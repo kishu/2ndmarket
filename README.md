@@ -1,4 +1,4 @@
-# Sndmarket
+# 2ndmarket
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
