@@ -10,4 +10,5 @@ export class GoodsService extends FirestoreService<Goods> {
   constructor(protected afs: AngularFirestore) {
     super(afs, 'goods');
   }
+
 }

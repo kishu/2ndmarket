@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -22,7 +22,7 @@ export abstract class FirestoreService<T> {
 
   protected constructor(
     protected afs: AngularFirestore,
-    protected path: string) {
+    @Inject(String) protected path: string) {
     this.collection = afs.collection<any>(this.path);
   }
 

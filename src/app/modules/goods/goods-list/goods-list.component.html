@@ -1,1 +1,12 @@
 <p>goods-list works!</p>
+
+<ng-container *ngIf="(goodsList$ | async) as goodsList">
+  <ul >
+    <li *ngFor="let goods of goodsList">
+      <p>
+        title: {{ goods.title }} <br>
+        price: {{ goods.price }}
+      </p>
+    </li>
+  </ul>
+</ng-container>
