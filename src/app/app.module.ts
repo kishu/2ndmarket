@@ -7,6 +7,7 @@ import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { environment } from '@environments/environment';
+import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +23,7 @@ import { AppComponent } from './app.component';
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
     AngularFirestoreModule,
+    AuthModule,
     GoodsModule,
     AppRoutingModule,
   ],

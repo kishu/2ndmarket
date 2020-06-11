@@ -1,0 +1,55 @@
+<h2>이메일 인증</h2>
+
+<ng-container *ngIf="step==='email'">
+  <p>
+    이메일을 입력하세요.<br>
+    이메일을 통해 인증번호를 전송합니다.
+  </p>
+  <form
+    [formGroup]="emailForm"
+    (ngSubmit)="submit()">
+    <div>
+      <label for="email">이메일 주소</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        formControlName="account"
+        required>
+      @
+      <label for="domain" style="display:none">도메인</label>
+      <select
+        id="domain"
+        name="domain"
+        formControlName="domain"
+        required>
+        <option value="">도메인 선택</option>
+        <option value="webtoonscorp.com">webtoonscorp.com</option>
+        <option value="navercorp.com">navercorp.com</option>
+      </select>
+    </div>
+    <div *ngIf="account.invalid && (account.dirty || account.touched)">
+      이메일 계정을 입력하세요.
+    </div>
+    <div *ngIf="domain.invalid && (domain.dirty || domain.touched)">
+      이메일 도메인을 선택하세요.
+    </div>
+    <div>
+      <button
+        type="submit"
+        [disabled]="!emailForm.valid">
+        {{ submitting ? '보내는 중...' : '이메일 보내기' }}
+      </button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-container *ngIf="step==='auth'">
+  <p>
+    {{ account.value }}@{{ domain.value }}(으)로 인증번호를 보냈습니다.<br/>
+    메일을 확인해 주세요.
+  </p>
+  <p>
+    <button type="button" (click)="reset()">다시 보내기</button>
+  </p>
+</ng-container>
