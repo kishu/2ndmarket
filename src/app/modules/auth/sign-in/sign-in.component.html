@@ -7,13 +7,13 @@
   </p>
   <form
     [formGroup]="emailForm"
-    (ngSubmit)="submit()">
+    (ngSubmit)="submitEmail()">
     <div>
       <label for="email">이메일 주소</label>
       <input
+        type="text"
         id="email"
         name="email"
-        type="email"
         formControlName="account"
         required>
       @
@@ -44,12 +44,34 @@
   </form>
 </ng-container>
 
-<ng-container *ngIf="step==='auth'">
-  <p>
-    {{ account.value }}@{{ domain.value }}(으)로 인증번호를 보냈습니다.<br/>
-    메일을 확인해 주세요.
-  </p>
-  <p>
-    <button type="button" (click)="reset()">다시 보내기</button>
-  </p>
+<ng-container *ngIf="step==='code'">
+  <form
+    [formGroup]="codeForm"
+    (ngSubmit)="submitCode()">
+    <div>
+      {{ account.value }}@{{ domain.value }}(으)로 인증번호를 보냈습니다.<br/>
+      이메일을 확인해 인증번호를 입력하세요.
+    </div>
+    <div>
+      <input
+        type="text"
+        id="code"
+        name="code"
+        formControlName="code"
+        required />
+      <app-limit-timer
+        [time]="1000 * 60 * 4"
+        (finished)="onFinishedLimitTimer()"></app-limit-timer>
+    </div>
+    <div *ngIf="code.invalid && (code.dirty || code.touched)">
+      인증코드를 입력하세요.
+    </div>
+    <div *ngIf="finishedLimitTimer">
+      입력시간이 지났습니다. 이메일을 다시 보내세요.
+    </div>
+    <div>
+      <button type="submit" [disabled]="finishedLimitTimer || !codeForm.valid">확인</button>
+      <button type="button" (click)="retry()">이메일 다시 보내기</button>
+    </div>
+  </form>
 </ng-container>

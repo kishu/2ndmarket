@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export enum SignInStep {
   email = 'email',
-  auth = 'auth'
+  code = 'code'
 }
 
 @Component({
@@ -12,29 +12,45 @@ export enum SignInStep {
   styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent implements OnInit {
+  step = SignInStep.code;
   emailForm: FormGroup;
-  authForm: FormGroup;
+  codeForm: FormGroup;
   submitting = false;
-  // step = SignInStep.email;
-  step = SignInStep.auth;
+  finishedLimitTimer = false;
 
   get account() { return this.emailForm.get('account'); }
   get domain() { return this.emailForm.get('domain'); }
+  get code() { return this.codeForm.get('code'); }
 
   constructor(private fb: FormBuilder) {
     this.emailForm = this.fb.group({
       account: ['kishu'],
       domain: ['webtoonscorp.com']
     });
+
+    this.codeForm = this.fb.group({
+      code: ['']
+    });
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
 
-  reset(): void {
+  retry() {
+    this.step = SignInStep.email;
   }
 
-  submit(): void {
+  submitEmail() {
+    this.step = SignInStep.code;
+    this.finishedLimitTimer = false;
+  }
+
+  onFinishedLimitTimer() {
+    this.finishedLimitTimer = true;
+  }
+
+  submitCode() {
+
   }
 
 }
