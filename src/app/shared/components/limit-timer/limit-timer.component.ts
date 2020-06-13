@@ -7,8 +7,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 })
 export class LimitTimerComponent implements OnInit, OnDestroy {
   @Input() time: number;
-  @Output() finished = new EventEmitter<null>();
-
+  @Output() timeover = new EventEmitter<null>();
   private timerId: number;
 
   constructor() { }
@@ -32,7 +31,7 @@ export class LimitTimerComponent implements OnInit, OnDestroy {
 
   clearTimer(emit: boolean) {
     clearInterval(this.timerId);
-    emit && this.finished.emit();
+    emit && this.timeover.emit();
   }
 
 }

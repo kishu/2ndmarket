@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { BehaviorSubject } from 'rxjs';
+import { first, tap } from 'rxjs/operators';
+import random from 'lodash/random';
 
 export enum SignInStep {
-  email = 'email',
-  code = 'code'
+  account = 'account',
+  verification = 'verification'
 }
 
 @Component({
@@ -12,24 +16,31 @@ export enum SignInStep {
   styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent implements OnInit {
-  step = SignInStep.code;
-  emailForm: FormGroup;
-  codeForm: FormGroup;
+  code: number;
   submitting = false;
-  finishedLimitTimer = false;
+  limitTimer = false;
+  timeover = false;
+  step$ = new BehaviorSubject<SignInStep>(SignInStep.account);
+  accountForm =  this.fb.group({
+    account: ['kishu'],
+    domain: ['webtoonscorp.com']
+  });
+  verificationForm = this.fb.group({
+    code: ['']
+  });
 
-  get account() { return this.emailForm.get('account'); }
-  get domain() { return this.emailForm.get('domain'); }
-  get code() { return this.codeForm.get('code'); }
+  get accountCtl() { return this.accountForm.get('account'); }
+  get domainCtl() { return this.accountForm.get('domain'); }
+  get codeCtl() { return this.verificationForm.get('code'); }
 
-  constructor(private fb: FormBuilder) {
-    this.emailForm = this.fb.group({
-      account: ['kishu'],
-      domain: ['webtoonscorp.com']
-    });
-
-    this.codeForm = this.fb.group({
-      code: ['']
+  constructor(
+    private fb: FormBuilder,
+    private fns: AngularFireFunctions,
+    private ref: ChangeDetectorRef
+  ) {
+    this.step$.subscribe(step => {
+      console.log(step);
+      this.limitTimer = (step === SignInStep.verification);
     });
   }
 
@@ -37,20 +48,45 @@ export class SignInComponent implements OnInit {
   }
 
   retry() {
-    this.step = SignInStep.email;
+    this.step$.next(SignInStep.account);
   }
 
-  submitEmail() {
-    this.step = SignInStep.code;
-    this.finishedLimitTimer = false;
+  submitAccount() {
+    this.submitting = true;
+    this.code = random(1000, 9999);
+    console.log(this.code);
+    const callable = this.fns.httpsCallable('sendVerificationEmail');
+    callable({
+      to: `${this.accountCtl.value}@${this.domainCtl.value}`,
+      code: this.code
+    })
+      .pipe(
+        first(),
+        tap(() => {
+          this.submitting = false;
+          this.ref.detectChanges();
+        })
+      )
+      .subscribe(
+        () => {
+          this.step$.next(SignInStep.verification);
+          this.ref.detectChanges();
+        },
+        (err) => alert(err)
+      );
   }
 
-  onFinishedLimitTimer() {
-    this.finishedLimitTimer = true;
+  onTimeoverLimitTimer() {
+    this.timeover = true;
   }
 
-  submitCode() {
-
+  submitVerification() {
+    this.submitting = true;
+    if (this.codeCtl.value === this.code) {
+      console.log('ok');
+    } else {
+      console.log('fail');
+    }
   }
 
 }

@@ -1,19 +1,19 @@
 <h2>이메일 인증</h2>
 
-<ng-container *ngIf="step==='email'">
-  <p>
+<ng-container *ngIf="(step$ | async) === 'account'">
+  <div>
     이메일을 입력하세요.<br>
     이메일을 통해 인증번호를 전송합니다.
-  </p>
+  </div>
   <form
-    [formGroup]="emailForm"
-    (ngSubmit)="submitEmail()">
+    [formGroup]="accountForm"
+    (ngSubmit)="submitAccount()">
     <div>
-      <label for="email">이메일 주소</label>
+      <label for="account">이메일 주소</label>
       <input
         type="text"
-        id="email"
-        name="email"
+        id="account"
+        name="account"
         formControlName="account"
         required>
       @
@@ -28,30 +28,30 @@
         <option value="navercorp.com">navercorp.com</option>
       </select>
     </div>
-    <div *ngIf="account.invalid && (account.dirty || account.touched)">
+    <div *ngIf="accountCtl.invalid && (accountCtl.dirty || accountCtl.touched)">
       이메일 계정을 입력하세요.
     </div>
-    <div *ngIf="domain.invalid && (domain.dirty || domain.touched)">
+    <div *ngIf="domainCtl.invalid && (domainCtl.dirty || domainCtl.touched)">
       이메일 도메인을 선택하세요.
     </div>
     <div>
       <button
         type="submit"
-        [disabled]="!emailForm.valid">
+        [disabled]="submitting || !accountForm.valid">
         {{ submitting ? '보내는 중...' : '이메일 보내기' }}
       </button>
     </div>
   </form>
 </ng-container>
 
-<ng-container *ngIf="step==='code'">
+<ng-container *ngIf="(step$ | async) === 'verification'">
+  <div>
+    {{ accountCtl.value }}@{{ domainCtl.value }}(으)로 인증번호를 보냈습니다.<br/>
+    이메일을 확인해 인증번호를 입력하세요.
+  </div>
   <form
-    [formGroup]="codeForm"
-    (ngSubmit)="submitCode()">
-    <div>
-      {{ account.value }}@{{ domain.value }}(으)로 인증번호를 보냈습니다.<br/>
-      이메일을 확인해 인증번호를 입력하세요.
-    </div>
+    [formGroup]="verificationForm"
+    (ngSubmit)="submitVerification()">
     <div>
       <input
         type="text"
@@ -61,16 +61,16 @@
         required />
       <app-limit-timer
         [time]="1000 * 60 * 4"
-        (finished)="onFinishedLimitTimer()"></app-limit-timer>
+        (timeover)="onTimeoverLimitTimer()"></app-limit-timer>
     </div>
-    <div *ngIf="code.invalid && (code.dirty || code.touched)">
+    <div *ngIf="codeCtl.invalid && (codeCtl.dirty || codeCtl.touched)">
       인증코드를 입력하세요.
     </div>
-    <div *ngIf="finishedLimitTimer">
+    <div *ngIf="timeover">
       입력시간이 지났습니다. 이메일을 다시 보내세요.
     </div>
     <div>
-      <button type="submit" [disabled]="finishedLimitTimer || !codeForm.valid">확인</button>
+      <button type="submit" [disabled]="!timeover || !verificationForm.valid">확인</button>
       <button type="button" (click)="retry()">이메일 다시 보내기</button>
     </div>
   </form>
