@@ -1,0 +1,13 @@
+<h2>인증</h2>
+
+<ng-container *ngIf="!verified">
+  <p>이메일 인증하고 있습니다. 잠시만 기다려주세요...</p>
+</ng-container>
+
+<ng-container *ngIf="failed">
+  <p>인증 오류가 발생했습니다. <a [routerLink]="['/sign-in']">다시 인증하기</a></p>
+</ng-container>
+
+<ng-container *ngIf="verified">
+  <p>이메일을 인증했습니다.</p>
+</ng-container>

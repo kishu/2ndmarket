@@ -4,8 +4,12 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-    match /goods/{documents=**} {
+    match /goods/{goods} {
       allow read, write: if true;
+    }
+    match /groups/{groups} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

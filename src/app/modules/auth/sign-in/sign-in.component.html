@@ -1,13 +1,13 @@
 <h2>이메일 인증</h2>
 
-<ng-container *ngIf="(step$ | async) === 'account'">
+<ng-container *ngIf="step === 'account'">
   <div>
     이메일을 입력하세요.<br>
-    이메일을 통해 인증번호를 전송합니다.
+    이메일을 통해 인증링크를 전송합니다.
   </div>
   <form
     [formGroup]="accountForm"
-    (ngSubmit)="submitAccount()">
+    (ngSubmit)="submit()">
     <div>
       <label for="account">이메일 주소</label>
       <input
@@ -24,8 +24,7 @@
         formControlName="domain"
         required>
         <option value="">도메인 선택</option>
-        <option value="webtoonscorp.com">webtoonscorp.com</option>
-        <option value="navercorp.com">navercorp.com</option>
+        <option *ngFor="let domain of (domains$ | async)" [value]="domain">{{ domain }}</option>
       </select>
     </div>
     <div *ngIf="accountCtl.invalid && (accountCtl.dirty || accountCtl.touched)">
@@ -37,41 +36,22 @@
     <div>
       <button
         type="submit"
-        [disabled]="submitting || !accountForm.valid">
-        {{ submitting ? '보내는 중...' : '이메일 보내기' }}
+        [disabled]="submitted || !accountForm.valid">
+        {{ submitted ? '보내는 중...' : '이메일 보내기' }}
       </button>
     </div>
   </form>
 </ng-container>
 
-<ng-container *ngIf="(step$ | async) === 'verification'">
+<ng-container *ngIf="step === 'verification'">
   <div>
-    {{ accountCtl.value }}@{{ domainCtl.value }}(으)로 인증번호를 보냈습니다.<br/>
-    이메일을 확인해 인증번호를 입력하세요.
+    {{ accountCtl.value }}@{{ domainCtl.value }}(으)로 인증메일을 보냈습니다.
   </div>
-  <form
-    [formGroup]="verificationForm"
-    (ngSubmit)="submitVerification()">
-    <div>
-      <input
-        type="text"
-        id="code"
-        name="code"
-        formControlName="code"
-        required />
-      <app-limit-timer
-        [time]="1000 * 60 * 4"
-        (timeover)="onTimeoverLimitTimer()"></app-limit-timer>
-    </div>
-    <div *ngIf="codeCtl.invalid && (codeCtl.dirty || codeCtl.touched)">
-      인증코드를 입력하세요.
-    </div>
-    <div *ngIf="timeover">
-      입력시간이 지났습니다. 이메일을 다시 보내세요.
-    </div>
-    <div>
-      <button type="submit" [disabled]="!timeover || !verificationForm.valid">확인</button>
-      <button type="button" (click)="retry()">이메일 다시 보내기</button>
-    </div>
-  </form>
+  <div>
+    <button type="button" (click)="retry()">이메일 다시 보내기</button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="step === 'verified'">
+  <div>이메일을 인증했습니다. <a [routerLink]="['']">홈으로 이동</a></div>
 </ng-container>

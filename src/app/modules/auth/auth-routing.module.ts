@@ -1,15 +1,27 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SignUpComponent } from './sign-up/sign-up.component';
+import { canActivate, redirectLoggedInTo } from '@angular/fire/auth-guard';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { SignInResultComponent } from './sign-in-result/sign-in-result.component';
+
+const redirectLoggedInToItems = () => redirectLoggedInTo(['']);
 
 @NgModule({
   imports: [
     RouterModule.forChild([
-      { path: 'sign-up', component: SignUpComponent },
-      { path: 'sign-in', component: SignInComponent }
+      {
+        path: 'sign-in',
+        component: SignInComponent,
+        ...canActivate(redirectLoggedInToItems),
+      },
+      {
+        path: 'sign-in-result',
+        component: SignInResultComponent,
+        ...canActivate(redirectLoggedInToItems)
+      }
     ])
   ],
   exports: [RouterModule]
 })
+
 export class AuthRoutingModule { }

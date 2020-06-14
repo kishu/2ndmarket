@@ -8,11 +8,11 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 
 import { environment } from '@environments/environment';
+import { HomeModule } from '@app/modules/home/home.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
-
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +25,7 @@ import { AppComponent } from './app.component';
     AngularFireAuthGuardModule,
     AngularFirestoreModule,
     AngularFireFunctionsModule,
+    HomeModule,
     AuthModule,
     GoodsModule,
     AppRoutingModule,

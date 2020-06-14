@@ -1,0 +1,11 @@
+<p>
+  <span>세컨드마켓</span>
+  <ng-container *ngIf="(group$ | async) as group">
+    <span>@</span>
+    <span>{{ group.name }}</span>
+    <ng-container *ngIf="(user$ | async) as user">
+      <span>({{ user.email.split('@')[0] }})</span>
+    </ng-container>
+  </ng-container>
+</p>
+<hr>

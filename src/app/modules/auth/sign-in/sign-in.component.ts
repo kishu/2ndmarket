@@ -1,13 +1,15 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Observable } from 'rxjs';
+import { filter, first, map } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { BehaviorSubject } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
-import random from 'lodash/random';
+import { AuthService } from '@app/core/http/auth.service';
+import { GroupService } from '@app/core/http/group.service';
 
 export enum SignInStep {
   account = 'account',
-  verification = 'verification'
+  verification = 'verification',
+  verified = 'verified'
 }
 
 @Component({
@@ -17,76 +19,50 @@ export enum SignInStep {
 })
 export class SignInComponent implements OnInit {
   code: number;
-  submitting = false;
-  limitTimer = false;
-  timeover = false;
-  step$ = new BehaviorSubject<SignInStep>(SignInStep.account);
+  submitted = false;
+  step = SignInStep.account;
+  domains$: Observable<string[]>;
   accountForm =  this.fb.group({
     account: ['kishu'],
-    domain: ['webtoonscorp.com']
-  });
-  verificationForm = this.fb.group({
-    code: ['']
+    domain: ['']
   });
 
   get accountCtl() { return this.accountForm.get('account'); }
   get domainCtl() { return this.accountForm.get('domain'); }
-  get codeCtl() { return this.verificationForm.get('code'); }
 
   constructor(
     private fb: FormBuilder,
-    private fns: AngularFireFunctions,
-    private ref: ChangeDetectorRef
+    private router: Router,
+    private authService: AuthService,
+    private groupService: GroupService
   ) {
-    this.step$.subscribe(step => {
-      console.log(step);
-      this.limitTimer = (step === SignInStep.verification);
-    });
+    this.domains$ = this.groupService
+      .getAll([['created', 'desc']])
+      .pipe(
+        first(),
+        map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort())
+      );
   }
 
   ngOnInit() {
   }
 
   retry() {
-    this.step$.next(SignInStep.account);
+    this.step = SignInStep.account;
   }
 
-  submitAccount() {
-    this.submitting = true;
-    this.code = random(1000, 9999);
-    console.log(this.code);
-    const callable = this.fns.httpsCallable('sendVerificationEmail');
-    callable({
-      to: `${this.accountCtl.value}@${this.domainCtl.value}`,
-      code: this.code
-    })
-      .pipe(
-        first(),
-        tap(() => {
-          this.submitting = false;
-          this.ref.detectChanges();
-        })
-      )
-      .subscribe(
-        () => {
-          this.step$.next(SignInStep.verification);
-          this.ref.detectChanges();
-        },
-        (err) => alert(err)
-      );
-  }
-
-  onTimeoverLimitTimer() {
-    this.timeover = true;
-  }
-
-  submitVerification() {
-    this.submitting = true;
-    if (this.codeCtl.value === this.code) {
-      console.log('ok');
-    } else {
-      console.log('fail');
-    }
+  submit() {
+    this.submitted = true;
+    this.authService
+      .sendSignInLinkToEmail(`${this.accountCtl.value}@${this.domainCtl.value}`)
+      .then(() => {
+        this.step = SignInStep.verification;
+        this.authService.user$.pipe(
+          filter(u => !!u),
+          first()
+        ).subscribe(() => this.step = SignInStep.verified);
+      })
+      .catch(() => this.submitted = false);
   }
 
 }
