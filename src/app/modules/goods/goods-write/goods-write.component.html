@@ -1,9 +1,142 @@
-<h2>상품등록</h2>
+<form class="w-full max-w-sm mx-auto px-2">
+  <div class="flex flex-wrap -mx-1 mb-6">
+    <div class="w-1/2 px-1">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="account">
+        Email Account
+      </label>
+      <div class="relative">
+        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 pl-4 pr-8 mb-2 leading-tight focus:outline-none focus:bg-white" id="account" type="account">
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          @
+        </div>
+      </div>
+      <p class="text-red-500 text-xs">이메일 계정을 입력해주세요.</p>
+    </div>
+    <div class="w-1/2 px-1">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+        Domain
+      </label>
+      <div class="relative">
+        <select class="block appearance-none w-full bg-gray-200 border text-gray-700 py-3 px-4 pr-8 mb-2 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+          <option value="">도메인 선택</option>
+          <option *ngFor="let domain of (domains$ | async)" [value]="domain">{{ domain }}</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+        </div>
+      </div>
+      <p class="text-red-500 text-xs">이메일 도메인을 선택해주세요.</p>
+    </div>
+  </div>
+  <div class="flex flex-wrap -mx-1 mb-6">
+    <div class="w-full px-1">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+        Password
+      </label>
+      <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="password" placeholder="******************">
+      <p class="text-red-500 text-xs">비밀번호를 입력해주세요.</p>
+    </div>
+  </div>
+  <div class="flex flex-wrap -mx-1 mb-6">
+    <div class="w-full px-1">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+        Password Confirm
+      </label>
+      <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="password" placeholder="******************">
+      <p class="text-red-500 text-xs">비밀번호가 다릅니다.</p>
+    </div>
+  </div>
+  <div class="flex items-center justify-between">
+    <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-8 border border-blue-500 hover:border-transparent rounded" type="button">
+      취소
+    </button>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded" type="button">
+      회원가입
+    </button>
+  </div>
+</form>
+
+<hr class="mt-10 mb-10">
+
+<form class="w-full max-w-sm mx-auto px-2">
+  <div class="flex flex-wrap -mx-1 mb-6">
+    <div class="w-full px-1">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="account">
+        Email Confirm
+      </label>
+      <div class="relative">
+        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 pl-4 pr-8 mb-2 leading-tight focus:outline-none focus:bg-white" id="account" type="account" value="kishu@webtoonscorp.com" disabled>
+      </div>
+      <p class="text-gray-500 text-xs">
+        위 메일 주소로 인증 메일을 보냈습니다.<br>
+        메일에 포함된 링크를 클릭하신 후 서비스를 이용할 수 있습니다.<br>
+        인증 메일을 받지 못하셨다면 인증 메일 다시 보내기 버튼을 클릭해주세요.
+      </p>
+    </div>
+  </div>
+  <div class="flex items-center justify-end">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded" type="button">
+      인증메일 다시 보내기
+    </button>
+  </div>
+</form>
+
+<hr class="mt-10 mb-10">
+
+<form class="w-full max-w-sm mx-auto px-2">
+  <div class="flex flex-wrap -mx-1 mb-6">
+    <div class="w-full px-1">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="account">
+        Email
+      </label>
+      <div class="relative">
+        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 pl-4 pr-8 mb-2 leading-tight focus:outline-none focus:bg-white" id="account" type="account" value="kishu@webtoonscorp.com">
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-wrap -mx-1 mb-6">
+    <div class="w-full px-1">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+        Password
+      </label>
+      <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="password" placeholder="******************">
+    </div>
+  </div>
+  <div class="flex items-center justify-between">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded" type="button">
+      로그인
+    </button>
+    <button class="text-blue-700 font-bold py-3 px-4 rounded" type="button">
+      회원가입
+    </button>
+  </div>
+</form>
+
+<hr class="mt-10 mb-10">
+
+<form class="w-full max-w-sm mx-auto px-2">
+  <div class="flex flex-wrap -mx-1 mb-6">
+    <div class="w-full px-1">
+      <p class="text-gray-700">
+        가입이 완료되었습니다.<br>
+        정상적으로 서비스를 이용할 수 있습니다.
+      </p>
+    </div>
+  </div>
+  <div class="flex items-center justify-between">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded" type="button">
+      서비스 이용하기
+    </button>
+  </div>
+</form>
+
+<hr class="mt-10 mb-10">
+
 <form
-  class="w-full max-w-lg mx-auto px-2"
+  class="w-full max-w-xl mx-auto px-2"
   [formGroup]="goodsWriteForm"
   (ngSubmit)="submit()">
-  <div class="flex flex-wrap -mx-1 mb-5">
+  <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-full px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
         Goods Name
@@ -19,14 +152,14 @@
       <p class="text-red-500 text-xs">상품명(제목)을 입력해주세요.</p>
     </div>
   </div>
-  <div class="flex flex-wrap -mx-1 mb-5">
+  <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-full px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="category">
         Category
       </label>
       <div class="relative w-full mb-2">
         <select
-          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
           id="category"
           name="category"
           formControlName="category"
@@ -46,14 +179,14 @@
       <p class="text-red-500 text-xs">카테고리를 선택해주세요.</p>
     </div>
   </div>
-  <div class="flex flex-wrap -mx-1 mb-5">
+  <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-1/2 px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="purchaseTime">
         Purchase Time
       </label>
       <div class="relative w-full mb-2">
         <select
-          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
           id="purchaseTime"
           name="purchaseTime"
           formControlName="purchaseTime"
@@ -78,7 +211,7 @@
       </label>
       <div class="relative w-full mb-2">
         <select
-          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
           id="condition"
           name="condition"
           formControlName="condition"
@@ -95,7 +228,7 @@
       <p class="text-red-500 text-xs">제품상태를 선택해주세요.</p>
     </div>
   </div>
-  <div class="flex flex-wrap -mx-1 mb-5">
+  <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-full px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="price">
         Price
@@ -110,14 +243,14 @@
       <p class="text-red-500 text-xs">판매할 금액을 적어주세요.</p>
     </div>
   </div>
-  <div class="flex flex-wrap -mx-1 mb-5">
+  <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-full px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="delivery">
         Delivery
       </label>
       <div class="relative w-full mb-2">
         <select
-          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
           id="delivery"
           name="delivery"
           formControlName="delivery"
@@ -134,7 +267,7 @@
       <p class="text-red-500 text-xs">거래방법을 선택해주세요.</p>
     </div>
   </div>
-  <div class="flex flex-wrap -mx-1 mb-5">
+  <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-full px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="contact">
         Contact
@@ -149,7 +282,7 @@
       <p class="text-red-500 text-xs">연락처를 적어주세요.</p>
     </div>
   </div>
-  <div class="flex flex-wrap -mx-1 mb-5">
+  <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-full px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="memo">
         Memo
@@ -168,7 +301,7 @@
     <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-4 border border-blue-500 hover:border-transparent rounded" type="button">
       취소
     </button>
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded" type="button">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded" type="submit">
       상품등록
     </button>
   </div>
