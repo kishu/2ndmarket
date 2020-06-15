@@ -7,9 +7,12 @@ service cloud.firestore {
     match /goods/{goods} {
       allow read, write: if true;
     }
-    match /groups/{groups} {
+    match /groups/{group} {
       allow read: if true;
       allow write: if false;
+    }
+    match /signInEmails/{signInEmail} {
+      allow read, write: if true;
     }
   }
 }

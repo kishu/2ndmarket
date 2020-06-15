@@ -24,6 +24,7 @@ export class LimitTimerComponent implements OnInit, OnDestroy {
     this.timerId = setInterval(() => {
       this.time = this.time - 1000;
       if ( this.time <= 0 ) {
+        this.time = 0;
         this.clearTimer(true);
       }
     }, 1000);

@@ -16,8 +16,7 @@ const redirectLoggedInToItems = () => redirectLoggedInTo(['']);
       },
       {
         path: 'sign-in-result',
-        component: SignInResultComponent,
-        ...canActivate(redirectLoggedInToItems)
+        component: SignInResultComponent
       }
     ])
   ],

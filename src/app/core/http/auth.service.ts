@@ -1,9 +1,9 @@
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
-import { first, map, switchMap, } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import {filter, map, switchMap,} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { GroupService } from '@app/core/http/group.service';
-import { User } from '@app/core/model/user';
+import { User } from '@app/core/model';
 import { Group } from '@app/core/model';
 
 @Injectable({
@@ -45,27 +45,28 @@ export class AuthService {
     user$.subscribe(u => this._user$.next(u));
 
     user$.pipe(
+      filter(u => !!u),
       switchMap(u => this.groupService.getByDomain(u.email.split('@')[1]))
     ).subscribe(g => this._group$.next(g));
+
+    user$.pipe(
+      filter(u => !u),
+    ).subscribe(g => this._group$.next(null));
   }
 
-  sendSignInLinkToEmail(email: string) {
+  sendSignInLinkToEmail(email: string, signInEmailId: string) {
     // https://firebase.google.com/docs/auth/web/email-link-auth
-    const actionCodeSettings = {
-      url: window.location.origin + '/sign-in-result',
+    const settings = {
+      url: `${window.location.origin}/sign-in-result?ref=${signInEmailId}`,
       handleCodeInApp: true
     };
-    return this.afAuth.sendSignInLinkToEmail(email, actionCodeSettings)
-      .then(() => window.localStorage.setItem('emailForSignIn', email))
-      .catch(err => alert(err));
+    return this.afAuth.sendSignInLinkToEmail(email, settings).catch(err => alert(err));
   }
 
-  signInWithEmailLink() {
+  signInWithEmailLink(signInEmail: string) {
     const isSignInWithEmilLink = this.afAuth.isSignInWithEmailLink(window.location.href);
-    const email = window.localStorage.getItem('emailForSignIn');
-    if (isSignInWithEmilLink && email) {
-      window.localStorage.removeItem('emailForSignIn');
-      return this.afAuth.signInWithEmailLink(email, window.location.href).catch(err => alert(err));
+    if (isSignInWithEmilLink) {
+      return this.afAuth.signInWithEmailLink(signInEmail, window.location.href).catch(err => alert(err));
     } else {
       return Promise.reject();
     }
