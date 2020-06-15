@@ -5,7 +5,7 @@ export interface User {
   displayName: string;
   photoURL: string;
   email: string;
-  emailVerified: boolean;
 }
 
+export type NewUser = Omit<User, 'id'>;
 export type UserRef = firestore.DocumentReference;

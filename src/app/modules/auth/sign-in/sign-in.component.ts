@@ -87,15 +87,15 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   submitVerification() {
-    const code = parseInt(this.codeCtl.value.trim(), 10);
-    if (code === this.code) {
-      this.authService.signInWithEmailLink(this.email).then(
-        () => this.router.navigate(['']),
-        (err) => alert(err)
-      );
-    } else {
-      alert('인증코드를 정확히 입력하세요.');
-    }
+    // const code = parseInt(this.codeCtl.value.trim(), 10);
+    // if (code === this.code) {
+    //   this.authService.signInWithEmailLink(this.email).then(
+    //     () => this.router.navigate(['']),
+    //     (err) => alert(err)
+    //   );
+    // } else {
+    //   alert('인증코드를 정확히 입력하세요.');
+    // }
   }
 
 }

@@ -1,18 +1,22 @@
 import { Observable, ReplaySubject } from 'rxjs';
-import {filter, map, switchMap,} from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { auth } from 'firebase/app';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { GroupService } from '@app/core/http/group.service';
 import { User } from '@app/core/model';
 import { Group } from '@app/core/model';
 
+enum AuthProvider {
+  google = 'google',
+  facebook = 'facebook',
+  twitter = 'twitter'
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // private _isAdmin: boolean;
-  // get isAdmin() { return this._isAdmin;
-
   private _group$ = new ReplaySubject<Group | null>(1);
   private _user$ = new ReplaySubject<User | null>(1);
 
@@ -23,14 +27,6 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private groupService: GroupService
   ) {
-    // this.afAuth.idTokenResult.subscribe(r => {
-    //   if ( r && r.claims && r.claims.admin) {
-    //     this._isAdmin = r.claims.admin;
-    //   } else {
-    //     this._isAdmin = false;
-    //   }
-    // });
-
     const user$ = this.afAuth.user.pipe(
       map(u => {
         if (u) {
@@ -52,6 +48,26 @@ export class AuthService {
     user$.pipe(
       filter(u => !u),
     ).subscribe(g => this._group$.next(null));
+  }
+
+  signInWithRedirect(provider: string) {
+    let authProvider;
+    switch (provider) {
+      case AuthProvider.google:
+        authProvider = new auth.GoogleAuthProvider();
+        break;
+      case AuthProvider.facebook:
+        authProvider = new auth.FacebookAuthProvider();
+        break;
+      case AuthProvider.twitter:
+        authProvider = new auth.TwitterAuthProvider();
+        break;
+    }
+    return this.afAuth.signInWithRedirect(authProvider);
+  }
+
+  getRedirectResult() {
+    return this.afAuth.getRedirectResult();
   }
 
   createUserWithEmailAndPassword(email: string, password: string) {

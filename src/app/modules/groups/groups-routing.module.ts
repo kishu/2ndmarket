@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { GroupsAddComponent } from './groups-add/groups-add.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
-      { path: '', component: HomeComponent },
+      { path: 'groups/add', component: GroupsAddComponent },
     ])
   ],
   exports: [RouterModule]
 })
-export class HomeRoutingModule { }
+export class GroupsRoutingModule { }
