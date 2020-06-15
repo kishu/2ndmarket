@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GoodsRoutingModule } from './goods-routing.module';
 import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -11,7 +12,9 @@ import { GoodsWriteComponent } from './goods-write/goods-write.component';
   ],
   imports: [
     CommonModule,
-    GoodsRoutingModule
+    GoodsRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class GoodsModule { }

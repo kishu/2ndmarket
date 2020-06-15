@@ -46,7 +46,6 @@ export abstract class FirestoreService<T> {
     return this.collection.doc(docId)
       .snapshotChanges()
       .pipe(
-        first(),
         map(a => {
           if (a.payload.exists) {
             const id = a.payload.id;

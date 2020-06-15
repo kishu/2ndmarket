@@ -3,6 +3,7 @@ import { firestore } from 'firebase/app';
 export interface SignInEmail {
   id: string;
   email: string;
+  verified: boolean;
   created: firestore.Timestamp;
 }
 

@@ -1,0 +1,45 @@
+<h2>로그인</h2>
+
+<form
+  [formGroup]="signInForm"
+  (ngSubmit)="submit()">
+  <div>
+    <label for="account">이메일 주소</label>
+    <input
+      id="account"
+      name="account"
+      type="text"
+      formControlName="account"
+      required>
+    @
+    <label for="domain" style="display:none">도메인</label>
+    <select
+      id="domain"
+      name="domain"
+      formControlName="domain"
+      required>
+      <option value="">도메인 선택</option>
+      <option *ngFor="let domain of (domains$ | async)" [value]="domain">{{ domain }}</option>
+    </select>
+  </div>
+  <div *ngIf="accountCtl.invalid && (accountCtl.dirty || accountCtl.touched)">
+    이메일 계정을 입력하세요.
+  </div>
+  <div *ngIf="domainCtl.invalid && (domainCtl.dirty || domainCtl.touched)">
+    도메인을 선택하세요.
+  </div>
+  <label for="password">패스워드</label>
+  <input
+    id="password"
+    name="password"
+    type="password"
+    formControlName="password"
+    required>
+  <div>
+    <button
+      type="submit"
+      [disabled]="!signInForm.valid">
+      {{ submitting ? '보내는 중...' : '이메일 보내기' }}
+    </button>
+  </div>
+</form>

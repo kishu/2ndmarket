@@ -34,8 +34,8 @@ export class AuthService {
     const user$ = this.afAuth.user.pipe(
       map(u => {
         if (u) {
-          const { uid, displayName, photoURL, email } = u;
-          return { id: uid, displayName, photoURL, email };
+          const { uid, displayName, photoURL, email, emailVerified } = u;
+          return { id: uid, displayName, photoURL, email, emailVerified };
         } else {
           return null;
         }
@@ -54,22 +54,33 @@ export class AuthService {
     ).subscribe(g => this._group$.next(null));
   }
 
+  createUserWithEmailAndPassword(email: string, password: string) {
+    return this.afAuth.createUserWithEmailAndPassword(email, password);
+  }
+
+  sendEmailVerification() {
+    return this.afAuth.currentUser.then(u => u.sendEmailVerification());
+  }
+
   sendSignInLinkToEmail(email: string, signInEmailId: string) {
     // https://firebase.google.com/docs/auth/web/email-link-auth
     const settings = {
       url: `${window.location.origin}/sign-in-result?ref=${signInEmailId}`,
       handleCodeInApp: true
     };
+    console.log('settings', settings);
     return this.afAuth.sendSignInLinkToEmail(email, settings).catch(err => alert(err));
   }
 
-  signInWithEmailLink(signInEmail: string) {
-    const isSignInWithEmilLink = this.afAuth.isSignInWithEmailLink(window.location.href);
-    if (isSignInWithEmilLink) {
-      return this.afAuth.signInWithEmailLink(signInEmail, window.location.href).catch(err => alert(err));
-    } else {
-      return Promise.reject();
-    }
+  signInWithEmailLink(signInEmail: string, signInEmailId: string) {
+    console.log(`${window.location.origin}/sign-in-result?ref=${signInEmailId}`);
+    return this.afAuth.signInWithEmailLink(signInEmail, `${window.location.origin}/sign-in-result?ref=${signInEmailId}`);
+    // const isSignInWithEmilLink = this.afAuth.isSignInWithEmailLink(window.location.href);
+    // if (isSignInWithEmilLink) {
+    //   return this.afAuth.signInWithEmailLink(signInEmail, window.location.href).catch(err => alert(err));
+    // } else {
+    //   return Promise.reject();
+    // }
   }
 
   signOut() {
