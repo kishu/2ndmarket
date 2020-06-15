@@ -87,7 +87,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   submitVerification() {
     const code = parseInt(this.codeCtl.value.trim(), 10);
     if (code === this.code) {
-      this.authService.
+      // this.authService.
       this.router.navigate(['']);
     } else {
       alert('인증코드를 정확히 입력하세요.');

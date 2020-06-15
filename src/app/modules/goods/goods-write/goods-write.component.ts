@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { GoodsService } from '@app/core/http';
 import { GoodsCategory, GoodsCondition, GoodsDelivery, GoodsPurchaseTime, NewGoods } from '@app/core/model';
 
@@ -8,13 +9,37 @@ import { GoodsCategory, GoodsCondition, GoodsDelivery, GoodsPurchaseTime, NewGoo
   styleUrls: ['./goods-write.component.scss']
 })
 export class GoodsWriteComponent implements OnInit {
+  goodsWriteForm: FormGroup;
 
-  constructor(private goodsService: GoodsService) { }
+  get name() { return this.goodsWriteForm.get('name'); }
+  get category() { return this.goodsWriteForm.get('category'); }
+  get purchaseTime() { return this.goodsWriteForm.get('purchaseTime'); }
+  get condition() { return this.goodsWriteForm.get('condition'); }
+  get price() { return this.goodsWriteForm.get('price'); }
+  get delivery() { return this.goodsWriteForm.get('delivery'); }
+  get contact() { return this.goodsWriteForm.get('contact'); }
+  get memo() { return this.goodsWriteForm.get('memo'); }
+
+  constructor(
+    private goodsService: GoodsService,
+    private fb: FormBuilder
+  ) {
+    this.goodsWriteForm = this.fb.group({
+      name: [''],
+      property: [''],
+      purchaseTime: [''],
+      condition: [''],
+      price: [''],
+      delivery: [''],
+      contact: [''],
+      memo: [''],
+    });
+  }
 
   ngOnInit(): void {
   }
 
-  onClickAdd() {
+  submit() {
     const newGoods: NewGoods = {
       title: 'new goods222',
       public: true,
@@ -34,7 +59,7 @@ export class GoodsWriteComponent implements OnInit {
       updated: GoodsService.serverTimestamp()
     };
 
-    this.goodsService.add(newGoods).then(() => console.log('ok'));
+    // this.goodsService.add(newGoods).then(() => console.log('ok'));
   }
 
 }
