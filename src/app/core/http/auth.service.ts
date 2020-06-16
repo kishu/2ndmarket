@@ -66,6 +66,22 @@ export class AuthService {
     return this.afAuth.signInWithRedirect(authProvider);
   }
 
+  signInWithPopup(provider: string) {
+    let authProvider;
+    switch (provider) {
+      case AuthProvider.google:
+        authProvider = new auth.GoogleAuthProvider();
+        break;
+      case AuthProvider.facebook:
+        authProvider = new auth.FacebookAuthProvider();
+        break;
+      case AuthProvider.twitter:
+        authProvider = new auth.TwitterAuthProvider();
+        break;
+    }
+    return this.afAuth.signInWithPopup(authProvider);
+  }
+
   getRedirectResult() {
     return this.afAuth.getRedirectResult();
   }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from "@app/shared/shared.module";
 import { GroupsRoutingModule } from './groups-routing.module';
 import { GroupsAddComponent } from './groups-add/groups-add.component';
 
@@ -8,9 +9,10 @@ import { GroupsAddComponent } from './groups-add/groups-add.component';
   declarations: [GroupsAddComponent],
   imports: [
     CommonModule,
-    GroupsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
+    GroupsRoutingModule
   ]
 })
 export class GroupsModule { }
