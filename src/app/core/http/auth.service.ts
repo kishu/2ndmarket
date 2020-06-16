@@ -3,7 +3,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { auth } from 'firebase/app';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { GroupService } from '@app/core/http/group.service';
+import { GroupsService } from '@app/core/http/groups.service';
 import { User } from '@app/core/model';
 import { Group } from '@app/core/model';
 
@@ -25,7 +25,7 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
-    private groupService: GroupService
+    private groupService: GroupsService
   ) {
     const user$ = this.afAuth.user.pipe(
       map(u => {

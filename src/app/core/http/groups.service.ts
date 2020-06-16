@@ -8,7 +8,7 @@ import { Group } from '@app/core/model';
 @Injectable({
   providedIn: 'root'
 })
-export class GroupService extends FirestoreService<Group> {
+export class GroupsService extends FirestoreService<Group> {
 
   constructor(protected afs: AngularFirestore) {
     super(afs, 'groups');

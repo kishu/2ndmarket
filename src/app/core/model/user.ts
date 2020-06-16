@@ -7,5 +7,5 @@ export interface User {
   email: string;
 }
 
-export type NewUser = Omit<User, 'id'>;
-export type UserRef = firestore.DocumentReference;
+// export type NewUser = Omit<User, 'id'>;
+// export type UserRef = firestore.DocumentReference;

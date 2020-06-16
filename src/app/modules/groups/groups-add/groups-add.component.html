@@ -51,7 +51,7 @@
         type="number"
         formControlName="code"
         required>
-      <app-limit-timer [time]="10 * 60 * 3" (timeover)="onTimeoverLimitTimer()"></app-limit-timer>
+      <app-limit-timer [time]="1000 * 60 * 3" (timeover)="onTimeoverLimitTimer()"></app-limit-timer>
     </div>
     <div *ngIf="codeCtl.invalid && (codeCtl.dirty || codeCtl.touched)">
       인증번호를 입력하세요.

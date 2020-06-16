@@ -11,8 +11,8 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
-    match /signInEmails/{signInEmail} {
-      allow read, write: if true;
+    match /userGroups/{userGroup} {
+      allow read, write: if request.auth.uid != null;
     }
   }
 }
