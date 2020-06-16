@@ -30,12 +30,12 @@ export class SignInComponent implements OnInit {
     e.preventDefault();
     this.authService
       .signInWithRedirect(provider)
-      .catch(err => console.log(err));
+      .catch(err => alert(err));
   }
 
   onClickSignOut(e: Event) {
     e.preventDefault();
-    this.authService.signOut();
+    this.authService.signOut().then(() => alert('ok'));
   }
 
 }

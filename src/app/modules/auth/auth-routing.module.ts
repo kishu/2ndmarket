@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { canActivate, redirectLoggedInTo } from '@angular/fire/auth-guard';
 import { SignInComponent } from './sign-in/sign-in.component';
 
 @NgModule({

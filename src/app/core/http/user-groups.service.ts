@@ -1,9 +1,9 @@
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { FirestoreService } from "@app/core/http/firestore.service";
-import { UserGroup } from "@app/core/model";
-import { AngularFirestore } from "@angular/fire/firestore";
+import { FirestoreService } from '@app/core/http/firestore.service';
+import { UserGroup } from '@app/core/model';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,13 @@ export class UserGroupsService extends FirestoreService<UserGroup> {
     super(afs, 'userGroups');
   }
 
-  getByUserId(id): Observable<UserGroup | null> {
-    return this.query({ where: [['userId', '==', id]]})
+  getByUserIdAndGroupId(uid: string, gRef: DocumentReference): Observable<UserGroup | null> {
+    return this.query({
+      where: [
+        ['userId', '==', uid],
+        ['groupRef', '==', gRef]
+      ]
+    })
       .pipe(
         map(ug => ug.length === 0 ? null : ug[0])
       );

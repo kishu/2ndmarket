@@ -13,15 +13,11 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private authService: AuthService
   ) {
-    // this.authService.user$.pipe().subscribe(u => console.log(u));
-    // this.authService.group$.pipe().subscribe(g => console.log(g));
+    this.authService.user$.pipe().subscribe(u => console.log('user', u));
+    this.authService.group$.pipe().subscribe(g => console.log('group', g));
   }
 
   ngOnInit(): void {
-  }
-
-  onClickSignOut() {
-    this.authService.signOut().then(() => this.router.navigate(['sign-in'])) ;
   }
 
 }

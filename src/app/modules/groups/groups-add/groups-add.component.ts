@@ -1,12 +1,11 @@
 import random from 'lodash/random';
-import { firestore } from 'firebase/app'
-import { BehaviorSubject, Observable, of, throwError, zip } from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError, zip } from 'rxjs';
+import { first, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService, GroupsService, UserGroupsService } from '@app/core/http';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { NewUserGroup, UpdatedUserGroup } from "@app/core/model";
+import { NewUserGroup } from '@app/core/model';
 
 enum GroupAddStep {
   email = 'email',
@@ -50,7 +49,7 @@ export class GroupsAddComponent implements OnInit {
     this.step$.subscribe(step => {
       if (step === GroupAddStep.email) {
         this.emailForm = this.fb.group({
-          account: ['kishu'],
+          account: [''],
           domain: [''],
         });
       } else {
@@ -58,28 +57,24 @@ export class GroupsAddComponent implements OnInit {
           code: ['']
         });
       }
-    })
+    });
   }
 
   onEmailSubmit() {
     this.submitting = true;
     const to = `${this.accountCtl.value.trim()}@${this.domainCtl.value}`;
     const code = random(1000, 9999);
-    this.code = code;
-    console.log('code', code);
-    this.submitting = false;
-    this.step$.next(GroupAddStep.verify);
-    // const callable = this.fns.httpsCallable('sendVerificationEmail');
-    // callable({ to, code }).pipe(first()).subscribe(() => {
-    //   // i don't know why this subscribe function run outside of ngzone.
-    //   // this is just tricky code.
-    //   this.ngZone.run(() => {
-    //     this.code = code;
-    //     console.log('code', code);
-    //     this.submitting = false;
-    //     this.step$.next(GroupAddStep.verify);
-    //   });
-    // });
+    const callable = this.fns.httpsCallable('sendVerificationEmail');
+    callable({ to, code }).pipe(first()).subscribe(() => {
+      // i don't know why this subscribe function run outside of ngzone.
+      // this is just tricky code.
+      this.ngZone.run(() => {
+        this.code = code;
+        console.log('code', code);
+        this.submitting = false;
+        this.step$.next(GroupAddStep.verify);
+      });
+    });
   }
 
   onTimeoverLimitTimer() {
@@ -92,54 +87,36 @@ export class GroupsAddComponent implements OnInit {
   }
 
   onVerifySubmit() {
-    if (this.code === parseInt(this.codeCtl.value, 10)) {
-      const userAndGroupAndUserGroup$ = this.authService.user$
-        .pipe(
-          first(),
-          switchMap(u => {
-            return zip(
-              of(u),
-              this.groupsService.getByDomain(this.domainCtl.value),
-              this.userGroupsService.getByUserId(u.id)
-            );
-          }),
-          tap(([, g,]) => {
-            if (!g) {
-              alert('no domain');
-              throwError('domain error');
-            }
-          })
-        );
-
-      userAndGroupAndUserGroup$
-        .pipe(
-          filter(([, , ug]) => ug === null),
-          switchMap(([u, g]) => {
-            const newUserGroup: NewUserGroup = {
-              userId: u.id,
-              groupRefs: [this.groupsService.getDocRef(g.id)],
-              created: UserGroupsService.serverTimestamp(),
-              updated: UserGroupsService.serverTimestamp()
-            };
-            return this.userGroupsService.add(newUserGroup);
-          })
-        ).subscribe();
-
-      userAndGroupAndUserGroup$
-        .pipe(
-          filter(([, , ug]) => ug !== null),
-          switchMap(([, g, ug]) => {
-            const updatedUserGroup: UpdatedUserGroup = {
-              groupRefs: firestore.FieldValue.arrayUnion(this.groupsService.getDocRef(g.id)),
-              updated: UserGroupsService.serverTimestamp()
-            };
-            return this.userGroupsService.update(ug.id, updatedUserGroup);
-          })
-        )
-        .subscribe();
-    } else {
-      this.verifyForm.setErrors({ incorrect: true });
+    if (this.code !== parseInt(this.codeCtl.value, 10)) {
+      return this.verifyForm.setErrors({ incorrect: true });
     }
+    const createNewUserGroup = (uid, gid): NewUserGroup => {
+      return {
+        userId: uid,
+        groupRef: this.groupsService.getDocRef(gid),
+        activated: true,
+        created: UserGroupsService.serverTimestamp(),
+        updated: UserGroupsService.serverTimestamp()
+      };
+    };
+    const domain = this.domainCtl.value;
+    const userAndGroup$ = zip(this.authService.user$.pipe(first()), this.groupsService.getByDomain(domain).pipe(first()));
+    userAndGroup$
+      .pipe(
+        switchMap(([u, g]) => {
+          return this.userGroupsService.getByUserIdAndGroupId(u.id, this.groupsService.getDocRef(g.id)).pipe(first());
+        }),
+        withLatestFrom(userAndGroup$),
+        switchMap(([ug, [u, g]]) => {
+          return ug === null ?
+            this.userGroupsService.add(createNewUserGroup(u.id, g.id)) :
+            throwError('exist group');
+        })
+      )
+      .subscribe(
+        r => alert('ok'),
+        err => alert(err)
+      );
   }
 
 }
