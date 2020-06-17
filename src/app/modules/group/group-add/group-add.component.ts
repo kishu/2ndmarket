@@ -27,6 +27,7 @@ export class GroupAddComponent implements OnInit {
 
   get accountCtl() { return this.emailForm.get('account'); }
   get domainCtl() { return this.emailForm.get('domain'); }
+  get email() { return `${this.accountCtl.value.trim()}@${this.domainCtl.value}`; }
   get codeCtl() { return this.verifyForm.get('code'); }
 
   constructor(
@@ -54,6 +55,7 @@ export class GroupAddComponent implements OnInit {
         });
       } else {
         this.verifyForm = this.fb.group({
+          email: [this.email],
           code: ['']
         });
       }
@@ -62,7 +64,7 @@ export class GroupAddComponent implements OnInit {
 
   onEmailSubmit() {
     this.submitting = true;
-    const to = `${this.accountCtl.value.trim()}@${this.domainCtl.value}`;
+    const to = this.email;
     const code = random(1000, 9999);
     const callable = this.fns.httpsCallable('sendVerificationEmail');
     callable({ to, code }).pipe(first()).subscribe(() => {
