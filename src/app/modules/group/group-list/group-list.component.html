@@ -3,7 +3,7 @@
   <li *ngFor="let userGroup of userGroupList">
     <div>
       {{ userGroup.group.name }}
-      {{ userGroup.group.created }}
+      {{ userGroup.group.created | fsTimestamp | formatDistanceToNow }}
     </div>
 
   </li>

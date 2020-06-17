@@ -1,8 +1,9 @@
-// import { UserRef } from './user';
 import { firestore } from 'firebase/app';
 
+/*
+ * deprecated
+ */
 export enum GoodsCategory {
-  undefined = '',
   appliances = 'appliances',  // 가전제품, 디지털
   household = 'household',    // 생활용품
   beauty = 'beauty',          // 뷰티
@@ -14,8 +15,7 @@ export enum GoodsCategory {
   kids = 'kids'               // 유아, 출산
 }
 
-export enum GoodsPurchaseTime {
-  undefined = '',
+export enum GoodsPurchased {
   unknown = 'unknown',        // 알 수 없음
   week = 'week',              // 일주일 이내
   month = 'month',            // 한 달 이내
@@ -25,30 +25,26 @@ export enum GoodsPurchaseTime {
 }
 
 export enum GoodsCondition {
-  undefined = '',
   boxed = 'boxed',            // 미개봉
   almostNew = 'almostNew',    // 거의 새상품
   used = 'used'               // 사용감 있음
 }
 
-export enum GoodsDelivery {
-  undefined = '',
+export enum GoodsShipping {
   directly = 'directly',      // 직거래
-  courier = 'courier',        // 택배
+  delivery = 'delivery',      // 택배
   etc = 'etc'                 // 기타 다른 방법
 }
 
 export interface Goods {
   id: string;
-  // user: UserRef;
-  title: string;
+  userId: string;
+  name: string;
   public: boolean;
-  category: GoodsCategory;
-  purchaseTime: GoodsPurchaseTime;
+  purchased: GoodsPurchased;
   condition: GoodsCondition;
   price: number;
-  delivery: GoodsDelivery;
-  deliveryEtc: string;
+  shipping: GoodsShipping;
   images: string[]; // url
   contact: string;
   favoritesCnt: number;
