@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService, GroupsService, UserGroupsService } from "@app/core/http";
 import { combineLatest, concat, forkJoin, from, merge, Observable, of, zip } from "rxjs";
 import { concatMap, first, map, switchMap, tap } from "rxjs/operators";
-import { UserGroup } from "@app/core/model";
+import { Group, UserGroup } from "@app/core/model";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { fromPromise } from "rxjs/internal-compatibility";
 import { firestore } from "firebase/app";
@@ -32,7 +32,7 @@ export class GroupListComponent implements OnInit {
         tap(r => console.log(r)),
         map(([userGroups, groups]) => {
           return userGroups.map((userGroup, i) => {
-            userGroup.group = groups[i];
+            userGroup.group = groups[i] as Group;
             return userGroup;
           });
         })
