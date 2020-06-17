@@ -1,5 +1,8 @@
+import range from 'lodash/range';
+import random from 'lodash/random';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder } from '@angular/forms';
+import { Goods } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-form',
@@ -7,20 +10,22 @@ import { FormBuilder } from "@angular/forms";
   styleUrls: ['./goods-form.component.scss']
 })
 export class GoodsFormComponent implements OnInit {
-  @Output() submit = new EventEmitter<null>();
+  // tslint:disable-next-line:no-output-native
+  @Output() formSubmit = new EventEmitter<Partial<Goods>>();
   submitting = false;
   goodsForm = this.fb.group({
     name: [''],
-    public: [''],
+    public: [true],
     purchased: [''],
     condition: [''],
-    price: [],
+    price: [0],
     shipping: [''],
     contact: [''],
     memo: [''],
   });
 
   get nameCtl() { return this.goodsForm.get('name'); }
+  get publicCtl() { return this.goodsForm.get('public'); }
   get purchasedCtl() { return this.goodsForm.get('purchased'); }
   get conditionCtl() { return this.goodsForm.get('condition'); }
   get priceCtl() { return this.goodsForm.get('price'); }
@@ -37,7 +42,8 @@ export class GoodsFormComponent implements OnInit {
 
   onSubmit() {
     this.submitting = true;
-    this.submit.emit()
+    const images = range(random(1, 7)).map(() => 'https://source.unsplash.com/random');
+    this.formSubmit.emit({ ...this.goodsForm.value, images });
   }
 
 }

@@ -19,7 +19,6 @@
       <p *ngIf="nameCtl.invalid && (nameCtl.dirty || nameCtl.touched)" class="text-red-500 text-xs">상품명을 입력해주세요.</p>
     </div>
   </div>
-  {{ nameCtl.errors | json }}, {{ nameCtl.invalid }}, {{ nameCtl.dirty }}, {{ nameCtl.touched }}
   <div class="flex flex-wrap -mx-1 mb-6">
     <div class="w-1/2 px-1">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="purchased">
