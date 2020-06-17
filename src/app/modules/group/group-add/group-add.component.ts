@@ -13,11 +13,11 @@ enum GroupAddStep {
 }
 
 @Component({
-  selector: 'app-groups-add',
-  templateUrl: './groups-add.component.html',
-  styleUrls: ['./groups-add.component.scss']
+  selector: 'app-group-add',
+  templateUrl: './group-add.component.html',
+  styleUrls: ['./group-add.component.scss']
 })
-export class GroupsAddComponent implements OnInit {
+export class GroupAddComponent implements OnInit {
   code: number;
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
   submitting = false;

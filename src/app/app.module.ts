@@ -11,7 +11,7 @@ import { environment } from '@environments/environment';
 import { HomeModule } from '@app/modules/home/home.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
-import { GroupsModule } from '@app/modules/groups/groups.module';
+import { GroupModule } from '@app/modules/group/group.module';
 import { PreferenceModule } from '@app/modules/preference/preference.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -30,7 +30,7 @@ import { AppRoutingModule } from './app-routing.module';
     HomeModule,
     AuthModule,
     GoodsModule,
-    GroupsModule,
+    GroupModule,
     PreferenceModule,
     AppRoutingModule,
   ],

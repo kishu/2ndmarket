@@ -1,0 +1,10 @@
+<p>group-list works!</p>
+<ul *ngIf="userGroupList$ | async as userGroupList">
+  <li *ngFor="let userGroup of userGroupList">
+    <div>
+      {{ userGroup.group.name }}
+      {{ userGroup.group.created }}
+    </div>
+
+  </li>
+</ul>
