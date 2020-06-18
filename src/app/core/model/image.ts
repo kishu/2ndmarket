@@ -4,9 +4,7 @@ export enum ImageType {
 }
 
 export interface ImageFile {
-  id: string;
   type: ImageType;
-  url?: string;   // assign after upload
   file: File;
   rotate: number;
 }

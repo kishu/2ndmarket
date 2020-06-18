@@ -1,22 +1,22 @@
 <ul>
-  <li *ngFor="let image of images; index as i">
+  <li *ngFor="let img of imageFileOrUrls; index as i">
     <div
-      *ngIf="image.type === 'file'"
+      *ngIf="img.type === 'file'"
       class="thumbnail"
-      [style.transform] = "'rotate(' + image.rotate + 'deg)'"
-      [style.backgroundImage]="'url(' + (image.file | objectUrl) + ')' | sanitizer: 'style'">
+      [style.transform] = "'rotate(' + img.rotate + 'deg)'"
+      [style.backgroundImage]="'url(' + (img.file | objectUrl) + ')' | sanitizer: 'style'">
     </div>
     <div
-      *ngIf="image.type === 'url'"
+      *ngIf="img.type === 'url'"
       class="goods_thumb"
-      [style.backgroundImage]="'url(' + (image.url | sanitizer: 'url' ) + ')'">
+      [style.backgroundImage]="'url(' + (img.url | sanitizer: 'url' ) + ')'">
     </div>
     <div>
-      <span>rotate: ({{ image.rotate }})</span>,
+      <span>rotate: ({{ img.rotate }})</span>,
       <button type="button" (click)="onClickMoveImage(i, i - 1)">&#62;</button>
       <button type="button" (click)="onClickMoveImage(i, i + 1)">&#60;</button>
-      <button type="button" (click)="onClickRotateImage(image, 90)">rr</button>
-      <button type="button" (click)="onClickRotateImage(image, -90)">rl</button>
+      <button type="button" (click)="onClickRotateImage(img, 90)">rr</button>
+      <button type="button" (click)="onClickRotateImage(img, -90)">rl</button>
       <button type="button" (click)="onClickDeleteImage(i)">d</button>
     </div>
   </li>
@@ -25,4 +25,4 @@
   type="file"
   accept="image/gif, image/jpeg, image/png"
   multiple
-  (change)="onChangeImage($event)">
+  (change)="onChangeFile($event)">

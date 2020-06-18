@@ -1,7 +1,7 @@
-import { merge } from "rxjs";
+import { merge } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { HttpEventType } from "@angular/common/http";
+import { HttpEventType } from '@angular/common/http';
 import { AuthService, CloudinaryService, GoodsService } from '@app/core/http';
 import { Goods, ImageFile, ImageFileOrUrl, ImageType, NewGoods } from '@app/core/model';
 
@@ -23,53 +23,34 @@ export class GoodsWrite2Component implements OnInit {
   ngOnInit(): void {
   }
 
-  upload(images: ImageFileOrUrl[]) {
-    const uploads$ = images
-      .filter(i => i.type === ImageType.file)
-      .map((i: ImageFile) => this.cloudinaryService.upload(i.file));
-
-    merge(...uploads$)
-      .pipe(
-        tap((e: any) => {
-          if (e.type === HttpEventType.UploadProgress) {
-            console.log('upload-progress', e.loaded, e.total, e);
-            //this.uploadedProgress = Math.round(100 * e.loaded / e.total);
-          }
-        }),
-        tap((e: any) => {
-          if (e.type === HttpEventType.Response) {
-            console.log('response', e.body);
-          }
-        })
-      )
-      .subscribe(
-        (r) => console.log('r', r),
-        (err) => console.log('err', err)
-      );
-  }
-
-  onSubmit({goods, images}: { goods: Partial<Goods>, images: ImageFileOrUrl[] }) {
+  onSubmit({goods, imageFileOrUrls}: {goods: Partial<Goods>, imageFileOrUrls: ImageFileOrUrl[] }) {
     console.log('goods', goods);
-    console.log('images', images);
-    this.upload(images);
+    console.log('imageFileOrUrls', imageFileOrUrls);
+    const imageFiles = imageFileOrUrls.filter(i => i.type === ImageType.file) as ImageFile[];
+
+    this.cloudinaryService.upload(imageFiles)
+      .pipe(
+        tap(r => console.log('rrrr', r))
+      )
+      .subscribe();
 
     return;
-    this.authService.user$
-      .pipe(
-        map(u => ({
-          ...goods,
-          userId: u.id,
-          favoritesCnt: 0,
-          commentCnt: 0,
-          created: GoodsService.serverTimestamp(),
-          updated: GoodsService.serverTimestamp(),
-        } as NewGoods)),
-        switchMap(g => this.goodsService.add(g))
-      )
-      .subscribe(
-        () => alert('ok'),
-        (err) => alert(err)
-      );
+    // this.authService.user$
+    //   .pipe(
+    //     map(u => ({
+    //       ...goods,
+    //       userId: u.id,
+    //       favoritesCnt: 0,
+    //       commentCnt: 0,
+    //       created: GoodsService.serverTimestamp(),
+    //       updated: GoodsService.serverTimestamp(),
+    //     } as NewGoods)),
+    //     switchMap(g => this.goodsService.add(g))
+    //   )
+    //   .subscribe(
+    //     () => alert('ok'),
+    //     (err) => alert(err)
+    //   );
   }
 
 }

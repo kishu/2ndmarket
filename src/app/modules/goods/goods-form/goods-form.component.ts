@@ -4,7 +4,7 @@ import * as faker from 'faker';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Goods, ImageFileOrUrl } from '@app/core/model';
-import { ImagesControlComponent } from "@app/shared/components/images-control/images-control.component";
+import { ImagesControlComponent } from '@app/shared/components/images-control/images-control.component';
 
 @Component({
   selector: 'app-goods-form',
@@ -35,7 +35,7 @@ export class GoodsFormComponent implements OnInit {
   get contactCtl() { return this.goodsForm.get('contact'); }
   get memoCtl() { return this.goodsForm.get('memo'); }
 
-  get images() { return this.imagesCtl?.images }
+  get imageFileOrUrls() { return this.imagesCtl?.imageFileOrUrls; }
   get imagesCount() { return this.imagesCtl?.imagesCount; }
   get imageFilesSize() { return this.imagesCtl?.imageFilesSize; }
 
@@ -46,10 +46,10 @@ export class GoodsFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
-
   onSubmit() {
     // this.submitting = true;
-    this.formSubmit.emit({ goods: this.goodsForm.value, images: this.images });
+    console.log('asdfasdf', this.imageFileOrUrls);
+    this.formSubmit.emit({ goods: this.goodsForm.value, images: this.imageFileOrUrls });
   }
 
 }
