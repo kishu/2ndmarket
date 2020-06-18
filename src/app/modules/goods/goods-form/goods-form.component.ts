@@ -1,8 +1,10 @@
 import range from 'lodash/range';
 import random from 'lodash/random';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import * as faker from 'faker';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Goods } from '@app/core/model';
+import { Goods, ImageFileOrUrl } from '@app/core/model';
+import { ImagesControlComponent } from "@app/shared/components/images-control/images-control.component";
 
 @Component({
   selector: 'app-goods-form',
@@ -10,18 +12,18 @@ import { Goods } from '@app/core/model';
   styleUrls: ['./goods-form.component.scss']
 })
 export class GoodsFormComponent implements OnInit {
-  // tslint:disable-next-line:no-output-native
-  @Output() formSubmit = new EventEmitter<Partial<Goods>>();
+  @Output() formSubmit = new EventEmitter<{ goods: Partial<Goods>, images: ImageFileOrUrl[] } >();
+  @ViewChild(ImagesControlComponent) imagesCtl: ImagesControlComponent;
   submitting = false;
   goodsForm = this.fb.group({
-    name: [''],
-    public: [true],
-    purchased: [''],
-    condition: [''],
-    price: [0],
-    shipping: [''],
-    contact: [''],
-    memo: [''],
+    name: [faker.commerce.productName()],
+    public: [false],
+    purchased: ['week'],
+    condition: ['boxed'],
+    price: [faker.commerce.price()],
+    shipping: ['directly'],
+    contact: [faker.phone.phoneNumber()],
+    memo: [faker.lorem.paragraphs()],
   });
 
   get nameCtl() { return this.goodsForm.get('name'); }
@@ -33,6 +35,10 @@ export class GoodsFormComponent implements OnInit {
   get contactCtl() { return this.goodsForm.get('contact'); }
   get memoCtl() { return this.goodsForm.get('memo'); }
 
+  get images() { return this.imagesCtl?.images }
+  get imagesCount() { return this.imagesCtl?.imagesCount; }
+  get imageFilesSize() { return this.imagesCtl?.imageFilesSize; }
+
   constructor(
     private fb: FormBuilder
   ) { }
@@ -40,10 +46,10 @@ export class GoodsFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
   onSubmit() {
-    this.submitting = true;
-    const images = range(random(1, 7)).map(() => 'https://source.unsplash.com/random');
-    this.formSubmit.emit({ ...this.goodsForm.value, images });
+    // this.submitting = true;
+    this.formSubmit.emit({ goods: this.goodsForm.value, images: this.images });
   }
 
 }

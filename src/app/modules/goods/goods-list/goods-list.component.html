@@ -2,7 +2,7 @@
   <ul >
     <li *ngFor="let goods of goodsList">
       <p>
-        title: {{ goods.title }} <br>
+        name: {{ goods.name }} <br>
         public: {{ goods.public }} <br>
         category: {{ goods.category }} <br>
         purchaseTime: {{ goods.purchaseTime }} <br>
@@ -17,6 +17,7 @@
         created: {{ goods.created }} <br>
         updated: {{ goods.updated }}
       </p>
+      <p>----------</p>
     </li>
   </ul>
 </ng-container>

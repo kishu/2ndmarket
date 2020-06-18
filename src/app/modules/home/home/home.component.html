@@ -1,1 +1,17 @@
-<p>home works!</p>
+<h2>
+  hello {{ (user$ | async)?.displayName }}<br>
+  ----
+</h2>
+<ul>
+  <li><a [routerLink]="['goods']">goods</a></li>
+  <li><a [routerLink]="['goods/write']">goods/write</a></li>
+  <li><a [routerLink]="['goods/write2']">goods/write2</a></li>
+  <li>&nbsp;</li>
+  <li><a [routerLink]="['groups']">groups</a></li>
+  <li><a [routerLink]="['groups/add']">groups/add</a></li>
+  <li>&nbsp;</li>
+  <ng-container *ngIf="(user$ | async) as user">
+    <li *ngIf="user === null"><a [routerLink]="['sign-in']">sign-in</a></li>
+    <li *ngIf="user !== null"><a (click)="onClickSignOut($event)">sign-out</a></li>
+  </ng-container>
+</ul>

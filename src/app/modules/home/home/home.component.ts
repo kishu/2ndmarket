@@ -8,6 +8,7 @@ import { AuthService } from '@app/core/http/auth.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  user$ = this.authService.user$;
 
   constructor(
     private router: Router,
@@ -18,6 +19,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  onClickSignOut(e: Event) {
+    e.preventDefault();
+    this.authService.signOut();
   }
 
 }
