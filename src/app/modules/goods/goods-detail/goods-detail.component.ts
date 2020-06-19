@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from '@angular/router';
+import { GoodsService, GoodsCacheService } from '@app/core/http';
+import { Observable, of } from 'rxjs';
+import { Goods } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-detail',
@@ -7,11 +10,16 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ['./goods-detail.component.scss']
 })
 export class GoodsDetailComponent implements OnInit {
-
+  goods$: Observable<Goods>;
   constructor(
-    private activatedRoute: ActivatedRoute
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private goodsService: GoodsService,
+    private goodsCacheService: GoodsCacheService
   ) {
-    console.log(this.activatedRoute.snapshot.paramMap.get('goodsId'));
+    const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
+    const cachedGoods = goodsCacheService.getGoods(goodsId);
+    this.goods$ = cachedGoods ? of(cachedGoods) : this.goodsService.get(goodsId);
   }
 
   ngOnInit(): void {

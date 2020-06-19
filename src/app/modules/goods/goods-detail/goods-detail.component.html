@@ -1,1 +1,10 @@
-<p>goods-detail works!</p>
+<ng-container *ngIf="goods$ | async as goods ">
+  <h2>{{ goods.name }}</h2>
+  <ul>
+    <li *ngFor="let image of goods.images" style="float:left"><img [src]="image" width="100" alt=""></li>
+  </ul>
+  <div style="clear:both"></div>
+  <div>{{ goods.price }}</div>
+  <div>{{ goods.memo }}</div>
+  <div>{{ goods.contact }}</div>
+</ng-container>

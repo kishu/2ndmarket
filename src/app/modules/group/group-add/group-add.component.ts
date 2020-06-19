@@ -72,7 +72,6 @@ export class GroupAddComponent implements OnInit {
       // this is just tricky code.
       this.ngZone.run(() => {
         this.code = code;
-        console.log('code', code);
         this.submitting = false;
         this.step$.next(GroupAddStep.verify);
       });

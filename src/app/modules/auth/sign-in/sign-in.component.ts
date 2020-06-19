@@ -18,7 +18,6 @@ export class SignInComponent implements OnInit {
     this.authService
       .getRedirectResult()
       .then(c => {
-        console.log(c);
         if (c && c.additionalUserInfo?.isNewUser) {
           this.router.navigate(['group/add']);
         }

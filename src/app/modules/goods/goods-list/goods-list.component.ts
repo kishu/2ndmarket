@@ -1,7 +1,9 @@
+import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { GoodsService } from '@app/core/http/goods.service';
-import { tap } from "rxjs/operators";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, GoodsService, GoodsCacheService, GroupsService } from '@app/core/http';
+import { Goods } from '@app/core/model';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-goods-list',
@@ -10,19 +12,30 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 export class GoodsListComponent implements OnInit {
 
-  goodsList$: any;
+  goodsList$: Observable<Goods[]>;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private goodsService: GoodsService
+    private authService: AuthService,
+    private groupService: GroupsService,
+    private goodsService: GoodsService,
+    private goodsCacheService: GoodsCacheService
   ) {
-    this.router.events.subscribe(e => console.log(e));
-    // this.activatedRoute.url.subscribe(r => console.log('asdfasdfasdf', r));
-    this.goodsList$ = this.goodsService.getAll([['updated', 'desc']]).pipe(tap(r => console.log(r)))
+    this.goodsList$ = this.authService.group$
+      .pipe(
+        map(g => this.groupService.getDocRef(g.id)),
+        switchMap(ref => this.goodsService.getAllByGroupRef(ref))
+      );
   }
 
   ngOnInit(): void {
+  }
+
+  onClickGoods(e: Event, goods: Goods) {
+    e.preventDefault();
+    this.goodsCacheService.setGoods(goods);
+    this.router.navigate(['goods', goods.id]);
   }
 
 }

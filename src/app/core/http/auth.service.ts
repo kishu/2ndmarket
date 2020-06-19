@@ -68,53 +68,8 @@ export class AuthService {
     return this.afAuth.signInWithRedirect(authProvider);
   }
 
-  signInWithPopup(provider: string) {
-    let authProvider;
-    switch (provider) {
-      case AuthProvider.google:
-        authProvider = new auth.GoogleAuthProvider();
-        break;
-      case AuthProvider.facebook:
-        authProvider = new auth.FacebookAuthProvider();
-        break;
-      case AuthProvider.twitter:
-        authProvider = new auth.TwitterAuthProvider();
-        break;
-    }
-    return this.afAuth.signInWithPopup(authProvider);
-  }
-
   getRedirectResult() {
     return this.afAuth.getRedirectResult();
-  }
-
-  createUserWithEmailAndPassword(email: string, password: string) {
-    return this.afAuth.createUserWithEmailAndPassword(email, password);
-  }
-
-  sendEmailVerification() {
-    return this.afAuth.currentUser.then(u => u.sendEmailVerification());
-  }
-
-  sendSignInLinkToEmail(email: string, signInEmailId: string) {
-    // https://firebase.google.com/docs/auth/web/email-link-auth
-    const settings = {
-      url: `${window.location.origin}/sign-in-result?ref=${signInEmailId}`,
-      handleCodeInApp: true
-    };
-    console.log('settings', settings);
-    return this.afAuth.sendSignInLinkToEmail(email, settings).catch(err => alert(err));
-  }
-
-  signInWithEmailLink(signInEmail: string, signInEmailId: string) {
-    console.log(`${window.location.origin}/sign-in-result?ref=${signInEmailId}`);
-    return this.afAuth.signInWithEmailLink(signInEmail, `${window.location.origin}/sign-in-result?ref=${signInEmailId}`);
-    // const isSignInWithEmilLink = this.afAuth.isSignInWithEmailLink(window.location.href);
-    // if (isSignInWithEmilLink) {
-    //   return this.afAuth.signInWithEmailLink(signInEmail, window.location.href).catch(err => alert(err));
-    // } else {
-    //   return Promise.reject();
-    // }
   }
 
   signOut() {
