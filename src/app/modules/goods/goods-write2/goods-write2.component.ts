@@ -1,8 +1,8 @@
 import { merge } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { HttpEventType } from '@angular/common/http';
 import { AuthService, CloudinaryService, GoodsService } from '@app/core/http';
+import { UploadProgress } from "@app/core/http/cloudinary.service";
 import { Goods, ImageFile, ImageFileOrUrl, ImageType, NewGoods } from '@app/core/model';
 
 @Component({
@@ -30,7 +30,13 @@ export class GoodsWrite2Component implements OnInit {
 
     this.cloudinaryService.upload(imageFiles)
       .pipe(
-        tap(r => console.log('rrrr', r))
+        tap(e => {
+          if (e.type === 'progress') {
+            console.log('progress', e.data);
+          } else if (e.type === 'complete') {
+            console.log('complete', e.data);
+          }
+        })
       )
       .subscribe();
 

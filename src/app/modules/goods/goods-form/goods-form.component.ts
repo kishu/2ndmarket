@@ -12,7 +12,7 @@ import { ImagesControlComponent } from '@app/shared/components/images-control/im
   styleUrls: ['./goods-form.component.scss']
 })
 export class GoodsFormComponent implements OnInit {
-  @Output() formSubmit = new EventEmitter<{ goods: Partial<Goods>, images: ImageFileOrUrl[] } >();
+  @Output() formSubmit = new EventEmitter<{ goods: Partial<Goods>,imageFileOrUrls: ImageFileOrUrl[] } >();
   @ViewChild(ImagesControlComponent) imagesCtl: ImagesControlComponent;
   submitting = false;
   goodsForm = this.fb.group({
@@ -48,8 +48,8 @@ export class GoodsFormComponent implements OnInit {
 
   onSubmit() {
     // this.submitting = true;
-    console.log('asdfasdf', this.imageFileOrUrls);
-    this.formSubmit.emit({ goods: this.goodsForm.value, images: this.imageFileOrUrls });
+    const goods = this.goodsForm.value as Goods;
+    this.formSubmit.emit({ goods, imageFileOrUrls: this.imageFileOrUrls });
   }
 
 }

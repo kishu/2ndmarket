@@ -1,16 +1,24 @@
 import * as sha1 from 'sha1';
-import { merge, Observable, Subject } from 'rxjs';
+import { merge, Observable, Subject, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { ImageFile } from '@app/core/model';
 import { tap } from 'rxjs/operators';
+
+// https://cloudinary.com/documentation/upload_images#uploading_with_a_direct_call_to_the_rest_api
+// https://cloudinary.com/documentation/image_upload_api_reference
+
+export interface UploadProgress {
+  type: 'progress' | 'response' | 'complete',
+  data: any
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CloudinaryService {
-  // https://cloudinary.com/documentation/upload_images#uploading_with_a_direct_call_to_the_rest_api
+
   protected httpRequestOptions = {
     headers: new HttpHeaders({
       'X-Requested-With': 'XMLHttpRequest',
@@ -22,49 +30,67 @@ export class CloudinaryService {
   }
 
   upload(imageFiles: ImageFile[]): Subject<any> {
-    console.log(imageFiles);
     let uploaded = 0;
-    const upload$ = new Subject<any>();
-    merge(imageFiles.map((i, idx) => this.getUploadRequest(i.file, i.rotate, { order: i })))
+
+    const uploadedUrls = Array(imageFiles.length);
+    const uploadProgress$ = new Subject<UploadProgress>();
+    const uploadRequests = imageFiles.map(img => this.getUploadRequest(img.file, img.rotate));
+
+    const upload$ = merge(...uploadRequests)
       .pipe(
-        tap((e: any) => {
+        tap(e => {
           if (e.type === HttpEventType.UploadProgress) {
-            console.log('upload-progress222', e.loaded, e.total, e);
-            upload$.next(e);
-            // this.uploadedProgress = Math.round(100 * e.loaded / e.total);
-          } else if (e.type === HttpEventType.Response) {
-            uploaded = uploaded + 1;
-            console.log('upload-response', uploaded, e);
-            upload$.next(e);
+            const uploadProgress: UploadProgress = {
+              type: 'progress',
+              data : { loaded: e.loaded, total: e.total }
+            };
+            uploadProgress$.next(uploadProgress);
+          }
+        }),
+        tap(e => {
+          if (e.type === HttpEventType.Response) {
+            const imageFileIdx = imageFiles.findIndex(img => {
+              return img.file.name.startsWith(e.body.original_filename) &&
+                 img.file.size === e.body.bytes;
+            });
+            if (imageFileIdx === -1) {
+              throwError('no image file index');
+            } else {
+              uploadedUrls[imageFileIdx] = e.body.eager[0].secure_url;
+            }
           }
         })
       )
-    .subscribe(
-      (r) => {
-        if (uploaded === imageFiles.length) {
-          // console.log('r', r, uploaded, imageFiles.length);
-        }
-      },
-      (err) => console.log('err', err)
-    );
-    return upload$;
+      .subscribe(
+        e => {
+          if (e.type === HttpEventType.Response &&
+            ++uploaded === uploadRequests.length) {
+            const uploadProgress: UploadProgress = {
+              type: 'complete',
+              data: uploadedUrls
+            };
+            uploadProgress$.next(uploadProgress);
+            uploadProgress$.complete();
+          }
+        },
+        () => upload$.unsubscribe()
+      );
+    return uploadProgress$;
   }
 
   // https://cloudinary.com/documentation/upload_images#generating_authentication_signatures
-  getUploadRequest(file: File, rotate = 0, context = {}): Observable<HttpEvent<any>> {
+  getUploadRequest(file: File, rotate = 0): Observable<HttpEvent<any>> {
     const cloudinary = environment.cloudinary;
     const eager = `f_auto,q_auto,w_720,a_${rotate},dpr_2.0,c_limit`;
-    const contextStr = JSON.stringify(context);
     const eagerAsync = true;
     const timestamp = new Date().getTime();
-    const signature = `context=${contextStr}&eager=${eager}&eager_async=${eagerAsync}&folder=${cloudinary.folder}&timestamp=${timestamp}${cloudinary.apiSecret}`; // Sort all the parameters in alphabetical order.
+    const signature = `eager=${eager}&eager_async=${eagerAsync}&folder=${cloudinary.folder}&timestamp=${timestamp}${cloudinary.apiSecret}`; // Sort all the parameters in alphabetical order.
     const fd = new FormData ();
     fd.set('api_key', cloudinary.apiKey);
     fd.set('eager', eager);
     fd.set('eager_async', `${eagerAsync}`);
     fd.set('file', file);
     fd.set('folder', cloudinary.folder);
-    fd.set('context', contextStr);
     fd.set('timestamp', `${timestamp}`);
     fd.set('signature', sha1(signature));
     const request = new HttpRequest('POST', cloudinary.url, fd, this.httpRequestOptions);
