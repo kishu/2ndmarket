@@ -1,3 +1,4 @@
-<h2> goods write </h2>
-
-<app-goods-form (formSubmit)="onSubmit($event)"></app-goods-form>
+<app-goods-form [submitting]="submitting" (formSubmit)="onSubmit($event)"></app-goods-form>
+<div *ngIf="submitting && uploadProgress">
+  {{ uploadProgress.loaded }} / {{ uploadProgress.total }}
+</div>

@@ -49,8 +49,9 @@ export interface Goods {
   shipping: GoodsShipping;
   images: string[]; // url
   contact: string;
+  memo: string;
   soldOut: boolean;
-  favoritesCnt: number;
+  favoriteUserIds: string[];
   commentCnt: number;
   created: firestore.Timestamp;
   updated: firestore.Timestamp;

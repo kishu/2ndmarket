@@ -6,6 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { GroupsService } from '@app/core/http/groups.service';
 import { User } from '@app/core/model';
 import { Group } from '@app/core/model';
+import { UserGroupsService } from "@app/core/http/user-groups.service";
 
 enum AuthProvider {
   google = 'google',
@@ -25,13 +26,14 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
+    private userGroupsService: UserGroupsService,
     private groupService: GroupsService
   ) {
     const user$ = this.afAuth.user.pipe(
       map(u => {
         if (u) {
-          const { uid, displayName, photoURL, email, emailVerified } = u;
-          return { id: uid, displayName, photoURL, email, emailVerified };
+          const { uid, displayName, photoURL, email } = u;
+          return { id: uid, displayName, photoURL, email };
         } else {
           return null;
         }
@@ -42,7 +44,7 @@ export class AuthService {
 
     user$.pipe(
       filter(u => !!u),
-      switchMap(u => this.groupService.getByDomain(u.email.split('@')[1]))
+      switchMap(u => this.groupService.get('0GdquHWyuHiuEeQEm9eF'))
     ).subscribe(g => this._group$.next(g));
 
     user$.pipe(

@@ -1,6 +1,5 @@
-import { uniqueId } from 'lodash-es';
 import * as arrayMove from 'array-move';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ImageType, ImageFile, ImageUrl, ImageFileOrUrl } from '@app/core/model';
 
 @Component({
@@ -27,13 +26,16 @@ export class ImagesControlComponent implements OnInit {
   }
 
   onChangeFile(e: Event) {
-    const fileList = (e.target as HTMLInputElement).files;
-    this.imageFileOrUrls = Array.from(fileList).map(file => ({
-      type: ImageType.file,
-      file,
-      rotate: 0
-    }));
+    const target = e.target as HTMLInputElement;
+    const addedImageFileOrUrls = Array.from(target.files)
+      .map(file => ({
+        type: ImageType.file,
+        file,
+        rotate: 0
+      }));
+    this.imageFileOrUrls.push(...addedImageFileOrUrls);
     this.updateImagesCountAndSize();
+    target.value = '';
   }
 
   onClickRotateImage(image: ImageFileOrUrl, degree: number) {

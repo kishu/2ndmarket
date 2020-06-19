@@ -1,8 +1,7 @@
-import { merge } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Router } from "@angular/router";
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, CloudinaryService, GoodsService } from '@app/core/http';
-import { UploadProgress } from "@app/core/http/cloudinary.service";
+import { AuthService, CloudinaryService, GoodsService, GroupsService } from '@app/core/http';
 import { Goods, ImageFile, ImageFileOrUrl, ImageType, NewGoods } from '@app/core/model';
 
 @Component({
@@ -11,11 +10,12 @@ import { Goods, ImageFile, ImageFileOrUrl, ImageType, NewGoods } from '@app/core
   styleUrls: ['./goods-write2.component.scss']
 })
 export class GoodsWrite2Component implements OnInit {
-
-  uploadedProgress = 0;
-
+  submitting = false;
+  uploadProgress: { loaded: number, total: number };
   constructor(
+    private router: Router,
     private authService: AuthService,
+    private groupService: GroupsService,
     private goodsService: GoodsService,
     private cloudinaryService: CloudinaryService
   ) { }
@@ -24,39 +24,41 @@ export class GoodsWrite2Component implements OnInit {
   }
 
   onSubmit({goods, imageFileOrUrls}: {goods: Partial<Goods>, imageFileOrUrls: ImageFileOrUrl[] }) {
-    console.log('goods', goods);
-    console.log('imageFileOrUrls', imageFileOrUrls);
+    if (this.submitting) {
+      return;
+    }
+
+    this.submitting = true;
     const imageFiles = imageFileOrUrls.filter(i => i.type === ImageType.file) as ImageFile[];
+    const [uploadProgress$, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
 
-    this.cloudinaryService.upload(imageFiles)
+    uploadProgress$.subscribe(v => {
+      this.uploadProgress = v;
+    });
+
+    uploadComplete$
       .pipe(
-        tap(e => {
-          if (e.type === 'progress') {
-            console.log('progress', e.data);
-          } else if (e.type === 'complete') {
-            console.log('complete', e.data);
-          }
-        })
+        withLatestFrom(this.authService.user$, this.authService.group$),
+        map(([uploadedUrls, user, group]) => ({
+          ...goods,
+          userId: user.id,
+          groupRef: this.groupService.getDocRef(group.id),
+          images: uploadedUrls,
+          favoriteUserIds: [],
+          commentCnt: 0,
+          created: GoodsService.serverTimestamp(),
+          updated: GoodsService.serverTimestamp()
+        } as NewGoods)),
+        switchMap(g => this.goodsService.add(g))
       )
-      .subscribe();
-
-    return;
-    // this.authService.user$
-    //   .pipe(
-    //     map(u => ({
-    //       ...goods,
-    //       userId: u.id,
-    //       favoritesCnt: 0,
-    //       commentCnt: 0,
-    //       created: GoodsService.serverTimestamp(),
-    //       updated: GoodsService.serverTimestamp(),
-    //     } as NewGoods)),
-    //     switchMap(g => this.goodsService.add(g))
-    //   )
-    //   .subscribe(
-    //     () => alert('ok'),
-    //     (err) => alert(err)
-    //   );
+      .subscribe(
+        () => {
+          alert('ok');
+          this.submitting = false;
+          // this.router.navigate(['goods']);
+        },
+        err => alert(err)
+      );
   }
 
 }
