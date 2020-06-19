@@ -1,4 +1,5 @@
 import { firestore } from 'firebase/app';
+import { GroupRef } from './group';
 
 /*
  * deprecated
@@ -39,6 +40,7 @@ export enum GoodsShipping {
 export interface Goods {
   id: string;
   userId: string;
+  groupRef: GroupRef;
   name: string;
   public: boolean;
   purchased: GoodsPurchased;
@@ -47,6 +49,7 @@ export interface Goods {
   shipping: GoodsShipping;
   images: string[]; // url
   contact: string;
+  soldOut: boolean;
   favoritesCnt: number;
   commentCnt: number;
   created: firestore.Timestamp;
