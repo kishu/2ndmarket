@@ -7,4 +7,12 @@
   <div>{{ goods.price }}</div>
   <div>{{ goods.memo }}</div>
   <div>{{ goods.contact }}</div>
+  <br>
+  <br>
+  <app-goods-comment-list></app-goods-comment-list>
+  <br>
+  <app-goods-comment-form *ngIf="user$ | async" [goodsId]="goods.id"></app-goods-comment-form>
 </ng-container>
+
+
+

@@ -7,6 +7,11 @@ service cloud.firestore {
     match /goods/{goods} {
       allow read, write: if true;
     }
+    match /goodsComments/{goodsComments} {
+      allow read: if true;
+      allow create: if request.auth.uid != null;
+      allow delete: if request.auth.uid == resource.data.userId;
+    }
     match /groups/{group} {
       allow read: if true;
       allow write: if false;

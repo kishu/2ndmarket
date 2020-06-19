@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, GoodsCacheService, GroupsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
-import { map, switchMap } from 'rxjs/operators';
+import { first, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-goods-list',
@@ -24,6 +24,7 @@ export class GoodsListComponent implements OnInit {
   ) {
     this.goodsList$ = this.authService.group$
       .pipe(
+        first(),
         map(g => this.groupService.getDocRef(g.id)),
         switchMap(ref => this.goodsService.getAllByGroupRef(ref))
       );

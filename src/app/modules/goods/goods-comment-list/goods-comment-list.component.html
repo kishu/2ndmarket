@@ -1,0 +1,11 @@
+<ng-container *ngIf="commentList$ | async as commentList">
+  <ul>
+    <li *ngFor="let comment of commentList">
+      <div>
+        {{ comment.body }}
+        {{ comment.created | fsTimestamp | formatDistanceToNow }}
+        <button *ngIf="canDelete(comment.userId)" (click)="onClickDelete(comment)">삭제</button>
+      </div>
+    </li>
+  </ul>
+</ng-container>
