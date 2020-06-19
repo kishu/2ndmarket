@@ -22,9 +22,10 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   @apply block w-full py-2 px-4 mb-2;
-  @apply border rounded-none border-gray-200 bg-gray-200 text-gray-700;
+  @apply border rounded-none border-white bg-white text-gray-700;
   @apply text-sm appearance-none;
   &:focus {
     @apply bg-white border-gray-500;
@@ -42,4 +43,8 @@ select {
     -webkit-line-clamp: 2; /* 라인 수 */
     -webkit-box-orient: vertical;
   }
+}
+
+.soldout {
+  opacity: 0.3;
 }

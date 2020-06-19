@@ -1,27 +1,19 @@
 <ng-container *ngIf="(goodsList$ | async) as goodsList">
-  <ul class="w-full min-w-sm max-w-xl mx-auto">
+  <ul class="w-full max-w-xl mx-auto">
     <li
-      class="goodsItem h-32 md:h-40"
-      *ngFor="let goods of goodsList">
-      <div class="w-5/12 bg-gray-200 flex">
+      class="goodsItem flex-col md:flex-row md:h-40 relative"
+      [ngClass]="{'soldout': (i+1)%3 === 0}"
+      *ngFor="let goods of goodsList; index as i">
+      <div
+        class="md:w-5/12 h-40 md:h-auto bg-gray-200 flex">
         <ng-container *ngFor="let image of goods.images; first as isFirst">
           <img [src]="image" class="object-cover" *ngIf="isFirst">
         </ng-container>
       </div>
-      <div class="relative w-7/12 px-4 pt-3 pb-16">
-        <h3 class="goodsName">
-          {{ goods.name }}
-          {{ goods.name }}
-          {{ goods.name }}
-          {{ goods.name }}
-          {{ goods.name }}
-          {{ goods.name }}
-          {{ goods.name }}
-          {{ goods.name }}
-          {{ goods.name }}
-        </h3>
+      <div class="relative md:w-7/12 px-4 py-3 md:pb-16">
+        <h3 class="goodsName">{{ goods.name }} {{ goods.name }} {{ goods.name }}</h3>
         <div class="font-bold">{{ goods.price | currency:'KRW' }}</div>
-        <span class="absolute right-0 bottom-0 px-4 py-3 text-sm text-gray-500">
+        <span class="absolute right-0 bottom-0 px-4 py-3 text-sm leading-relaxed text-gray-500">
           댓글 {{ goods.commentCnt }}개 / {{ goods.created | fsTimestamp | formatDistanceToNow }} 전
         </span>
       </div>
