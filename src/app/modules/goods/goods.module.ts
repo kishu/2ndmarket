@@ -9,6 +9,7 @@ import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsFormComponent } from './goods-form/goods-form.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
 import { GoodsWrite2Component } from './goods-write2/goods-write2.component';
+import { GoodsEditComponent } from './goods-edit/goods-edit.component';
 import { GoodsCommentListComponent } from './goods-comment-list/goods-comment-list.component';
 import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-form.component';
 
@@ -16,9 +17,10 @@ import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-fo
   declarations: [
     GoodsListComponent,
     GoodsDetailComponent,
+    GoodsFormComponent,
     GoodsWriteComponent,
     GoodsWrite2Component,
-    GoodsFormComponent,
+    GoodsEditComponent,
     GoodsCommentListComponent,
     GoodsCommentFormComponent
   ],

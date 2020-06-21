@@ -1,10 +1,10 @@
 import * as sha1 from 'sha1';
 import { merge, Observable, ReplaySubject, Subject, throwError } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
-import { environment } from '@environments/environment';
-import { ImageFile } from '@app/core/model';
 import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { environment } from '@environments/environment';
+import { ImageFileOrUrl, ImageType } from '@app/core/model';
 
 // https://cloudinary.com/documentation/upload_images#uploading_with_a_direct_call_to_the_rest_api
 // https://cloudinary.com/documentation/image_upload_api_reference
@@ -24,14 +24,20 @@ export class CloudinaryService {
   constructor(private http: HttpClient) {
   }
 
-  upload(imageFiles: ImageFile[]): [Subject<any>, Subject<any>] {
-    let uploaded = 0;
-
-    const uploadedUrls = Array(imageFiles.length);
+  upload(imageFileOrUrls: ImageFileOrUrl[]): [Subject<any>, Subject<any>] {
     const uploadProgress$ = new ReplaySubject<any>();
     const uploadComplete$ = new ReplaySubject<any>();
 
-    const uploadRequests = imageFiles.map(img => this.getUploadRequest(img.file, img.rotate));
+    // if (imageFileOrUrls.length === 0) {
+    //   uploadComplete$.next([]);
+    //   uploadProgress$.complete();
+    //   uploadComplete$.complete();
+    //   return [uploadProgress$, uploadComplete$];
+    // }
+
+    let uploaded = 0;
+    // const uploadedUrls = Array(imageFiles.length);
+    const uploadRequests = imageFileOrUrls.filter(i => i.type === ImageType.file);
 
     merge(...uploadRequests)
       .pipe(
@@ -73,9 +79,9 @@ export class CloudinaryService {
   }
 
   // https://cloudinary.com/documentation/upload_images#generating_authentication_signatures
-  getUploadRequest(file: File, rotate = 0): Observable<HttpEvent<any>> {
+  getUploadRequest(imageFile: ImageFileOrUrl): Observable<HttpEvent<any>> {
     const cloudinary = environment.cloudinary;
-    const eager = `f_auto,q_auto,w_375,a_${rotate},dpr_3.0,c_limit`;
+    const eager = `f_auto,q_auto,w_375,a_${imageFile.rotate},dpr_3.0,c_limit`;
     const eagerAsync = true;
     const timestamp = new Date().getTime();
     const signature = `eager=${eager}&eager_async=${eagerAsync}&folder=${cloudinary.folder}&timestamp=${timestamp}${cloudinary.apiSecret}`; // Sort all the parameters in alphabetical order.
@@ -83,7 +89,7 @@ export class CloudinaryService {
     fd.set('api_key', cloudinary.apiKey);
     fd.set('eager', eager);
     fd.set('eager_async', `${eagerAsync}`);
-    fd.set('file', file);
+    fd.set('file', imageFile.value);
     fd.set('folder', cloudinary.folder);
     fd.set('timestamp', `${timestamp}`);
     fd.set('signature', sha1(signature));

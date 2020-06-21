@@ -1,3 +1,4 @@
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Goods } from '@app/core/model';
 
@@ -13,8 +14,8 @@ export class GoodsCacheService {
     this.goods = goods;
   }
 
-  getGoods(goodsId: string): Goods | null {
-    return this.goods?.id === goodsId ? this.goods : null;
+  getGoods(goodsId: string): Observable<Goods | null> {
+    return this.goods?.id === goodsId ? of(this.goods) : of(null);
   }
 
   removeGoods() {

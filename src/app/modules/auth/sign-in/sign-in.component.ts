@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/http';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent implements OnInit {
+  redirect$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private router: Router,
@@ -18,8 +20,12 @@ export class SignInComponent implements OnInit {
     this.authService
       .getRedirectResult()
       .then(c => {
-        if (c && c.additionalUserInfo?.isNewUser) {
-          this.router.navigate(['group/add']);
+        if (c?.user) {
+          c.additionalUserInfo?.isNewUser ?
+            this.router.navigate(['/groups/add']) :
+            this.router.navigate(['']);
+        } else {
+          this.redirect$.next(false);
         }
       })
       .catch(err => alert(err));
@@ -30,11 +36,6 @@ export class SignInComponent implements OnInit {
     this.authService
       .signInWithRedirect(provider)
       .catch(err => alert(err));
-  }
-
-  onClickSignOut(e: Event) {
-    e.preventDefault();
-    this.authService.signOut().then(() => alert('ok'));
   }
 
 }

@@ -3,16 +3,8 @@ export enum ImageType {
   'url' = 'url'
 }
 
-export interface ImageFile {
+export interface ImageFileOrUrl {
   type: ImageType;
-  file: File;
+  value: File | string;
   rotate: number;
 }
-
-export interface ImageUrl {
-  type: ImageType;
-  url: string;
-  rotate: number;
-}
-
-export type ImageFileOrUrl = (ImageFile | ImageUrl);

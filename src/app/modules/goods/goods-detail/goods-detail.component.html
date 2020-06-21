@@ -9,6 +9,9 @@
   <div>{{ goods.contact }}</div>
   <br>
   <br>
+  <a *ngIf="canEdit" [routerLink]="['edit']">수정</a>
+  <br>
+  <br>
   <app-goods-comment-list></app-goods-comment-list>
   <br>
   <app-goods-comment-form *ngIf="user$ | async" [goodsId]="goods.id"></app-goods-comment-form>

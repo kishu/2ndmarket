@@ -42,7 +42,7 @@ export interface Goods {
   userId: string;
   groupRef: GroupRef;
   name: string;
-  public: boolean;
+  shared: boolean;
   purchased: GoodsPurchased;
   condition: GoodsCondition;
   price: number;
@@ -52,7 +52,7 @@ export interface Goods {
   memo: string;
   soldOut: boolean;
   favoriteUserIds: string[];
-  commentCnt: number;
+  commentsCnt: number;
   created: firestore.Timestamp;
   updated: firestore.Timestamp;
 }

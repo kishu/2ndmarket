@@ -1,0 +1,3 @@
+<ng-container *ngIf="(goods$ | async) as goods">
+  <app-goods-form [goods]="goods" [submitting]="submitting" (formSubmit)="onSubmit($event)"></app-goods-form>
+</ng-container>

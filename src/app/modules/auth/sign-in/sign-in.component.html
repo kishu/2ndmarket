@@ -1,8 +1,7 @@
 <h2>로그인</h2>
-<ul>
+<div>----</div>
+<ul *ngIf="!(redirect$ | async)">
   <li><a href="#" (click)="onClickSignIn($event, 'google')">google</a></li>
   <li><a href="#" (click)="onClickSignIn($event, 'facebook')">facebook</a></li>
   <li><a href="#" (click)="onClickSignIn($event, 'twitter')">twitter</a></li>
-  <li>&nbsp;</li>
-  <li><a href="#" (click)="onClickSignOut($event)">SignOut</a></li>
 </ul>

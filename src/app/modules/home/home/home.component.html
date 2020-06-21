@@ -10,6 +10,8 @@
   <li><a [routerLink]="['groups']">groups</a></li>
   <li><a [routerLink]="['groups/add']">groups/add</a></li>
   <li>&nbsp;</li>
-  <li><a [routerLink]="['sign-in']">sign-in</a></li>
-  <li *ngIf="(user$ | async) as user"><a (click)="onClickSignOut($event)">sign-out</a></li>
+  <ng-container *ngIf="(user$ | async) as user">
+    <li *ngIf="!user"><a [routerLink]="['sign-in']">sign-in</a></li>
+    <li *ngIf="user"><a (click)="onClickSignOut($event)">sign-out</a></li>
+  </ng-container>
 </ul>

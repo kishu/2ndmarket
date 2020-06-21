@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
 import { NewComment } from '@app/core/model';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-goods-comment-form',
@@ -38,11 +38,11 @@ export class GoodsCommentFormComponent implements OnInit {
           ...this.commentForm.value,
           created: GoodsCommentsService.serverTimestamp()
         } as NewComment)),
+        tap(() => this.commentForm.reset()),
         switchMap(c => this.goodsCommentsService.add(c))
       )
       .subscribe(
         () => {
-          this.commentForm.reset();
           this.submitting = false;
         },
         (err) => alert(err)

@@ -1,6 +1,6 @@
 import * as arrayMove from 'array-move';
 import { Component, Input, OnInit } from '@angular/core';
-import { ImageType, ImageFile, ImageUrl, ImageFileOrUrl } from '@app/core/model';
+import { ImageFileOrUrl, ImageType } from '@app/core/model';
 
 @Component({
   selector: 'app-images-control',
@@ -9,48 +9,50 @@ import { ImageType, ImageFile, ImageUrl, ImageFileOrUrl } from '@app/core/model'
 })
 export class ImagesControlComponent implements OnInit {
   @Input() maxlength = 10;
+  @Input() set imageUrls(urls: string[]) {
+    this.imageFileOrUrls = this.imageFileOrUrls.concat(
+      urls.map(u => ({ type: ImageType.url, value: u, rotate: 0 } as ImageFileOrUrl))
+    );
+  }
+
   imageFileOrUrls: ImageFileOrUrl[] = [];
-  imagesCount = 0;
-  imageFilesSize = 0;
+
+  // get imagesCount() { return this.fileOrUrls.length; }
+  // get imageFilesSize() {
+  //   return this.fileOrUrls
+  //     .filter(i => i instanceof File)
+  //     .reduce((a, f: File) => (a + f.size), 0);
+  // }
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  protected updateImagesCountAndSize() {
-    this.imagesCount = this.imageFileOrUrls.length;
-    this.imageFilesSize = this.imageFileOrUrls
-      .filter(i => i.type === ImageType.file )
-      .reduce((a, c) => (a + (c as ImageFile).file.size), 0);
-  }
-
   onChangeFile(e: Event) {
     const target = e.target as HTMLInputElement;
-    const addedImageFileOrUrls = Array.from(target.files)
-      .map(file => ({
-        type: ImageType.file,
-        file,
-        rotate: 0
-      }));
-    this.imageFileOrUrls.push(...addedImageFileOrUrls);
-    this.updateImagesCountAndSize();
+    this.imageFileOrUrls = this.imageFileOrUrls.concat(
+      Array.from(target.files).map(f => ({ type: ImageType.file, value: f, rotate: 0 } as ImageFileOrUrl))
+    );
     target.value = '';
   }
 
-  onClickRotateImage(image: ImageFileOrUrl, degree: number) {
-    image.rotate = (image.rotate + degree) % 360;
-  }
-
   onClickMoveImage(from: number, to: number) {
-    if (to > 0 && to < this.imageFileOrUrls.length) {
+    if (
+      from !== to &&
+      (from >= 0 && from < this.imageFileOrUrls.length) &&
+      (to >= 0 && to < this.imageFileOrUrls.length)
+    ) {
       this.imageFileOrUrls = arrayMove(this.imageFileOrUrls, from, to);
     }
   }
 
-  onClickDeleteImage(idx: number) {
-    this.imageFileOrUrls = this.imageFileOrUrls.filter((image, i) => i !== idx );
-    this.updateImagesCountAndSize();
+  onClickRotateImage(imageFileOrUrl: ImageFileOrUrl, degree: number) {
+    imageFileOrUrl.rotate = (imageFileOrUrl.rotate + degree) % 360;
+  }
+
+  onClickDeleteImage(imageFileOrUrl: ImageFileOrUrl) {
+    this.imageFileOrUrls = this.imageFileOrUrls.filter(i =>  i !== imageFileOrUrl );
   }
 
 }
