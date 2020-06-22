@@ -1,5 +1,5 @@
 import * as sha1 from 'sha1';
-import { merge, Observable, ReplaySubject, Subject, throwError } from 'rxjs';
+import { merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest } from '@angular/common/http';
@@ -36,8 +36,14 @@ export class CloudinaryService {
     // }
 
     let uploaded = 0;
-    // const uploadedUrls = Array(imageFiles.length);
-    const uploadRequests = imageFileOrUrls.filter(i => i.type === ImageType.file);
+    const uploadedUrls = Array(imageFileOrUrls.length);
+    imageFileOrUrls.forEach((img, idx) => {
+      if (img.type === ImageType.url) {
+        uploadedUrls[idx] = img.value as string;
+      }
+    });
+    const uploadRequests =
+      imageFileOrUrls.filter(img => img.type === ImageType.file).map(i => this.getUploadRequest(i));
 
     merge(...uploadRequests)
       .pipe(
@@ -48,15 +54,14 @@ export class CloudinaryService {
         }),
         tap(e => {
           if (e.type === HttpEventType.Response) {
-            const imageFileIdx = imageFiles.findIndex(img => {
-              return img.file.name.startsWith(e.body.original_filename) &&
-                 img.file.size === e.body.bytes;
+            imageFileOrUrls.forEach((img, idx) => {
+              if (img.type === ImageType.file) {
+                const file = img.value as File;
+                if (file.name.startsWith(e.body.original_filename) && file.size === e.body.bytes) {
+                  uploadedUrls[idx] = e.body.eager[0].secure_url;
+                }
+              }
             });
-            if (imageFileIdx === -1) {
-              throwError('no image file index');
-            } else {
-              uploadedUrls[imageFileIdx] = e.body.eager[0].secure_url;
-            }
           }
         })
       )

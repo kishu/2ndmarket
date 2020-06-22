@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Goods, ImageFile, ImageFileOrUrl, ImageType, NewGoods } from '@app/core/model';
+import { Goods, ImageFileOrUrl, ImageType, NewGoods } from '@app/core/model';
 import { CloudinaryService, GoodsService } from '@app/core/http';
 import { map, switchMap, tap } from 'rxjs/operators';
 
@@ -26,19 +26,19 @@ export class GoodsEditComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit({goods, imageFiles}: {goods: Goods, imageFiles: ImageFile[] }) {
+  onSubmit({goods, imageFileOrUrls}: {goods: Goods, imageFileOrUrls: ImageFileOrUrl[] }) {
     if (this.submitting) {
       return;
     }
 
     this.submitting = true;
-    const [, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
+    const [, uploadComplete$] = this.cloudinaryService.upload(imageFileOrUrls);
 
     uploadComplete$
       .pipe(
         map(uploadedUrls => ({
           ...goods,
-          images: goods.images.concat(uploadedUrls),
+          images: uploadedUrls,
           updated: GoodsService.serverTimestamp()
         } as Goods)),
         switchMap(g => this.goodsService.update(g.id, g))
