@@ -1,8 +1,8 @@
-<div class="px-4 mb-2 bg-white shadow">
-  <div class="relative w-full max-w-xl mx-auto py-3">
+<div class="mb-2 bg-white shadow">
+  <div class="relative w-full max-w-xl mx-auto py-3 px-2">
     <h1 class="font-bold">세컨드마켓</h1>
     <ng-container *ngIf="(user$ | async) as user">
-      <div class="absolute inset-y-0 right-0 mx-auto py-3 flex items-center text-xs uppercase">
+      <div class="absolute inset-y-0 right-0 mx-auto py-3 px-2 flex items-center text-xs uppercase">
         {{ user.displayName || user.email.split('@')[0] }}
         <ng-container *ngIf="(group$ | async) as group">
           <span>@</span>

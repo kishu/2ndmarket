@@ -30,6 +30,9 @@ textarea {
   &:focus {
     @apply bg-white border-gray-500;
   }
+  .bg-white & {
+    @apply border-gray-200 bg-gray-200;
+  }
 }
 
 .goodsItem {
@@ -53,4 +56,20 @@ textarea {
 
 .soldout {
   opacity: 0.3;
+}
+
+.talk {
+  border-radius: 1rem;
+  @apply py-2 px-3 bg-gray-300 rounded-tl-none;
+  @apply text-sm leading-tight;
+
+  .mine & {
+    border-radius: 1rem;
+    @apply rounded-tr-none;
+    @apply bg-white;
+  }
+}
+
+.mine {
+  @apply flex-row-reverse;
 }

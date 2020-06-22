@@ -1,5 +1,15 @@
-<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
-  <textarea formControlName="body" minlength="2" required></textarea>
-  <p *ngIf="bodyCtl.invalid && (bodyCtl.dirty || bodyCtl.touched)" class="text-red-500 text-xs">댓글을 입력해주세요.</p>
-  <button type="submit" [disabled]="commentForm.invalid || submitting">등록</button>
+<form
+  class="flex p-1"
+  [formGroup]="commentForm"
+  (ngSubmit)="onSubmit()">
+  <textarea
+    class="m-0"
+    formControlName="body"
+    minlength="2"
+    rows="5"
+    required></textarea>
+  <button
+    class="flex-shrink-0"
+    type="submit"
+    [disabled]="commentForm.invalid || submitting">등록</button>
 </form>

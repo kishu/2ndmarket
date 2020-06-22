@@ -14,7 +14,7 @@ export class GoodsCommentsService extends FirestoreService<Comment> {
   getAllByGoodsRef(ref: GoodsRef) {
     return this.query({
       where: [['goodsRef', '==', ref]],
-      orderBy: [['created', 'desc']]
+      orderBy: [['created', 'asc']]
     });
   }
 }

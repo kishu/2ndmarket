@@ -1,10 +1,16 @@
 <ng-container *ngIf="commentList$ | async as commentList">
   <ul>
-    <li *ngFor="let comment of commentList">
-      <div>
-        {{ comment.body }}
-        {{ comment.created | fsTimestamp | formatDistanceToNow }}
-        <button *ngIf="canDelete(comment.userId)" (click)="onClickDelete(comment)">삭제</button>
+    <li
+      class="py-1 text-sm"
+      *ngFor="let comment of commentList">
+      <div
+        class="flex items-end"
+        [ngClass]="{'mine': canDelete(comment.userId)}">
+        <p class="talk mx-1 shadow max-w-sm">{{ comment.body }}</p>
+        <div class="flex items-center flex-row-reverse flex-shrink-0">
+          <span class="px-1 text-xs flex-shrink-0">{{ comment.created | fsTimestamp | formatDistanceToNow }}전 </span>
+          <button class="p-1 border-white bg-red-500" *ngIf="canDelete(comment.userId)" (click)="onClickDelete(comment)"></button>
+        </div>
       </div>
     </li>
   </ul>
