@@ -4,10 +4,11 @@
       class="py-1 text-sm"
       *ngFor="let comment of commentList">
       <div
-        class="flex items-end"
+        class="flex"
         [ngClass]="{'mine': canDelete(comment.userId)}">
+        <div class="w-8 h-8 bg-white rounded-full" *ngIf="!canDelete(comment.userId)"></div>
         <p class="talk mx-1 shadow max-w-sm">{{ comment.body }}</p>
-        <div class="flex items-center flex-row-reverse flex-shrink-0">
+        <div class="flex flex-row-reverse flex-shrink-0 items-end">
           <span class="px-1 text-xs flex-shrink-0">{{ comment.created | fsTimestamp | formatDistanceToNow }}전 </span>
           <button class="p-1 border-white bg-red-500" *ngIf="canDelete(comment.userId)" (click)="onClickDelete(comment)"></button>
         </div>

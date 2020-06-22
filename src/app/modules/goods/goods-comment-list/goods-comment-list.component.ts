@@ -1,9 +1,12 @@
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Comment } from '@app/core/model';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
 import { filter, first } from 'rxjs/operators';
+
+export type ReducedComment = Comment[][];
 
 @Component({
   selector: 'app-goods-comment-list',
