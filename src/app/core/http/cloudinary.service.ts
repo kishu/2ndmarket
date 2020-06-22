@@ -4,10 +4,18 @@ import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { ImageFileOrUrl, ImageType } from '@app/core/model';
+import { ImageFile, ImageFileOrUrl, UploadedImage } from '@app/core/model';
 
 // https://cloudinary.com/documentation/upload_images#uploading_with_a_direct_call_to_the_rest_api
 // https://cloudinary.com/documentation/image_upload_api_reference
+
+export interface UploadProgress {
+  loaded: number,
+  total: number,
+}
+
+export type UploadComplete = UploadedImage;
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,26 +32,12 @@ export class CloudinaryService {
   constructor(private http: HttpClient) {
   }
 
-  upload(imageFileOrUrls: ImageFileOrUrl[]): [Subject<any>, Subject<any>] {
-    const uploadProgress$ = new ReplaySubject<any>();
-    const uploadComplete$ = new ReplaySubject<any>();
+  upload(imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete[]>] {
+    const uploadProgress$ = new ReplaySubject<UploadProgress>();
+    const uploadComplete$ = new ReplaySubject<UploadComplete[]>();
 
-    // if (imageFileOrUrls.length === 0) {
-    //   uploadComplete$.next([]);
-    //   uploadProgress$.complete();
-    //   uploadComplete$.complete();
-    //   return [uploadProgress$, uploadComplete$];
-    // }
-
-    let uploaded = 0;
-    const uploadedUrls = Array(imageFileOrUrls.length);
-    imageFileOrUrls.forEach((img, idx) => {
-      if (img.type === ImageType.url) {
-        uploadedUrls[idx] = img.value as string;
-      }
-    });
-    const uploadRequests =
-      imageFileOrUrls.filter(img => img.type === ImageType.file).map(i => this.getUploadRequest(i));
+    const uploadedImages: UploadedImage[] = [];
+    const uploadRequests = imageFiles.map(i => this.getUploadRequest(i));
 
     merge(...uploadRequests)
       .pipe(
@@ -54,13 +48,10 @@ export class CloudinaryService {
         }),
         tap(e => {
           if (e.type === HttpEventType.Response) {
-            imageFileOrUrls.forEach((img, idx) => {
-              if (img.type === ImageType.file) {
-                const file = img.value as File;
-                if (file.name.startsWith(e.body.original_filename) && file.size === e.body.bytes) {
-                  uploadedUrls[idx] = e.body.eager[0].secure_url;
-                }
-              }
+            uploadedImages.push({
+              filename: e.body.original_filename,
+              size: e.body.bytes,
+              url: e.body.eager[0].secure_url
             });
           }
         })
@@ -68,8 +59,8 @@ export class CloudinaryService {
       .subscribe(
         e => {
           if (e.type === HttpEventType.Response &&
-            ++uploaded === uploadRequests.length) {
-            uploadComplete$.next(uploadedUrls);
+            uploadedImages.length === uploadRequests.length) {
+            uploadComplete$.next(uploadedImages as UploadComplete[]);
             uploadProgress$.complete();
             uploadComplete$.complete();
           }

@@ -1,6 +1,19 @@
+import * as faker from 'faker';
+import { Observable, of, zip } from 'rxjs';
+import { filter, first, map, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { GoodsService } from '@app/core/http';
+import { AuthService, CloudinaryService, GoodsService, GroupsService } from '@app/core/http';
+import {
+  Goods,
+  GoodsCondition,
+  GoodsPurchased,
+  GoodsShipping,
+  ImageFile,
+  ImageFileOrUrl,
+  ImageType,
+  NewGoods
+} from '@app/core/model';
 
 @Component({
   selector: 'app-goods-write',
@@ -8,57 +21,75 @@ import { GoodsService } from '@app/core/http';
   styleUrls: ['./goods-write.component.scss']
 })
 export class GoodsWriteComponent implements OnInit {
-  goodsWriteForm: FormGroup;
-
-  get name() { return this.goodsWriteForm.get('name'); }
-  get category() { return this.goodsWriteForm.get('category'); }
-  get purchaseTime() { return this.goodsWriteForm.get('purchaseTime'); }
-  get condition() { return this.goodsWriteForm.get('condition'); }
-  get price() { return this.goodsWriteForm.get('price'); }
-  get delivery() { return this.goodsWriteForm.get('delivery'); }
-  get contact() { return this.goodsWriteForm.get('contact'); }
-  get memo() { return this.goodsWriteForm.get('memo'); }
-
+  submitting = false;
+  goods$: Observable<NewGoods>;
+  uploadProgress: { loaded: number, total: number };
   constructor(
+    private router: Router,
+    private authService: AuthService,
+    private groupService: GroupsService,
     private goodsService: GoodsService,
-    private fb: FormBuilder
+    private cloudinaryService: CloudinaryService
   ) {
-    this.goodsWriteForm = this.fb.group({
-      name: [''],
-      property: [''],
-      purchaseTime: [''],
-      condition: [''],
-      price: [''],
-      delivery: [''],
-      contact: [''],
-      memo: [''],
-    });
+    this.goods$ = zip(this.authService.user$, this.authService.group$)
+      .pipe(
+        first(),
+        filter(([u, g]) => !!u && !!g),
+        map(([u, g]) => ({
+          userId: u.id,
+          groupRef: this.groupService.getDocRef(g.id),
+          name: faker.commerce.productName(),
+          shared: false,
+          purchased: GoodsPurchased.week,
+          condition: GoodsCondition.almostNew,
+          price: faker.commerce.price(),
+          shipping: GoodsShipping.delivery,
+          images: [],
+          contact: faker.phone.phoneNumber(),
+          memo: faker.lorem.paragraphs(),
+          soldOut: false,
+          favoritesCnt: 0,
+          commentsCnt: 0,
+          created: GoodsService.serverTimestamp(),
+          updated: GoodsService.serverTimestamp()
+        })),
+        switchMap((g: NewGoods) => of(g))
+      );
   }
 
   ngOnInit(): void {
   }
 
-  submit() {
-    // const newGoods: NewGoods = {
-    //   title: 'new goods222',
-    //   public: true,
-    //   category: GoodsCategory.beauty,
-    //   purchaseTime: GoodsPurchaseTime.month,
-    //   condition: GoodsCondition.boxed,
-    //   price: 25000,
-    //   delivery: GoodsDelivery.courier,
-    //   deliveryEtc: '',
-    //   images: [
-    //     'https://thefancy-media-ec.thefancy.com/1280/20170131/1346364284443034953_63cd458bb756.jpg'
-    //   ],
-    //   contact: '01029400359',
-    //   favoritesCnt: 0,
-    //   commentCnt: 0,
-    //   created: GoodsService.serverTimestamp(),
-    //   updated: GoodsService.serverTimestamp()
-    // };
-
-    // this.goodsService.add(newGoods).then(() => console.log('ok'));
+  onSubmit({goods, imageFileOrUrls}: {goods: Partial<Goods>, imageFileOrUrls: ImageFileOrUrl[] }) {
+    if (this.submitting) {
+      return;
+    }
+    this.submitting = true;
+    const imageFiles = imageFileOrUrls.filter(img => img.type === ImageType.file) as ImageFile[];
+    const [uploadProgress$, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
+    uploadComplete$
+      .pipe(
+        map(uploadedImages => {
+          return imageFileOrUrls.map(img => {
+            if (img.type === ImageType.url) {
+              return img.value;
+            } else {
+              return uploadedImages.find(u => u.filename === (img.value as File).name && u.size === (img.value as File).size).url;
+            }
+          });
+        }),
+        map(uploadedUrls => ({
+          ...goods,
+          images: uploadedUrls,
+        } as NewGoods)),
+        switchMap(goods => this.goodsService.add(goods))
+      )
+      .subscribe(
+        (r) => {
+          this.router.navigate(['goods']);
+        },
+        err => alert(err)
+      );
   }
 
 }

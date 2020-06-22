@@ -14,7 +14,7 @@
         <h3 class="goodsName">{{ goods.name }} {{ goods.name }} {{ goods.name }}</h3>
         <div class="font-bold">{{ goods.price | currency:'KRW' }}</div>
         <span class="absolute right-0 bottom-0 px-4 py-3 text-sm leading-relaxed text-gray-500">
-          댓글 {{ goods.commentsCnt }}개 / {{ goods.created | fsTimestamp | formatDistanceToNow }} 전
+          댓글 {{ goods.commentsCnt }}개 / 좋아요 {{ goods.favoritesCnt }}개 / {{ goods.created | fsTimestamp | formatDistanceToNow }} 전
         </span>
       </div>
     </li>

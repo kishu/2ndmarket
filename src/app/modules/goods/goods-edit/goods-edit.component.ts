@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Goods, ImageFileOrUrl, ImageType, NewGoods } from '@app/core/model';
+import { Observable, of } from 'rxjs';
+import { Goods, ImageFile, ImageFileOrUrl, ImageType, ImageUrl, UploadedImage } from '@app/core/model';
 import { CloudinaryService, GoodsService } from '@app/core/http';
 import { map, switchMap, tap } from 'rxjs/operators';
 
@@ -30,25 +30,33 @@ export class GoodsEditComponent implements OnInit {
     if (this.submitting) {
       return;
     }
-
     this.submitting = true;
-    const [, uploadComplete$] = this.cloudinaryService.upload(imageFileOrUrls);
-
-    uploadComplete$
-      .pipe(
-        map(uploadedUrls => ({
+    const imageFiles = imageFileOrUrls.filter(img => img.type === ImageType.file) as ImageFile[];
+    const [uploadProgress$, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
+    (imageFiles.length > 0 ? uploadComplete$ : of([])).pipe(
+      map(uploadedImages => {
+        return imageFileOrUrls.map(img => {
+          if (img.type === ImageType.url) {
+            return img.value;
+          } else {
+            return uploadedImages.find(u => u.filename === (img.value as File).name && u.size === (img.value as File).size).url;
+          }
+        });
+      }),
+      map(uploadedUrls => {
+        return {
           ...goods,
           images: uploadedUrls,
           updated: GoodsService.serverTimestamp()
-        } as Goods)),
-        switchMap(g => this.goodsService.update(g.id, g))
-      )
-      .subscribe(
-        (r) => {
-          this.router.navigate(['goods', goods.id]);
-        },
-        err => alert(err)
-      );
+        } as Goods;
+      }),
+      switchMap(goods => this.goodsService.update(goods.id, goods))
+    ).subscribe(
+      (r) => {
+        this.router.navigate(['goods', goods.id]);
+      },
+      err => alert(err)
+    );
   }
 
 }

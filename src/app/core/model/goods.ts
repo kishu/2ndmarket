@@ -51,7 +51,7 @@ export interface Goods {
   contact: string;
   memo: string;
   soldOut: boolean;
-  favoriteUserIds: string[];
+  favoritesCnt: number;
   commentsCnt: number;
   created: firestore.Timestamp;
   updated: firestore.Timestamp;
