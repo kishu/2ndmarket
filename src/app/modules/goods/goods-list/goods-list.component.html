@@ -5,9 +5,9 @@
       [ngClass]="{'soldout': (i+1)%3 === 0}"
       *ngFor="let goods of goodsList; index as i">
       <div
-        class="md:w-5/12 h-40 md:h-auto bg-gray-200 flex">
+        class="md:w-5/12 h-40 md:h-auto bg-gray-200">
         <ng-container *ngFor="let image of goods.images; first as isFirst">
-          <a href (click)="onClickGoods($event, goods)"><img [src]="image" class="object-cover" *ngIf="isFirst"></a>
+          <a href class="block w-full h-full overflow-hidden" (click)="onClickGoods($event, goods)"><img [src]="image" class="object-cover" *ngIf="isFirst"></a>
         </ng-container>
       </div>
       <div class="relative md:w-7/12 px-4 py-3 md:pb-16">

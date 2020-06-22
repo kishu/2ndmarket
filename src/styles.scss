@@ -45,6 +45,12 @@ textarea {
   }
 }
 
+.goodsDetail {
+  .goodsName {
+    @apply leading-tight;
+  }
+}
+
 .soldout {
   opacity: 0.3;
 }

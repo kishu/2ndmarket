@@ -1,12 +1,14 @@
 <div class="mb-2 bg-white shadow">
   <div class="relative w-full max-w-xl mx-auto py-2 px-4">
     <h1 class="font-bold text-center">세컨드마켓</h1>
-    <ng-container *ngIf="(group$ | async) as group">
-      <span>@</span>
-      <span>{{ group.name }}</span>
-    </ng-container>
     <ng-container *ngIf="(user$ | async) as user">
-      <span class="absolute inset-y-0 right-0 mx-auto py-2 px-4 flex items-center text-xs">{{ user.displayName || user.email.split('@')[0] }}</span>
+      <div class="absolute inset-y-0 right-0 mx-auto py-2 px-4 flex items-center text-xs">
+        {{ user.displayName || user.email.split('@')[0] }}
+        <ng-container *ngIf="(group$ | async) as group">
+          <span>@</span>
+          <span>{{ group.name }}</span>
+        </ng-container>
+      </div>
     </ng-container>
   </div>
 </div>
