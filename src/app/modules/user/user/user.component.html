@@ -1,0 +1,35 @@
+<div *ngIf="user$ | async as user">
+  <div>
+    <img [src]="user.photoURL" width="120" alt="">
+  </div>
+  <div>{{ user.displayName }} / {{ user.email }}</div>
+</div>
+
+<ul *ngIf="userGroups$ | async as userGroups">
+  <li *ngFor="let userGroup of userGroups">
+    {{ userGroup.group.name }} {{ userGroup.group.created | fsTimestamp | formatDistanceToNow }}
+  </li>
+</ul>
+
+<ul *ngIf="goodsList$ | async as goodsList">
+  <li *ngFor="let goods of goodsList">
+    <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+  </li>
+</ul>
+
+<ul *ngIf="favoriteGoodsList$ | async as favoriteGoodsList">
+  <li *ngFor="let goods of favoriteGoodsList">
+    <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+  </li>
+</ul>
+
+<ng-template #goodsTemplate let-goods="goods">
+  <div>
+    <img [src]="goods.images[0]" width="60" alt="">
+  </div>
+  <div>
+    <a [routerLink]="['/goods', goods.id]">
+      {{ goods.name }} / {{ goods.price }} / 댓글: {{ goods.commentsCnt }} / 좋아요: {{ goods.favoritesCnt }} / {{ goods.created | fsTimestamp | formatDistanceToNow }}
+    </a>
+  </div>
+</ng-template>

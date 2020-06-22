@@ -74,7 +74,11 @@ export class GoodsWriteComponent implements OnInit {
             if (img.type === ImageType.url) {
               return img.value;
             } else {
-              return uploadedImages.find(u => u.filename === (img.value as File).name && u.size === (img.value as File).size).url;
+              const targetImage = uploadedImages.find(u => {
+                const imgFile = img.value as File;
+                return imgFile.name.startsWith(u.filename) && imgFile.size === u.size;
+              });
+              return targetImage.url;
             }
           });
         }),

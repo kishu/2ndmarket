@@ -19,4 +19,12 @@ export class GoodsService extends FirestoreService<Goods> {
     });
   }
 
+  getAllByUserId(userId: string, limit: number = 100): Observable<Goods[]> {
+    return this.query({
+      where: [['userId', '==', userId]],
+      orderBy: [['created', 'desc']],
+      limit: limit
+    });
+  }
+
 }
