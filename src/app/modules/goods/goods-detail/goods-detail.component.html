@@ -7,9 +7,11 @@
     </ul>
     <div class="px-4 py-3">
       <h2 class="goodsName text-lg">{{ goods.name }}</h2>
-      <button type="button" (click)="onClickFavorite()">좋아요</button>
-      <span *ngIf="favoriteCount$ | async as favoritedCount">{{ favoritedCount }}</span>
-      <span *ngIf="isFavorite$ | async">좋아요함</span>
+      <ng-container [ngSwitch]="(favorited$ | async)">
+        <button *ngSwitchCase="true" type="button" (click)="onClickFavorite(true)">좋아요(했음)</button>
+        <button *ngSwitchCase="false" type="button" (click)="onClickFavorite(false)">좋아요(안했음)</button>
+      </ng-container>
+      <span *ngIf="favoritesCount$ | async as favoritesCount">{{ favoritesCount }}</span>
       <div class="my-3"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
       <p class="leading-tight">{{ goods.memo }}</p>
       <div class="my-3 text-sm">

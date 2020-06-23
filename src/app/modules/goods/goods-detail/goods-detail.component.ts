@@ -1,8 +1,8 @@
-import { forkJoin, of } from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { filter, first, map, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsCacheService, GoodsFavoriteService } from '@app/core/http';
+import { AuthService, GoodsService, GoodsCacheService, GoodsFavoritesService } from '@app/core/http';
 import { Goods, User } from '@app/core/model';
 
 @Component({
@@ -11,30 +11,11 @@ import { Goods, User } from '@app/core/model';
   styleUrls: ['./goods-detail.component.scss']
 })
 export class GoodsDetailComponent implements OnInit {
-  private goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-  user$ = this.authService.user$.pipe(first());
-  goods$ = forkJoin(
-    this.user$,
-    this.goodsCacheService.getGoods(this.goodsId).pipe(
-      switchMap(g => g ?
-        of(g) :
-        this.goodsService.get(this.goodsId).pipe(first()))
-    )
-  ).pipe(
-    tap(([u, g]) => this.canEdit = g.userId === u.id),
-    map(([, g]) => g)
-  );
-  isFavorite$ = this.authService.user$.pipe(
-    first(),
-    filter(u => !!u),
-    switchMap(u => this.goodsFavoriteService.isFavorite(this.goodsRef, u.id).pipe(first()))
-  );
-  favoriteCount$ = this.goodsFavoriteService.getCountByGoodsRef(this.goodsRef);
+  user$: Observable<User>;
+  goods$: Observable<Goods>;
+  favoritesCount$: Observable<number>;
+  favorited$: Observable<boolean>;
   canEdit = false;
-
-  get goodsRef() {
-    return this.goodsFavoriteService.getDocRef(this.goodsId);
-  }
 
   constructor(
     private router: Router,
@@ -42,18 +23,35 @@ export class GoodsDetailComponent implements OnInit {
     private authService: AuthService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
-    private goodsFavoriteService: GoodsFavoriteService
+    private goodsFavoritesService: GoodsFavoritesService
   ) {
+    const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
+    this.user$ = this.authService.user$.pipe(first(), filter(u => !!u), share());
+    this.goods$ = this.goodsCacheService.getGoods(goodsId).pipe(
+      switchMap(g => g ? of(g) : this.goodsService.get(goodsId).pipe(first())),
+      tap(g => this.user$.subscribe(u => this.canEdit = g.userId === u.id)),
+    );
+    const goodsFavorites$ = this.user$.pipe(
+      switchMap(u =>  this.goodsFavoritesService.getAllBy(goodsId))
+    );
+    this.favoritesCount$ = goodsFavorites$.pipe(map(f => f.length));
+    this.favorited$ = goodsFavorites$.pipe(
+      withLatestFrom(this.user$),
+      map(([f, u]) => f.some(i => i.userId === u.id)),
+    );
   }
 
   ngOnInit(): void {
   }
 
-  onClickFavorite() {
-    this.authService.user$.pipe(
-      first(),
-      filter(u => !!u),
-      switchMap(u => this.goodsFavoriteService.add({ userId: u.id, goodsRef: this.goodsService.getDocRef(this.goodsId) }))
+  onClickFavorite(favorite: boolean) {
+    const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
+    const goodsRef = this.goodsService.getDocRef(goodsId);
+    this.user$.pipe(
+      switchMap(u => favorite ?
+        this.goodsFavoritesService.deleteBy(u.id, goodsRef) :
+        this.goodsFavoritesService.add({ userId: u.id, goodsRef })
+      )
     ).subscribe();
   }
 
