@@ -1,8 +1,8 @@
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
-import { NewComment } from '@app/core/model';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { NewGoodsComment } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-comment-form',
@@ -37,7 +37,7 @@ export class GoodsCommentFormComponent implements OnInit {
           goodsRef: this.goodsService.getDocRef(this.goodsId),
           ...this.commentForm.value,
           created: GoodsCommentsService.serverTimestamp()
-        } as NewComment)),
+        } as NewGoodsComment)),
         tap(() => this.commentForm.reset()),
         switchMap(c => this.goodsCommentsService.add(c))
       )

@@ -1,8 +1,8 @@
-import { combineLatest, forkJoin, Observable, of, zip } from 'rxjs';
-import { concatAll, filter, first, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsCacheService } from '@app/core/http';
+import { AuthService, GoodsService, GoodsCacheService, GoodsFavoriteService } from '@app/core/http';
 import { Goods, User } from '@app/core/model';
 
 @Component({
@@ -24,14 +24,25 @@ export class GoodsDetailComponent implements OnInit {
     tap(([u, g]) => this.canEdit = g.userId === u.id),
     map(([, g]) => g)
   );
+  isFavorite$ = this.authService.user$.pipe(
+    first(),
+    filter(u => !!u),
+    switchMap(u => this.goodsFavoriteService.isFavorite(this.goodsRef, u.id).pipe(first()))
+  );
+  favoriteCount$ = this.goodsFavoriteService.getCountByGoodsRef(this.goodsRef);
   canEdit = false;
+
+  get goodsRef() {
+    return this.goodsFavoriteService.getDocRef(this.goodsId);
+  }
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private goodsService: GoodsService,
-    private goodsCacheService: GoodsCacheService
+    private goodsCacheService: GoodsCacheService,
+    private goodsFavoriteService: GoodsFavoriteService
   ) {
   }
 
@@ -42,16 +53,8 @@ export class GoodsDetailComponent implements OnInit {
     this.authService.user$.pipe(
       first(),
       filter(u => !!u),
-      // switchMap(u => this.)
-    ).subscribe(r => console.log(r));
-    // combineLatest(this.user$, this.goods$)
-    // .pipe(
-    //   filter(([u, ]) => !!u),
-    //   switchMap(([u, g]) => {
-    //
-    //   })
-    // )
-    // .subscribe(r => console.log(r));
+      switchMap(u => this.goodsFavoriteService.add({ userId: u.id, goodsRef: this.goodsService.getDocRef(this.goodsId) }))
+    ).subscribe();
   }
 
 }

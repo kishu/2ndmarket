@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Comment } from '@app/core/model';
+import { GoodsComment } from '@app/core/model';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
 import { filter, first } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ import { filter, first } from 'rxjs/operators';
 })
 export class GoodsCommentListComponent implements OnInit {
   private userId: string;
-  commentList$: Observable<Comment[]>;
+  commentList$: Observable<GoodsComment[]>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -52,9 +52,11 @@ export class GoodsCommentListComponent implements OnInit {
 
   canDelete(userId): boolean { return this.userId === userId; }
 
-  onClickDelete(comment: Comment) {
+
+  onClickDelete(comment: GoodsComment) {
     if (confirm(comment.body + '를 삭제할까요?')) {
       this.commentsService.delete(comment.id);
     }
   }
+
 }

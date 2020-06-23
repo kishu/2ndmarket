@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { FirestoreService } from '@app/core/http/firestore.service';
-import { Comment, GoodsRef } from '@app/core/model';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { FirestoreService } from '@app/core/http/firestore.service';
+import { GoodsComment, GoodsRef } from '@app/core/model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GoodsCommentsService extends FirestoreService<Comment> {
+export class GoodsCommentsService extends FirestoreService<GoodsComment> {
   constructor(protected afs: AngularFirestore) {
     super(afs, 'goodsComments');
   }
