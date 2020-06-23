@@ -7,7 +7,8 @@
     </ul>
     <div class="px-4 py-3">
       <h2 class="goodsName text-lg">{{ goods.name }}</h2>
-      <div class="my-3 font-bold">{{ goods.price | currency:'KRW' }}</div>
+      <button type="button" (click)="onClickFavorite()">좋아요</button>
+      <div class="my-3"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
       <p class="leading-tight">{{ goods.memo }}</p>
       <div class="my-3 text-sm">
         <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>

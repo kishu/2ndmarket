@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { AngularFireModule } from '@angular/fire';
@@ -17,8 +17,18 @@ import { GoodsModule } from '@app/modules/goods/goods.module';
 import { GroupModule } from '@app/modules/group/group.module';
 import { UserModule } from '@app/modules/user/user.module';
 
+import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { first } from 'rxjs/operators';
+
+export function appInitializer(authService: AuthService) {
+  return () => {
+    return new Promise(resolve => {
+      authService.user$.pipe(first()).subscribe(() => resolve());
+    });
+  };
+}
 
 @NgModule({
   declarations: [
@@ -40,6 +50,7 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
+    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [AuthService], multi: true },
     { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy }
   ],
   bootstrap: [AppComponent]
