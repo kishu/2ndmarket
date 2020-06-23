@@ -6,8 +6,6 @@ import { Comment } from '@app/core/model';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
 import { filter, first } from 'rxjs/operators';
 
-export type ReducedComment = Comment[][];
-
 @Component({
   selector: 'app-goods-comment-list',
   templateUrl: './goods-comment-list.component.html',
@@ -33,13 +31,30 @@ export class GoodsCommentListComponent implements OnInit {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
     if (goodsId) {
       const goodsRef = this.goodsService.getDocRef(goodsId);
-      this.commentList$ = this.commentsService.getAllByGoodsRef(goodsRef);
+      this.commentList$ = this.commentsService.getAllByGoodsRef(goodsRef).pipe(
+        map(cList => {
+          return cList.reduce((a, c) => {
+            if (a.length === 0) {
+              return [[c]];
+            }
+            const p = a[a.length - 1];
+            if (p[0].userId === c.userId) {
+              p.push(c);
+            } else {
+              a.push([c]);
+            }
+            return a;
+          }, []);
+        })
+      );
     }
   }
 
   canDelete(userId): boolean { return this.userId === userId; }
 
   onClickDelete(comment: Comment) {
-    this.commentsService.delete(comment.id);
+    if (confirm(comment.body + '를 삭제할까요?')) {
+      this.commentsService.delete(comment.id);
+    }
   }
 }

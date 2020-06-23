@@ -61,7 +61,7 @@ textarea {
 .talk {
   border-radius: 1rem;
   @apply py-2 px-3 bg-gray-300 rounded-tl-none;
-  @apply text-sm leading-tight;
+  @apply leading-tight;
 
   .mine & {
     border-radius: 1rem;

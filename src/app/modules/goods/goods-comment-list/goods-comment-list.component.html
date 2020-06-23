@@ -5,12 +5,15 @@
       *ngFor="let comment of commentList">
       <div
         class="flex"
-        [ngClass]="{'mine': canDelete(comment.userId)}">
-        <div class="w-8 h-8 bg-white rounded-full" *ngIf="!canDelete(comment.userId)"></div>
-        <p class="talk mx-1 shadow max-w-sm">{{ comment.body }}</p>
-        <div class="flex flex-row-reverse flex-shrink-0 items-end">
-          <span class="px-1 text-xs flex-shrink-0">{{ comment.created | fsTimestamp | formatDistanceToNow }}전 </span>
-          <button class="p-1 border-white bg-red-500" *ngIf="canDelete(comment.userId)" (click)="onClickDelete(comment)"></button>
+        *ngFor="let talk of comment; first as isFirst; last as isLast"
+        [ngClass]="{'mine': canDelete(talk.userId)}">
+        <div
+          class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-xs font-bold uppercase"
+          [ngClass]="{'opacity-0': !isFirst}"
+          *ngIf="!canDelete(talk.userId)">{{ talk.userId.slice(0, 2) }}</div>
+        <p class="talk mx-1 mb-1 shadow max-w-sm" (click)="onClickDelete(talk)">{{ talk.body }}</p>
+        <div class="flex flex-row-reverse flex-shrink-0 items-end mb-1">
+          <span class="text-xs flex-shrink-0" *ngIf="isLast">{{ talk.created | fsTimestamp | formatDistanceToNow }}전 </span>
         </div>
       </div>
     </li>
