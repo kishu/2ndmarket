@@ -1,5 +1,5 @@
 import { firestore } from 'firebase';
-import { GoodsRef } from './goods';
+import { Goods, GoodsRef } from './goods';
 
 export interface GoodsFavorite {
   id: string;
@@ -12,4 +12,6 @@ export type NewGoodsFavorite = Omit<Comment, 'id' | 'created'> & {
   created: firestore.FieldValue
 };
 
+
 export type GoodsFavoriteRef = firestore.DocumentReference;
+

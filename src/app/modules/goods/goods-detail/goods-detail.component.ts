@@ -29,9 +29,11 @@ export class GoodsDetailComponent implements OnInit {
     this.user$ = this.authService.user$.pipe(first(), filter(u => !!u), share());
     this.goods$ = this.goodsCacheService.getGoods(goodsId).pipe(
       switchMap(g => g ? of(g) : this.goodsService.get(goodsId).pipe(first())),
-      tap(g => this.user$.subscribe(u => this.canEdit = g.userId === u.id))
+      tap(g => this.user$.subscribe(u => this.canEdit = g.userId === u.id)),
     );
-    const goodsFavorites$ = this.goodsFavoritesService.getAllBy(goodsId);
+    const goodsFavorites$ = this.user$.pipe(
+      switchMap(u =>  this.goodsFavoritesService.getAllByGoodsRef(goodsId))
+    );
     this.favoritesCount$ = goodsFavorites$.pipe(map(f => f.length));
     this.favorited$ = goodsFavorites$.pipe(
       withLatestFrom(this.user$),
