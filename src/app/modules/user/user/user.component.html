@@ -17,6 +17,11 @@
     </li>
   </ul>
 
+  <ul>
+    <li><a [routerLink]="">등록한 상품</a></li>
+    <li><a [routerLink]="" fragment="favorites">좋아요 상품</a></li>
+  </ul>
+
   <h3>등록한 상품</h3>
   <ul class="grid grid-cols-3 md:grid-cols-4 gap-1 p-1" *ngIf="goodsList$ | async as goodsList">
     <li *ngFor="let goods of goodsList">
