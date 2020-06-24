@@ -4,4 +4,5 @@ export * from './goods-favorite';
 export * from './group';
 export * from './image';
 export * from './user';
+export * from './user-auth';
 export * from './user-group';
