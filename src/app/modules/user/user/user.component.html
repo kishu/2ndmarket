@@ -1,35 +1,50 @@
-<div *ngIf="user$ | async as user">
-  <div>
-    <img [src]="user.photoURL" width="120" alt="">
+<div class="w-full max-w-xl mx-auto">
+  <div
+    class="mt-5"
+    *ngIf="user$ | async as user">
+    <div class="w-32 h-32 mx-auto overflow-hidden rounded-full">
+      <img [src]="user.photoURL" class="w-full h-full" alt="">
+    </div>
+    <div>
+      <div>{{ user.displayName }}</div>
+      <div>{{ user.email }}</div>
+    </div>
   </div>
-  <div>{{ user.displayName }} / {{ user.email }}</div>
+
+  <ul *ngIf="userGroups$ | async as userGroups">
+    <li *ngFor="let userGroup of userGroups">
+      {{ userGroup.group.name }} {{ userGroup.group.created | fsTimestamp | formatDistanceToNow }}
+    </li>
+  </ul>
+
+  <h3>등록한 상품</h3>
+  <ul class="grid grid-cols-3 md:grid-cols-4 gap-1 p-1" *ngIf="goodsList$ | async as goodsList">
+    <li *ngFor="let goods of goodsList">
+      <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+    </li>
+  </ul>
+
+  <h3>관심 상품</h3>
+  <ul class="grid grid-cols-3 gap-1 p-1" *ngIf="favoriteGoodsList$ | async as favoriteGoodsList">
+    <li *ngFor="let goods of favoriteGoodsList">
+      <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+    </li>
+  </ul>
 </div>
 
-<ul *ngIf="userGroups$ | async as userGroups">
-  <li *ngFor="let userGroup of userGroups">
-    {{ userGroup.group.name }} {{ userGroup.group.created | fsTimestamp | formatDistanceToNow }}
-  </li>
-</ul>
-
-<ul *ngIf="goodsList$ | async as goodsList">
-  <li *ngFor="let goods of goodsList">
-    <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
-  </li>
-</ul>
-
-<ul *ngIf="favoriteGoodsList$ | async as favoriteGoodsList">
-  <li *ngFor="let goods of favoriteGoodsList">
-    <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
-  </li>
-</ul>
-
-<ng-template #goodsTemplate let-goods="goods">
+<ng-template #goodsTemplate let-goods="goods"
+class="goodsItem">
   <div>
-    <img [src]="goods.images[0]" width="60" alt="">
+    <div class="relative square">
+      <img
+        [src]="goods.images[0]"
+        class="absolute l-0 t-0 w-full h-full object-cover"
+        alt="">
+    </div>
   </div>
-  <div>
+  <!-- <div class="relative md:w-7/12 px-4 py-3 md:pb-16">
     <a [routerLink]="['/goods', goods.id]">
       {{ goods.name }} / {{ goods.price }} / 댓글: {{ goods.commentsCnt }} / 좋아요: {{ goods.favoritesCnt }} / {{ goods.created | fsTimestamp | formatDistanceToNow }}
     </a>
-  </div>
+  </div> -->
 </ng-template>

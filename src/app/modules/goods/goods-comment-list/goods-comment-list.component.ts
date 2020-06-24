@@ -1,17 +1,22 @@
-import { Observable } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Observable, forkJoin, of } from 'rxjs';
+import { filter, first, map, tap, share, withLatestFrom } from 'rxjs/operators';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GoodsComment, User } from '@app/core/model';
+import { GoodsComment, User, Goods } from '@app/core/model';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
+
+export interface GoodsCommentExtend extends GoodsComment {
+  seller: boolean;
+  permission: boolean;
+}
 
 @Component({
   selector: 'app-goods-comment-list',
   templateUrl: './goods-comment-list.component.html',
   styleUrls: ['./goods-comment-list.component.scss']
 })
-export class GoodsCommentListComponent implements OnInit {
-  private userId: string;
+export class GoodsCommentListComponent implements OnInit, AfterViewInit {
+  @Input() goods: Goods;
   commentList$: Observable<GoodsComment[]>;
 
   constructor(
@@ -20,14 +25,19 @@ export class GoodsCommentListComponent implements OnInit {
     private goodsService: GoodsService,
     private commentsService: GoodsCommentsService
   ) {
-    this.authService.user$.pipe(
-      filter(u => !!u),
-      first()
-    ).subscribe(u => this.userId = u.id);
+  }
 
+  ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-    this.commentList$ = this.commentsService.getAllByGoodsRef(goodsId).pipe(
-      map(cList => {
+    const user$ = this.authService.user$.pipe(first(), filter(u => !!u), share());
+    const comments$ = this.commentsService.getAllByGoodsRef(goodsId).pipe(first());
+
+    this.commentList$ = forkJoin(user$, of(this.goods), comments$).pipe(
+      map(([user, goods, comments]) => comments.map(c => ({...c, seller: goods.userId === c.userId, permission: c.userId === user.id}))),
+      map((cList: GoodsCommentExtend[]) => {
         return cList.reduce((a, c) => {
           if (a.length === 0) {
             return [[c]];
@@ -43,11 +53,6 @@ export class GoodsCommentListComponent implements OnInit {
       })
     );
   }
-
-  ngOnInit(): void {
-  }
-
-  canDelete(userId): boolean { return this.userId === userId; }
 
   onClickDelete(comment: GoodsComment) {
     if (confirm(comment.body + '를 삭제할까요?')) {

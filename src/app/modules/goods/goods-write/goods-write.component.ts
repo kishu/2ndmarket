@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import { Observable, of, zip } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -31,9 +31,8 @@ export class GoodsWriteComponent implements OnInit {
     private goodsService: GoodsService,
     private cloudinaryService: CloudinaryService
   ) {
-    this.goods$ = zip(this.authService.user$, this.authService.group$)
+    this.goods$ = forkJoin(this.authService.user$.pipe(first(), filter(u => !!u)), this.authService.group$.pipe(first()))
       .pipe(
-        first(),
         filter(([u, g]) => !!u && !!g),
         map(([u, g]) => ({
           userId: u.id,
