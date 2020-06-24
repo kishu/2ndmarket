@@ -1,28 +1,46 @@
-<ul>
-  <li *ngFor="let fileOrUrl of imageFileOrUrls; let i = index">
+<ul class="grid grid-cols-3 p-3">
+  <li
+    class="relative border border-white"
+    *ngFor="let fileOrUrl of imageFileOrUrls; let i = index;">
     <ng-container [ngSwitch]="fileOrUrl.type">
       <div *ngSwitchCase="'file'"
-       class="thumbnail"
-       [style.transform] = "'rotate(' + fileOrUrl.rotate + 'deg)'"
-       [style.backgroundImage]="'url(' + (fileOrUrl.value | objectUrl) + ')' | sanitizer: 'style'">
+        class="square bg-gray-700"
+        [style.transform]="'rotate(' + fileOrUrl.rotate + 'deg)'">
+        <img
+          [src]="fileOrUrl.value | objectUrl | sanitizer: 'url'"
+          class="absolute w-full h-full object-cover"
+          alt="">
       </div>
       <div *ngSwitchCase="'url'"
-        class="thumbnail"
-        [style.transform] = "'rotate(' + fileOrUrl.rotate + 'deg)'"
-        [style.backgroundImage]="'url(' + (fileOrUrl.value) + ')' | sanitizer: 'style'">
+        class="square"
+        [style.transform]="'rotate(' + fileOrUrl.rotate + 'deg)'">
+        <img
+          [src]="fileOrUrl.value"
+          class="absolute w-full h-full object-cover"
+          alt="">
       </div>
     </ng-container>
-    <div>
-      <span>rotate: ({{ fileOrUrl.rotate }})</span>,
-      <button type="button" (click)="onClickMoveImage(i, i - 1)">&#60;</button>
-      <button type="button" (click)="onClickMoveImage(i, i + 1)">&#62;</button>
-      <button type="button" (click)="onClickRotateImage(fileOrUrl, 90)">r</button>
-      <button type="button" (click)="onClickDeleteImage(fileOrUrl)">d</button>
+    <button
+      type="button"
+      class="absolute inset-y-0 left-0 w-8 h-8 m-auto opacity-50"
+      *ngIf="i !== 0"
+      (click)="onClickMoveImage(i, i - 1)"></button>
+    <button
+      type="button"
+      class="absolute inset-y-0 right-0 w-8 h-8 m-auto opacity-50"
+      *ngIf="i !== 0"
+      (click)="onClickMoveImage(i, i + 1)"></button>
+    <!-- <button type="button" (click)="onClickRotateImage(fileOrUrl, 90)">r</button>
+    <button type="button" (click)="onClickDeleteImage(fileOrUrl)">d</button> -->
+  </li>
+  <li>
+    <div class="relative square bg-gray-700">
+      <input
+        type="file"
+        accept="image/gif, image/jpeg, image/png"
+        class="absolute w-full h-full"
+        multiple
+        (change)="onChangeFile($event)">
     </div>
   </li>
 </ul>
-<input
-  type="file"
-  accept="image/gif, image/jpeg, image/png"
-  multiple
-  (change)="onChangeFile($event)">
