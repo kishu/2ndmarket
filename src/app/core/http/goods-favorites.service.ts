@@ -1,33 +1,22 @@
 import { forkJoin, Observable } from 'rxjs';
-import { combineAll, first, map, switchMap } from 'rxjs/operators';
+import { first, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
-import { GoodsFavorite, GoodsRef } from '@app/core/model';
-import { GoodsService } from '@app/core/http/goods.service';
+import { GoodsFavorite } from '@app/core/model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
 
-  constructor(
-    protected afs: AngularFirestore,
-    private goodsService: GoodsService
-  ) {
+  constructor(protected afs: AngularFirestore) {
     super(afs, 'goodsFavorites');
   }
 
-  getGoodsRef(goodsRefOrId: GoodsRef | string): GoodsRef {
-    return  typeof goodsRefOrId === 'string' ?
-      this.goodsService.getDocRef(goodsRefOrId) :
-      goodsRefOrId as GoodsRef;
-  }
-
-  getAllByGoodsRef(goodsRefOrId: GoodsRef | string): Observable<GoodsFavorite[]> {
-    const goodsRef = this.getGoodsRef(goodsRefOrId);
+  getAllByGoodsId(goodsId: string): Observable<GoodsFavorite[]> {
     return this.query({
-      where: [['goodsRef', '==', goodsRef]]
+      where: [['goodsId', '==', goodsId]]
     });
   }
 
@@ -37,12 +26,11 @@ export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
     });
   }
 
-  deleteBy(userId: string, goodsRefOrId: GoodsRef | string) {
-    const goodsRef = this.getGoodsRef(goodsRefOrId);
+  deleteByGoodsIdAndProfileId(goodsId: string, profileId: string, ) {
     return this.query({
       where: [
-        ['userId', '==', userId],
-        ['goodsRef', '==', goodsRef]
+        ['goodsId', '==', goodsId],
+        ['profileId', '==', profileId]
       ]
     }).pipe(
       first(),

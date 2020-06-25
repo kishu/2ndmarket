@@ -1,12 +1,11 @@
-import { Observable, ReplaySubject } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
 import { auth } from 'firebase/app';
+import { Observable, of, ReplaySubject } from 'rxjs';
+import { first, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { GroupsService } from '@app/core/http/groups.service';
-import { User } from '@app/core/model';
-import { Group } from '@app/core/model';
-import { UserGroupsService } from "@app/core/http/user-groups.service";
+import { ProfilesService } from "@app/core/http/profiles.service";
+import { UserProfilesService } from "@app/core/http/user-profiles.service";
+import { Group, Profile, User } from '@app/core/model';
 
 enum AuthProvider {
   google = 'google',
@@ -18,16 +17,16 @@ enum AuthProvider {
   providedIn: 'root'
 })
 export class AuthService {
-  private _group$ = new ReplaySubject<Group | null>(1);
   private _user$ = new ReplaySubject<User | null>(1);
+  private _profile$ = new ReplaySubject<Profile | null>(1);
 
   get user$(): Observable<User | null> { return this._user$; }
-  get group$(): Observable<Group | null> { return this._group$; }
+  get profile$(): Observable<Profile | null > { return this._profile$; }
 
   constructor(
     private afAuth: AngularFireAuth,
-    private userGroupsService: UserGroupsService,
-    private groupService: GroupsService
+    private userProfilesService: UserProfilesService,
+    private profilesService: ProfilesService
   ) {
     const user$ = this.afAuth.user.pipe(
       map(u => {
@@ -43,13 +42,19 @@ export class AuthService {
     user$.subscribe(u => this._user$.next(u));
 
     user$.pipe(
-      filter(u => !!u),
-      switchMap(u => this.groupService.get('0GdquHWyuHiuEeQEm9eF'))
-    ).subscribe(g => this._group$.next(g));
-
-    user$.pipe(
-      filter(u => !u),
-    ).subscribe(g => this._group$.next(null));
+      switchMap(u => {
+        if (u) {
+          return this.userProfilesService.getByUserId(u.id).pipe(
+            first(),
+            switchMap(userProfiles => {
+              return userProfiles.length ? this.profilesService.get(userProfiles[0].profileId) : of(null)
+            })
+          )
+        } else {
+          return of(null)
+        }
+      })
+    ).subscribe(p => this._profile$.next(p));
   }
 
   signInWithRedirect(provider: string) {

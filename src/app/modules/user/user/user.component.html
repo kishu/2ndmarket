@@ -11,11 +11,11 @@
     </div>
   </div>
 
-  <ul *ngIf="userGroups$ | async as userGroups">
-    <li *ngFor="let userGroup of userGroups">
-      {{ userGroup.group.name }} {{ userGroup.group.created | fsTimestamp | formatDistanceToNow }}
-    </li>
-  </ul>
+<!--  <ul *ngIf="userGroups$ | async as userGroups">-->
+<!--    <li *ngFor="let userGroup of userGroups">-->
+<!--      {{ userGroup.group.name }} {{ userGroup.group.created | fsTimestamp | formatDistanceToNow }}-->
+<!--    </li>-->
+<!--  </ul>-->
 
   <ul>
     <li><a [routerLink]="">등록한 상품</a></li>

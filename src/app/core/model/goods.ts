@@ -1,5 +1,4 @@
 import { firestore } from 'firebase/app';
-import { GroupRef } from './group';
 
 /*
  * deprecated
@@ -40,7 +39,8 @@ export enum GoodsShipping {
 export interface Goods {
   id: string;
   userId: string;
-  groupRef: GroupRef;
+  groupId: string;
+  profileId: string;
   name: string;
   shared: boolean;
   purchased: GoodsPurchased;
@@ -61,5 +61,3 @@ export type NewGoods = Omit<Goods, 'id' | 'created' | 'updated'> & {
   created: firestore.FieldValue,
   updated: firestore.FieldValue
 };
-
-export type GoodsRef = firestore.DocumentReference;

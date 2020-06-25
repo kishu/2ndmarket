@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService
   ) {
     this.authService.user$.pipe().subscribe(u => console.log('user', u));
-    this.authService.group$.pipe().subscribe(g => console.log('group', g));
+    this.authService.profile$.pipe().subscribe(p => console.log('profile', p));
   }
 
   ngOnInit(): void {

@@ -21,10 +21,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
-    match /users/{user} {
+    match /profiles/{profile} {
       allow read, write: if request.auth.uid != null;
     }
-    match /userAuths/{userAuth} {
+    match /userProfiles/{userProfile} {
       allow read, write: if request.auth.uid != null;
     }
     match /userGroups/{userGroup} {

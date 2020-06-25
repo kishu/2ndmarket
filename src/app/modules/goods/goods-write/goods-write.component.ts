@@ -3,7 +3,7 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, CloudinaryService, GoodsService, GroupsService } from '@app/core/http';
+import { AuthService, CloudinaryService, GoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import {
   Goods,
   GoodsCondition,
@@ -27,33 +27,35 @@ export class GoodsWriteComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private groupService: GroupsService,
     private goodsService: GoodsService,
+    private profilesService: ProfilesService,
     private cloudinaryService: CloudinaryService
   ) {
-    this.goods$ = forkJoin(this.authService.user$.pipe(first(), filter(u => !!u)), this.authService.group$.pipe(first()))
-      .pipe(
-        filter(([u, g]) => !!u && !!g),
-        map(([u, g]) => ({
-          userId: u.id,
-          groupRef: this.groupService.getDocRef(g.id),
-          name: faker.commerce.productName(),
-          shared: false,
-          purchased: GoodsPurchased.week,
-          condition: GoodsCondition.almostNew,
-          price: faker.commerce.price(),
-          shipping: GoodsShipping.delivery,
-          images: [],
-          contact: faker.phone.phoneNumber(),
-          memo: faker.lorem.paragraphs(),
-          soldOut: false,
-          favoritesCnt: 0,
-          commentsCnt: 0,
-          created: GoodsService.serverTimestamp(),
-          updated: GoodsService.serverTimestamp()
-        })),
-        switchMap((g: NewGoods) => of(g))
-      );
+    this.goods$ = forkJoin([
+      this.authService.user$.pipe(first(), filter(u => !!u)),
+      this.authService.profile$.pipe(first(), filter(p => !!p))
+    ]).pipe(
+      map(([u, p]) => ({
+        userId: u.id,
+        groupId: p.groupId,
+        profileId: p.id,
+        name: faker.commerce.productName(),
+        shared: false,
+        purchased: GoodsPurchased.week,
+        condition: GoodsCondition.almostNew,
+        price: faker.commerce.price(),
+        shipping: GoodsShipping.delivery,
+        images: [],
+        contact: faker.phone.phoneNumber(),
+        memo: faker.lorem.paragraphs(),
+        soldOut: false,
+        favoritesCnt: 0,
+        commentsCnt: 0,
+        created: GoodsService.serverTimestamp(),
+        updated: GoodsService.serverTimestamp()
+      })),
+      switchMap((g: NewGoods) => of(g))
+    );
   }
 
   ngOnInit(): void {
