@@ -32,11 +32,11 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-    const user$ = this.authService.user$.pipe(first(), filter(u => !!u), share());
+    const profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), share());
     const comments$ = this.commentsService.getAllByGoodsId(goodsId).pipe(first());
 
-    this.commentList$ = forkJoin([user$, of(this.goods), comments$]).pipe(
-      map(([user, goods, comments]) => comments.map(c => ({...c, seller: goods.userId === c.userId, permission: c.userId === user.id}))),
+    this.commentList$ = forkJoin([profile$, of(this.goods), comments$]).pipe(
+      map(([profile, goods, comments]) => comments.map(c => ({...c, seller: goods.profileId === c.profileId, permission: c.profileId === profile.id}))),
       map((cList: GoodsCommentExtend[]) => {
         return cList.reduce((a, c) => {
           if (a.length === 0) {

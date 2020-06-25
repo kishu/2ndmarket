@@ -13,7 +13,7 @@ button {
   @apply border border-green-500 bg-green-500;
   @apply text-white text-sm;
   &:disabled {
-    @apply border-green-400 bg-green-400;
+    @apply opacity-50;
   }
 }
 
@@ -22,7 +22,7 @@ select,
 textarea {
   @apply block w-full py-2 px-3;
   @apply border-0 border-b-2 rounded-none border-gray-500 bg-white text-gray-700;
-  @apply text-sm appearance-none;
+  @apply appearance-none;
   &:focus {
     @apply bg-white border-gray-500;
   }
@@ -81,4 +81,21 @@ textarea {
 
 .square {
   padding-bottom: 100%;
+}
+
+.attachImage {
+  position: relative;
+  padding-bottom: 100%;
+  .image {
+    @apply absolute w-full h-full object-cover;
+  }
+
+  &.selected {
+    @apply z-10;
+    .image {
+      @apply border-2 border-gray-700 bg-white;
+      padding: 2px;
+      transform: scale(1.1);
+    }
+  }
 }

@@ -10,7 +10,7 @@
         <div
           class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-xs font-bold uppercase"
           [ngClass]="{'opacity-0': !isFirst}"
-          *ngIf="!talk.permission">{{ talk.userId.slice(0, 2) }}</div>
+          *ngIf="!talk.permission">{{ talk.profileId.slice(0, 2) }}</div>
         <p class="talk mx-1 mb-1 shadow max-w-sm" (click)="onClickDelete(talk)">{{ talk.body }}</p>
         <div class="flex flex-row-reverse flex-shrink-0 items-end mb-1">
           <span class="text-xs flex-shrink-0 text-gray-400" *ngIf="isLast">{{ talk.created | fsTimestamp | date:'hh:mm' }}</span>

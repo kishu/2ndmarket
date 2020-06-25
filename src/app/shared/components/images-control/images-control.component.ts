@@ -37,6 +37,15 @@ export class ImagesControlComponent implements OnInit {
     target.value = '';
   }
 
+  onSelectImage(image: ImageFileOrUrl) {
+    this.imageFileOrUrls.filter(f => f.selected).map(f => delete f.selected);
+    image.selected = true;
+  }
+
+  onBlurImage(image: ImageFileOrUrl) {
+    delete image.selected;
+  }
+
   onClickMoveImage(from: number, to: number) {
     if (
       from !== to &&
