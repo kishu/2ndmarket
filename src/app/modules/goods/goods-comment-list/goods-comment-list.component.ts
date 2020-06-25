@@ -1,5 +1,5 @@
 import { Observable, forkJoin, of } from 'rxjs';
-import { filter, first, map, tap, share, withLatestFrom } from 'rxjs/operators';
+import { filter, first, map, tap, share, withLatestFrom, switchMap } from 'rxjs/operators';
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GoodsComment, User, Goods } from '@app/core/model';
@@ -32,24 +32,36 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-    const profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), share());
-    const comments$ = this.commentsService.getAllByGoodsId(goodsId).pipe(first());
 
-    this.commentList$ = forkJoin([profile$, of(this.goods), comments$]).pipe(
-      map(([profile, goods, comments]) => comments.map(c => ({...c, seller: goods.profileId === c.profileId, permission: c.profileId === profile.id}))),
-      map((cList: GoodsCommentExtend[]) => {
-        return cList.reduce((a, c) => {
-          if (a.length === 0) {
-            return [[c]];
-          }
-          const p = a[a.length - 1];
-          if (p[0].userId === c.userId) {
-            p.push(c);
-          } else {
-            a.push([c]);
-          }
-          return a;
-        }, []);
+    this.commentList$ = this.authService.profile$.pipe(
+      first(),
+      filter(p => !!p),
+      switchMap(profile => {
+        return this.commentsService.getAllByGoodsId(goodsId).pipe(
+          map(comments => {
+            return comments.map(c => {
+              return {
+                ...c,
+                seller: this.goods.profileId === c.profileId,
+                permission: c.profileId === profile.id
+              } as GoodsCommentExtend
+            })
+          }),
+          map(comments => {
+            return comments.reduce((a, c) => {
+              if (a.length === 0) {
+                return [[c]];
+              }
+              const p = a[a.length - 1];
+              if (p[0].profileId === c.profileId) {
+                p.push(c);
+              } else {
+                a.push([c]);
+              }
+              return a;
+            }, []);
+          })
+        )
       })
     );
   }
