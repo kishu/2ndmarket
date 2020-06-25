@@ -110,3 +110,9 @@
     </div>
   </form>
 </ng-container>
+
+<ul *ngIf="profiles$ | async as profiles">
+  <li *ngFor="let profile of profiles">
+    {{profile | json}}
+  </li>
+</ul>

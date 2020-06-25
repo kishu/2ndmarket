@@ -1,6 +1,6 @@
 import { random } from 'lodash-es';
 import { BehaviorSubject, empty, of } from 'rxjs';
-import { first, map, share, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
@@ -25,6 +25,11 @@ export class GroupAddComponent implements OnInit {
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
   groups$ = this.groupsService.getAll([['created', 'desc']]).pipe(first(), share());
   domains$ = this.groups$.pipe(map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort()));
+  profiles$ = this.authService.user$.pipe(
+    first(),
+    filter(u => !!u),
+    switchMap(u => this.userProfilesService.getByUserId(u.id).pipe(first()))
+  );
 
   get accountCtl() { return this.emailForm.get('account'); }
   get domainCtl() { return this.emailForm.get('domain'); }
@@ -44,14 +49,14 @@ export class GroupAddComponent implements OnInit {
       switch(step) {
         case GroupAddStep.email:
           this.emailForm = this.fb.group({
-            account: ['kishu'],
-            domain: ['webtoonscorp.com'],
+            account: [''],
+            domain: [''],
           });
           break;
         case GroupAddStep.verify:
           this.verifyForm = this.fb.group({
             email: [this.email],
-            code: [this.code]
+            code: []
           });
           break;
       }
@@ -65,23 +70,16 @@ export class GroupAddComponent implements OnInit {
     this.submitting = true;
     const to = this.email;
     const code = random(1000, 9999);
-    console.log('code', code);
-    // temp
-    this.code = code;
-    this.step$.next(GroupAddStep.verify);
-
-    if (false) {
-      const callable = this.fns.httpsCallable('sendVerificationEmail');
-      callable({to, code}).pipe(first()).subscribe(() => {
-        // i don't know why this subscribe function run outside of ngzone.
-        // this is just tricky code.
-        this.ngZone.run(() => {
-          this.code = code;
-          this.submitting = false;
-          this.step$.next(GroupAddStep.verify);
-        });
+    const callable = this.fns.httpsCallable('sendVerificationEmail');
+    callable({to, code}).pipe(first()).subscribe(() => {
+      // i don't know why this subscribe function run outside of ngzone.
+      // this is just tricky code.
+      this.ngZone.run(() => {
+        this.code = code;
+        this.submitting = false;
+        this.step$.next(GroupAddStep.verify);
       });
-    }
+    });
   }
 
   onTimeoverLimitTimer() {
