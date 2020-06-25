@@ -11,7 +11,6 @@ import { Goods, NewGoodsFavorite, User } from '@app/core/model';
   styleUrls: ['./goods-detail.component.scss']
 })
 export class GoodsDetailComponent implements OnInit {
-  user$: Observable<User>;
   goods$: Observable<Goods>;
   favoritesCount$: Observable<number>;
   favorited$: Observable<boolean>;
@@ -39,14 +38,18 @@ export class GoodsDetailComponent implements OnInit {
       switchMap(p => this.goods$.pipe(map(g => g.profileId === p.id)))
     );
 
-    const goodsFavorites$ = this.user$.pipe(
-      switchMap(u =>  this.goodsFavoritesService.getAllByGoodsId(goodsId))
-    );
+    const goodsFavorites$ = this.goodsFavoritesService.getAllByGoodsId(goodsId);
 
     this.favoritesCount$ = goodsFavorites$.pipe(map(f => f.length));
     this.favorited$ = goodsFavorites$.pipe(
-      withLatestFrom(this.user$),
-      map(([f, u]) => f.some(i => i.userId === u.id)),
+      switchMap(favorites => {
+        return this.authService.user$.pipe(
+          first(),
+          filter(u => !!u)
+        ).pipe(
+          map(u => favorites.some(f => f.userId === u.id))
+        )
+      })
     );
   }
 
