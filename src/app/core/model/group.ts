@@ -1,6 +1,3 @@
-import { firestore } from 'firebase/app';
-import { AngularFirestore } from '@angular/fire/firestore';
-
 // export enum GroupType {
 //   corp = 'corp',
 //   school = 'school',
@@ -15,4 +12,3 @@ export interface Group {
 }
 
 export type NewGroup = Omit<Group, 'id'>;
-export type GroupRef = firestore.DocumentReference;

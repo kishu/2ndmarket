@@ -1,3 +1,4 @@
+import { forkJoin } from "rxjs";
 import { first, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -30,23 +31,24 @@ export class GoodsCommentFormComponent implements OnInit {
 
   onSubmit() {
     this.submitting = true;
-    this.authService.user$
-      .pipe(
-        first(),
-        filter(u => !!u),
-        map(u => ({
-          userId: u.id,
-          goodsRef: this.goodsService.getDocRef(this.goodsId),
-          ...this.commentForm.value,
-          created: GoodsCommentsService.serverTimestamp()
-        } as NewGoodsComment)),
-        tap(() => this.commentForm.reset()),
-        switchMap(c => this.goodsCommentsService.add(c))
-      )
-      .subscribe(
-        () => this.submitting = false,
-        (err) => alert(err)
-      );
+
+    forkJoin([
+      this.authService.user$.pipe(first(), filter(u => !!u)),
+      this.authService.profile$.pipe(first(), filter(p => !!p))
+    ]).pipe(
+      map(([u, p]) => ({
+        userId: u.id,
+        profileId: p.id,
+        goodsId: this.goodsId,
+        ...this.commentForm.value,
+        created: GoodsCommentsService.serverTimestamp()
+      } as NewGoodsComment)),
+      tap(() => this.commentForm.reset()),
+      switchMap(c => this.goodsCommentsService.add(c))
+    ).subscribe(
+      () => this.submitting = false,
+      (err) => alert(err)
+    );
   }
 
 }

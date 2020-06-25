@@ -1,9 +1,9 @@
 import { forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, first, map, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsCacheService, GoodsFavoritesService } from '@app/core/http';
-import { Goods, User } from '@app/core/model';
+import { AuthService, GoodsService, GoodsCacheService, GoodsFavoritesService, ProfilesService } from '@app/core/http';
+import { Goods, NewGoodsFavorite, User } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-detail',
@@ -15,25 +15,34 @@ export class GoodsDetailComponent implements OnInit {
   goods$: Observable<Goods>;
   favoritesCount$: Observable<number>;
   favorited$: Observable<boolean>;
-  canEdit = false;
+  permission$: Observable<boolean>;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
+    private profilesService: ProfilesService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
     private goodsFavoritesService: GoodsFavoritesService
   ) {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-    this.user$ = this.authService.user$.pipe(first(), filter(u => !!u), share());
+
     this.goods$ = this.goodsCacheService.getGoods(goodsId).pipe(
       switchMap(g => g ? of(g) : this.goodsService.get(goodsId).pipe(first())),
-      tap(g => this.user$.subscribe(u => this.canEdit = g.userId === u.id)),
+      share(),
     );
+
+    this.permission$ = this.authService.profile$.pipe(
+      first(),
+      filter(p => !!p),
+      switchMap(p => this.goods$.pipe(map(g => g.profileId === p.id)))
+    );
+
     const goodsFavorites$ = this.user$.pipe(
-      switchMap(u =>  this.goodsFavoritesService.getAllByGoodsRef(goodsId))
+      switchMap(u =>  this.goodsFavoritesService.getAllByGoodsId(goodsId))
     );
+
     this.favoritesCount$ = goodsFavorites$.pipe(map(f => f.length));
     this.favorited$ = goodsFavorites$.pipe(
       withLatestFrom(this.user$),
@@ -46,12 +55,23 @@ export class GoodsDetailComponent implements OnInit {
 
   onClickFavorite(favorite: boolean) {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-    const goodsRef = this.goodsService.getDocRef(goodsId);
-    this.user$.pipe(
-      switchMap(u => favorite ?
-        this.goodsFavoritesService.deleteBy(u.id, goodsRef) :
-        this.goodsFavoritesService.add({ userId: u.id, goodsRef })
-      )
+    forkJoin([
+      this.authService.user$.pipe(first(), filter(u => !!u)),
+      this.authService.profile$.pipe(first(), filter(p => !!p))
+    ]).pipe(
+      switchMap(([u, p]) => {
+        if (favorite) {
+          return this.goodsFavoritesService.deleteByGoodsIdAndProfileId(goodsId, p.id);
+        } else {
+          const newGoodsFavorite: NewGoodsFavorite = {
+            userId: u.id,
+            profileId: p.id,
+            goodsId,
+            created: GoodsFavoritesService.serverTimestamp()
+          };
+          return this.goodsFavoritesService.add(newGoodsFavorite);
+        }
+      })
     ).subscribe();
   }
 

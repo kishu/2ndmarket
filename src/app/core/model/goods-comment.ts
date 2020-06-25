@@ -1,10 +1,10 @@
 import { firestore } from 'firebase';
-import { GoodsRef } from './goods';
 
 export interface GoodsComment {
   id: string;
   userId: string;
-  goodsRef: GoodsRef;
+  profileId: string;
+  goodsId: string;
   body: string;
   created: firestore.Timestamp;
 }
@@ -12,5 +12,3 @@ export interface GoodsComment {
 export type NewGoodsComment = Omit<GoodsComment, 'id' | 'created'> & {
   created: firestore.FieldValue
 };
-
-export type GoodsCommentRef = firestore.DocumentReference;

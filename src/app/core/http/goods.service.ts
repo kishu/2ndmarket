@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
-import { Goods, GroupRef } from '@app/core/model';
+import { Goods } from '@app/core/model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +12,9 @@ export class GoodsService extends FirestoreService<Goods> {
     super(afs, 'goods');
   }
 
-  getAllByGroupRef(groupRef: GroupRef): Observable<Goods[]> {
+  getAllByGroupId(groupId: string): Observable<Goods[]> {
     return this.query({
-      where: [['groupRef', '==', groupRef]],
+      where: [['groupId', '==', groupId]],
       orderBy: [['updated', 'desc']]
     });
   }
