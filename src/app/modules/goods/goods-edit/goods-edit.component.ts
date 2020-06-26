@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { Goods, ImageFile, ImageFileOrUrl, ImageType, ImageUrl, UploadedImage } from '@app/core/model';
+import { Observable } from 'rxjs';
+import { Goods, ImageFile, ImageFileOrUrl, ImageType } from '@app/core/model';
 import { CloudinaryService, GoodsService } from '@app/core/http';
-import { map, switchMap, tap } from 'rxjs/operators';
 import { fromPromise } from "rxjs/internal-compatibility";
 
 @Component({

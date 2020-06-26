@@ -2,7 +2,7 @@ import * as faker from 'faker';
 faker.locale = 'ko';
 import { fill } from 'lodash-es';
 import { forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AuthService, CloudinaryService, GoodsService, ProfilesService } from '@app/core/http';

@@ -1,9 +1,9 @@
 import { Observable, of } from 'rxjs';
-import { switchMap } from "rxjs/operators";
+import { share, switchMap } from "rxjs/operators";
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/http/auth.service';
 import { GroupsService } from "@app/core/http";
-import { Group, User } from '@app/core/model';
+import { Group, Profile } from '@app/core/model';
 
 @Component({
   selector: 'app-header',
@@ -11,14 +11,14 @@ import { Group, User } from '@app/core/model';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  user$: Observable<User>;
+  profile$: Observable<Profile>;
   group$: Observable<Group | null>;
   constructor(
     private authService: AuthService,
     private groupService: GroupsService
   ) {
-    this.user$ = this.authService.user$;
-    this.group$ = this.authService.profile$.pipe(
+    this.profile$ = this.authService.profile$.pipe(share());
+    this.group$ = this.profile$.pipe(
       switchMap(p => {
         if (p) {
           return this.groupService.get(p.groupId);
