@@ -11,8 +11,8 @@ body {
 
 button {
   @apply py-2 px-4;
-  @apply border border-green-500 bg-green-500;
-  @apply text-white text-sm;
+  @apply border border-blue-500 bg-blue-500;
+  @apply text-white;
   &:disabled {
     @apply opacity-50;
   }
@@ -98,5 +98,13 @@ textarea {
       padding: 2px;
       transform: scale(1.1);
     }
+  }
+}
+
+.endline {
+  @apply relative text-gray-300 text-sm text-center;
+  &:before {
+    @apply absolute inset-y-0 left-0 right-0 w-full h-px m-auto bg-gray-400;
+    content: '';
   }
 }

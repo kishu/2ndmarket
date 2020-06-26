@@ -1,7 +1,7 @@
 <ng-container *ngIf="commentList$ | async as commentList">
   <ul>
     <li
-      class="py-1 text-sm"
+      class="py-1"
       *ngFor="let comment of commentList">
       <div
         class="flex"
@@ -19,3 +19,6 @@
     </li>
   </ul>
 </ng-container>
+<div class="endline mt-2 mb-4">
+  <p class="inline-block relative px-3 bg-gray-500">상품이 팔렸습니다.</p>
+</div>
