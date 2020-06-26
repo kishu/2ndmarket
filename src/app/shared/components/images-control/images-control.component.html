@@ -1,4 +1,4 @@
-<ul class="grid grid-cols-3 p-3">
+<ul class="p-3 goods-images">
   <li
     class="relative border border-white"
     *ngFor="let fileOrUrl of imageFileOrUrls; let i = index; first as isFirst; last as isLast">
@@ -65,17 +65,15 @@
       </div>
     </div>
   </li>
-  <li class="relative border border-white">
-    <div class="relative square bg-gray-700">
-      <div class="absolute inset-x-0 inset-y-0 flex justify-center items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-      </div>
-      <input
-        type="file"
-        accept="image/gif, image/jpeg, image/png"
-        class="absolute w-full h-full border-none opacity-0"
-        multiple
-        (change)="onChangeFile($event)">
-    </div>
-  </li>
 </ul>
+<div class="relative bg-gray-700">
+  <div class="flex justify-center items-center p-1">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+  </div>
+  <input
+    type="file"
+    accept="image/gif, image/jpeg, image/png"
+    class="absolute left-0 top-0 w-full h-full border-none opacity-0"
+    multiple
+    (change)="onChangeFile($event)">
+</div>

@@ -58,7 +58,7 @@
     <div class="form-col w-1/2">
       <div class="bg-white">
         <label class="form-label" for="condition">
-          제품상태
+          상태
         </label>
         <div class="relative">
           <select
@@ -67,7 +67,7 @@
             name="condition"
             formControlName="condition"
             required>
-            <option value="">제품상태</option>
+            <option value="">상태</option>
             <option value="boxed">미개봉</option>
             <option value="almostNew">거의 새상품</option>
             <option value="used">사용감 있음</option>
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)" class="text-red-500 text-xs">제품상태를 선택해주세요.</p>
+        <p *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)" class="text-red-500 text-xs">상품의 상태를 선택해주세요.</p>
       </div>
     </div>
   </div>

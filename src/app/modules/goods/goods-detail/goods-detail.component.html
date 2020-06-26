@@ -18,16 +18,18 @@
         <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>
         <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
       </div>
-      <ul>
+      <ul class="goods-images">
         <ng-container *ngFor="let image of goods.images; first as isFirst">
-          <li *ngIf="!isFirst"><img [src]="image" alt=""></li>
+          <li class="relative border border-white">
+            <div class="attachImage"><img [src]="image" class="image" alt=""></div>
+          </li>
         </ng-container>
       </ul>
       <div>{{ goods.contact }}</div>
       <a *ngIf="permission$ | async" [routerLink]="['edit']">수정</a>
     </div>
   </div>
-  <div class="w-full max-w-xl mx-auto p-4 bg-gray-500">
+  <div class="comment-wrap">
     <app-goods-comment-list [goods]="goods"></app-goods-comment-list>
     <app-goods-comment-form [goodsId]="goods.id"></app-goods-comment-form>
   </div>
