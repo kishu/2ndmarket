@@ -77,12 +77,12 @@ export class CloudinaryService {
     return [uploadProgress$, uploadComplete$];
   }
 
-  upload(imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete>] {
+  upload(folder: string, imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete>] {
     const uploadProgress$ = new ReplaySubject<UploadProgress>();
     const uploadComplete$ = new ReplaySubject<UploadComplete>();
 
     let uploadedCnt = 0;
-    const uploadRequests = imageFiles.map(i => this.getUploadRequest(i));
+    const uploadRequests = imageFiles.map(i => this.getUploadRequest(folder, i));
 
     merge(...uploadRequests)
       .pipe(
@@ -119,18 +119,19 @@ export class CloudinaryService {
   }
 
   // https://cloudinary.com/documentation/upload_images#generating_authentication_signatures
-  getUploadRequest(imageFile: ImageFileOrUrl): Observable<HttpEvent<any>> {
+  getUploadRequest(folder: string, imageFile: ImageFileOrUrl): Observable<HttpEvent<any>> {
     const cloudinary = environment.cloudinary;
-    const eager = `f_auto,q_auto,w_375,a_${imageFile.rotate},dpr_3.0,c_limit`;
+    folder = `${cloudinary.folder}/${folder}`;
+    const eager = `f_auto,q_auto,w_375,a_${imageFile.rotate},dpr_2.0,c_limit`;
     const eagerAsync = true;
     const timestamp = new Date().getTime();
-    const signature = `eager=${eager}&eager_async=${eagerAsync}&folder=${cloudinary.folder}&timestamp=${timestamp}${cloudinary.apiSecret}`; // Sort all the parameters in alphabetical order.
+    const signature = `eager=${eager}&eager_async=${eagerAsync}&folder=${folder}&timestamp=${timestamp}${cloudinary.apiSecret}`; // Sort all the parameters in alphabetical order.
     const fd = new FormData ();
     fd.set('api_key', cloudinary.apiKey);
     fd.set('eager', eager);
     fd.set('eager_async', `${eagerAsync}`);
     fd.set('file', imageFile.value);
-    fd.set('folder', cloudinary.folder);
+    fd.set('folder', folder);
     fd.set('timestamp', `${timestamp}`);
     fd.set('signature', sha1(signature));
     const request = new HttpRequest('POST', cloudinary.url, fd, this.httpRequestOptions);

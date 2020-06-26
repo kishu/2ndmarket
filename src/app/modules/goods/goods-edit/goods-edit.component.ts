@@ -35,7 +35,7 @@ export class GoodsEditComponent implements OnInit {
     const uploadedImageUrls = imageFileOrUrls.map(img => img.type === ImageType.url ? img.value as string : '');
     const imageFiles = imageFileOrUrls.filter(img => img.type === ImageType.file) as ImageFile[];
     fromPromise(this.goodsService.update(goods.id, goods)).subscribe(() => {
-      const [, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
+      const [, uploadComplete$] = this.cloudinaryService.upload(goods.id, imageFiles);
       uploadComplete$.subscribe(uploaded => {
         const order = imageFileOrUrls.findIndex(img => {
           if (img.type === ImageType.file) {
