@@ -32,51 +32,6 @@ export class CloudinaryService {
   constructor(private http: HttpClient) {
   }
 
-  /**
-   * @deprecated
-   */
-  deprecated_upload(imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete[]>] {
-    const uploadProgress$ = new ReplaySubject<UploadProgress>();
-    const uploadComplete$ = new ReplaySubject<UploadComplete[]>();
-
-    const uploadedImages: UploadedImage[] = [];
-    const uploadRequests = imageFiles.map(i => this.getUploadRequest(i));
-
-    merge(...uploadRequests)
-      .pipe(
-        tap(e => {
-          if (e.type === HttpEventType.UploadProgress) {
-            uploadProgress$.next({ loaded: e.loaded, total: e.total });
-          }
-        }),
-        tap(e => {
-          if (e.type === HttpEventType.Response) {
-            uploadedImages.push({
-              filename: e.body.original_filename,
-              size: e.body.bytes,
-              url: e.body.eager[0].secure_url
-            });
-          }
-        })
-      )
-      .subscribe(
-        e => {
-          if (e.type === HttpEventType.Response &&
-            uploadedImages.length === uploadRequests.length) {
-            uploadComplete$.next(uploadedImages as UploadComplete[]);
-            uploadProgress$.complete();
-            uploadComplete$.complete();
-          }
-        },
-        () => {
-          uploadProgress$.complete();
-          uploadComplete$.complete();
-        }
-      );
-
-    return [uploadProgress$, uploadComplete$];
-  }
-
   upload(folder: string, imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete>] {
     const uploadProgress$ = new ReplaySubject<UploadProgress>();
     const uploadComplete$ = new ReplaySubject<UploadComplete>();
