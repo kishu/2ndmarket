@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { Goods, ImageFile, ImageFileOrUrl, ImageType, ImageUrl, UploadedImage } from '@app/core/model';
 import { CloudinaryService, GoodsService } from '@app/core/http';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { fromPromise } from "rxjs/internal-compatibility";
 
 @Component({
   selector: 'app-goods-edit',
@@ -26,41 +27,31 @@ export class GoodsEditComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit({goods, imageFileOrUrls}: {goods: Goods, imageFileOrUrls: ImageFileOrUrl[] }) {
+  onSubmit({goods, imageFileOrUrls}: {goods: Partial<Goods>, imageFileOrUrls: ImageFileOrUrl[] }) {
     if (this.submitting) {
       return;
     }
     this.submitting = true;
+    goods = { ...goods, updated: GoodsService.serverTimestamp()} as any;
+    const uploadedImageUrls = imageFileOrUrls.map(img => img.type === ImageType.url ? img.value as string : '');
     const imageFiles = imageFileOrUrls.filter(img => img.type === ImageType.file) as ImageFile[];
-    const [uploadProgress$, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
-    (imageFiles.length > 0 ? uploadComplete$ : of([])).pipe(
-      map(uploadedImages => {
-        return imageFileOrUrls.map(img => {
-          if (img.type === ImageType.url) {
-            return img.value;
-          } else {
-            const targetImage = uploadedImages.find(u => {
-              const imgFile = img.value as File;
-              return imgFile.name.startsWith(u.filename) && imgFile.size === u.size;
-            });
-            return targetImage.url;
+    fromPromise(this.goodsService.update(goods.id, goods)).subscribe(() => {
+      const [, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
+      uploadComplete$.subscribe(uploaded => {
+        const order = imageFileOrUrls.findIndex(img => {
+          if (img.type === ImageType.file) {
+            const file = img.value as File;
+            return file.name.startsWith(uploaded.filename) && file.size === uploaded.size;
           }
         });
-      }),
-      map(uploadedUrls => {
-        return {
-          ...goods,
-          images: uploadedUrls,
-          updated: GoodsService.serverTimestamp()
-        } as Goods;
-      }),
-      switchMap(goods => this.goodsService.update(goods.id, goods))
-    ).subscribe(
-      (r) => {
-        this.router.navigate(['goods', goods.id]);
-      },
-      err => alert(err)
-    );
+        uploadedImageUrls[order] = uploaded.url;
+        this.goodsService.update(goods.id, { images: uploadedImageUrls });
+      }, err => {
+        alert(err);
+      }, () => {
+        this.router.navigate(['goods']);
+      });
+    });
   }
 
 }

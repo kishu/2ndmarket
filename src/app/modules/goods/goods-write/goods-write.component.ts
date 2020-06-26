@@ -1,9 +1,11 @@
 import * as faker from 'faker';
-import { Observable, of, forkJoin } from 'rxjs';
-import { filter, first, map, switchMap } from 'rxjs/operators';
+faker.locale = 'ko';
+import { fill } from 'lodash-es';
+import { forkJoin, Observable, of } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, CloudinaryService, GoodsService, GroupsService, ProfilesService } from '@app/core/http';
+import { AuthService, CloudinaryService, GoodsService, ProfilesService } from '@app/core/http';
 import {
   Goods,
   GoodsCondition,
@@ -14,6 +16,7 @@ import {
   ImageType,
   NewGoods
 } from '@app/core/model';
+import { fromPromise } from "rxjs/internal-compatibility";
 
 @Component({
   selector: 'app-goods-write',
@@ -66,35 +69,25 @@ export class GoodsWriteComponent implements OnInit {
       return;
     }
     this.submitting = true;
+    const uploadedImageUrls = fill(Array(imageFileOrUrls.length), '');
     const imageFiles = imageFileOrUrls.filter(img => img.type === ImageType.file) as ImageFile[];
-    const [uploadProgress$, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
-    uploadComplete$
-      .pipe(
-        map(uploadedImages => {
-          return imageFileOrUrls.map(img => {
-            if (img.type === ImageType.url) {
-              return img.value;
-            } else {
-              const targetImage = uploadedImages.find(u => {
-                const imgFile = img.value as File;
-                return imgFile.name.startsWith(u.filename) && imgFile.size === u.size;
-              });
-              return targetImage.url;
-            }
-          });
-        }),
-        map(uploadedUrls => ({
-          ...goods,
-          images: uploadedUrls,
-        } as NewGoods)),
-        switchMap(goods => this.goodsService.add(goods))
-      )
-      .subscribe(
-        (r) => {
-          this.router.navigate(['goods']);
-        },
-        err => alert(err)
-      );
+    fromPromise(this.goodsService.add(goods)).subscribe(goods => {
+      const [, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
+      uploadComplete$.subscribe(uploaded => {
+        const order = imageFileOrUrls.findIndex(img => {
+          if (img.type === ImageType.file) {
+            const file = img.value as File;
+            return file.name.startsWith(uploaded.filename) && file.size === uploaded.size;
+          }
+        });
+        uploadedImageUrls[order] = uploaded.url;
+        this.goodsService.update(goods.id, { images: uploadedImageUrls });
+      }, err => {
+        alert(err);
+      }, () => {
+        this.router.navigate(['goods']);
+      });
+    });
   }
 
 }

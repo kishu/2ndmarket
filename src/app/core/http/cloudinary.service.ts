@@ -32,7 +32,10 @@ export class CloudinaryService {
   constructor(private http: HttpClient) {
   }
 
-  upload(imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete[]>] {
+  /**
+   * @deprecated
+   */
+  deprecated_upload(imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete[]>] {
     const uploadProgress$ = new ReplaySubject<UploadProgress>();
     const uploadComplete$ = new ReplaySubject<UploadComplete[]>();
 
@@ -61,6 +64,47 @@ export class CloudinaryService {
           if (e.type === HttpEventType.Response &&
             uploadedImages.length === uploadRequests.length) {
             uploadComplete$.next(uploadedImages as UploadComplete[]);
+            uploadProgress$.complete();
+            uploadComplete$.complete();
+          }
+        },
+        () => {
+          uploadProgress$.complete();
+          uploadComplete$.complete();
+        }
+      );
+
+    return [uploadProgress$, uploadComplete$];
+  }
+
+  upload(imageFiles: ImageFile[]): [Subject<UploadProgress>, Subject<UploadComplete>] {
+    const uploadProgress$ = new ReplaySubject<UploadProgress>();
+    const uploadComplete$ = new ReplaySubject<UploadComplete>();
+
+    let uploadedCnt = 0;
+    const uploadRequests = imageFiles.map(i => this.getUploadRequest(i));
+
+    merge(...uploadRequests)
+      .pipe(
+        tap(e => {
+          if (e.type === HttpEventType.UploadProgress) {
+            uploadProgress$.next({ loaded: e.loaded, total: e.total });
+          }
+        }),
+        tap(e => {
+          if (e.type === HttpEventType.Response) {
+            uploadedCnt = uploadedCnt + 1;
+            uploadComplete$.next({
+              filename: e.body.original_filename,
+              size: e.body.bytes,
+              url: e.body.eager[0].secure_url
+            });
+          }
+        })
+      )
+      .subscribe(
+        e => {
+          if (e.type === HttpEventType.Response && uploadRequests.length === uploadedCnt) {
             uploadProgress$.complete();
             uploadComplete$.complete();
           }
