@@ -1,9 +1,16 @@
 import { forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, first, map, share, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsCacheService, GoodsFavoritesService, ProfilesService } from '@app/core/http';
-import { Goods, NewGoodsFavorite, User } from '@app/core/model';
+import {
+  AuthService,
+  GoodsService,
+  GoodsCacheService,
+  GoodsFavoritesService,
+  ProfilesService,
+  CloudinaryService
+} from '@app/core/http';
+import { Goods, NewGoodsFavorite } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-detail',
@@ -23,7 +30,8 @@ export class GoodsDetailComponent implements OnInit {
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
-    private goodsFavoritesService: GoodsFavoritesService
+    private goodsFavoritesService: GoodsFavoritesService,
+    private cloudinaryService: CloudinaryService
   ) {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
 
@@ -76,6 +84,13 @@ export class GoodsDetailComponent implements OnInit {
         }
       })
     ).subscribe();
+  }
+
+  onClickDelete() {
+    this.goods$.subscribe(g => {
+      this.goodsService.delete(g.id);
+      alert('ok');
+    });
   }
 
 }

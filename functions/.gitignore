@@ -8,4 +8,3 @@ typings/
 *.log
 lib/
 node_modules/
-.runtimeconfig.json

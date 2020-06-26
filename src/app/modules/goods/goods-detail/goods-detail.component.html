@@ -26,7 +26,10 @@
         </ng-container>
       </ul>
       <div>{{ goods.contact }}</div>
-      <a *ngIf="permission$ | async" [routerLink]="['edit']">수정</a>
+      <ng-container *ngIf="permission$ | async">
+        <a [routerLink]="['edit']">수정</a>
+        <button type="button" (click)="onClickDelete()">삭제</button>
+      </ng-container>
     </div>
   </div>
   <div class="comment-wrap">
