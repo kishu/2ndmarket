@@ -5,6 +5,7 @@
 @import "tailwindcss/utilities";
 
 body {
+  min-width: 320px;
   @apply bg-gray-200;
 }
 
