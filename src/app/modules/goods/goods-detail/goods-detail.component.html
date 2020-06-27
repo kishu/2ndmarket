@@ -1,39 +1,45 @@
 <ng-container *ngIf="goods$ | async as goods">
-  <div class="goodsDetail bg-white w-full max-w-xl mx-auto">
-    <ul>
-      <ng-container *ngFor="let src of goods.images; first as isFirst">
-        <li *ngIf="isFirst"><img [src]="src" alt=""></li>
-      </ng-container>
-    </ul>
-    <div class="px-4 py-3">
-      <h2 class="goodsName text-lg">{{ goods.name }}</h2>
-      <ng-container [ngSwitch]="favorited$ | async">
-        <button *ngSwitchCase="true" type="button" (click)="onClickFavorite(true)">좋아요(했음)</button>
-        <button *ngSwitchCase="false" type="button" (click)="onClickFavorite(false)">좋아요(안했음)</button>
-      </ng-container>
-      <span *ngIf="favoritesCount$ | async as favoritesCount">{{ favoritesCount }}</span>
-      <div class="my-3"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
-      <p class="leading-tight">{{ goods.memo }}</p>
-      <div class="my-3 text-sm">
-        <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>
-        <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
-      </div>
-      <ul class="goods-images">
+  <ng-container *ngIf="goods.id && goods.activated then goodsTemplate else emptyTemplate"></ng-container>
+  <ng-template #goodsTemplate>
+    <div class="goodsDetail bg-white w-full max-w-xl mx-auto">
+      <ul>
         <ng-container *ngFor="let src of goods.images; first as isFirst">
-          <li class="relative border border-white">
-            <div class="attachImage"><img [src]="src" class="image" alt=""></div>
-          </li>
+          <li *ngIf="isFirst"><img [src]="src" alt=""></li>
         </ng-container>
       </ul>
-      <div>{{ goods.contact }}</div>
-      <ng-container *ngIf="permission$ | async">
-        <a [routerLink]="['edit']" skipLocationChange>수정</a>
-        <button type="button" (click)="onClickDelete()">삭제</button>
-      </ng-container>
+      <div class="px-4 py-3">
+        <h2 class="goodsName text-lg">{{ goods.name }}</h2>
+        <ng-container [ngSwitch]="favorited$ | async">
+          <button *ngSwitchCase="true" type="button" (click)="onClickFavorite(true)">좋아요(했음)</button>
+          <button *ngSwitchCase="false" type="button" (click)="onClickFavorite(false)">좋아요(안했음)</button>
+        </ng-container>
+        <span *ngIf="favoritesCount$ | async as favoritesCount">{{ favoritesCount }}</span>
+        <div class="my-3"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
+        <p class="leading-tight">{{ goods.memo }}</p>
+        <div class="my-3 text-sm">
+          <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>
+          <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
+        </div>
+        <ul class="goods-images">
+          <ng-container *ngFor="let src of goods.images; first as isFirst">
+            <li class="relative border border-white">
+              <div class="attachImage"><img [src]="src" class="image" alt=""></div>
+            </li>
+          </ng-container>
+        </ul>
+        <div>{{ goods.contact }}</div>
+        <ng-container *ngIf="permission$ | async">
+          <a [routerLink]="['edit']" skipLocationChange>수정</a>
+          <button type="button" (click)="onClickDelete()">삭제</button>
+        </ng-container>
+      </div>
     </div>
-  </div>
-  <div class="comment-wrap">
-    <app-goods-comment-list [goods]="goods"></app-goods-comment-list>
-    <app-goods-comment-form [goodsId]="goods.id"></app-goods-comment-form>
-  </div>
+    <div class="comment-wrap">
+      <app-goods-comment-list [goods]="goods"></app-goods-comment-list>
+      <app-goods-comment-form [goodsId]="goods.id"></app-goods-comment-form>
+    </div>
+  </ng-template>
+  <ng-template #emptyTemplate>
+    <div>상품이 없습니다.</div>
+  </ng-template>
 </ng-container>

@@ -32,11 +32,8 @@ export class GoodsEditComponent implements OnInit {
     }
     this.submitting = true;
     this.goodsService.update(goods.id, goods).then(() => {
+      draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${goods.id}`}));
       const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
-      draftImages = draftImages.map(d => {
-        d.context = `type=goods|id=${goods.id}`;
-        return d;
-      });
       uploadComplete$.subscribe(cloudinaryImages => {
         this.goodsService.update(goods.id, { images: cloudinaryImages });
       }, err => {

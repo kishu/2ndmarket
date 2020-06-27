@@ -1,15 +1,8 @@
 import { forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { filter, first, map, publish, refCount, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  AuthService,
-  GoodsService,
-  GoodsCacheService,
-  GoodsFavoritesService,
-  ProfilesService,
-  CloudinaryService
-} from '@app/core/http';
+import { AuthService, GoodsService, GoodsCacheService, GoodsFavoritesService, ProfilesService } from '@app/core/http';
 import { Goods, NewGoodsFavorite } from '@app/core/model';
 
 @Component({
@@ -17,8 +10,8 @@ import { Goods, NewGoodsFavorite } from '@app/core/model';
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss']
 })
-export class GoodsDetailComponent implements OnInit {
-  goods$: Observable<Goods>;
+export class GoodsDetailComponent implements OnInit, OnDestroy {
+  goods$: Observable<Goods | Partial<Goods>>;
   favoritesCount$: Observable<number>;
   favorited$: Observable<boolean>;
   permission$: Observable<boolean>;
@@ -36,14 +29,18 @@ export class GoodsDetailComponent implements OnInit {
 
     this.goods$ = this.goodsCacheService.getGoods(goodsId).pipe(
       switchMap(g => g ? of(g) : this.goodsService.get(goodsId).pipe(first())),
-      tap(g => console.log('g', g)),
+      map(g => g ? g : { id: '' }),
       share()
     );
 
-    this.permission$ = this.authService.profile$.pipe(
-      first(),
-      filter(p => !!p),
-      switchMap(p => this.goods$.pipe(map(g => g.profileId === p.id)))
+    this.permission$ = this.goods$.pipe(
+      switchMap(g => {
+        return this.authService.profile$.pipe(
+          first(),
+          filter(p => !!p),
+          map(p => p.id === g.profileId)
+        );
+      })
     );
 
     const goodsFavorites$ = this.goodsFavoritesService.getAllByGoodsId(goodsId);
@@ -56,12 +53,16 @@ export class GoodsDetailComponent implements OnInit {
           filter(u => !!u)
         ).pipe(
           map(u => favorites.some(f => f.userId === u.id))
-        )
+        );
       })
     );
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    this.goodsCacheService.removeGoods();
   }
 
   onClickFavorite(favorite: boolean) {
@@ -87,10 +88,13 @@ export class GoodsDetailComponent implements OnInit {
   }
 
   onClickDelete() {
-    this.goods$.subscribe(g => {
-      this.goodsService.delete(g.id);
-      alert('ok');
-    });
+    if (confirm('삭제 할까요?')) {
+      const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
+      this.goodsService.update(goodsId, {activated: false}).then(
+        () => this.router.navigate(['goods']),
+        (err) => alert(err)
+      );
+    }
   }
 
 }

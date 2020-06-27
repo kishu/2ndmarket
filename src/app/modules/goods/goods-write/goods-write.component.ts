@@ -61,10 +61,7 @@ export class GoodsWriteComponent implements OnInit {
     }
     this.submitting = true;
     this.goodsService.add(goods).then(addedGoods => {
-      draftImages = draftImages.map(d => {
-        d.context = `type=goods|id=${addedGoods.id}`;
-        return d;
-      });
+      draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${addedGoods.id}`}));
       const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
       uploadComplete$.subscribe(cloudinaryImages => {
         addedGoods.update({ images: cloudinaryImages });

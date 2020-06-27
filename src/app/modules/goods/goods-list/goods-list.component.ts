@@ -14,9 +14,8 @@ export class GoodsListComponent implements OnInit {
   goodsList$ = this.authService.profile$.pipe(
     first(),
     filter(p => !!p),
-    switchMap(p => this.goodsService.getAllByGroupId(p.groupId))
+    switchMap(p => this.goodsService.getAllByGroupId(p.groupId).pipe(first()))
   );
-
 
   constructor(
     private router: Router,

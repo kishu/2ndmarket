@@ -1,5 +1,5 @@
 import * as sha1 from 'sha1';
-import { merge, Observable, ReplaySubject, Subject } from 'rxjs';
+import { empty, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
@@ -53,7 +53,14 @@ export class CloudinaryService {
   upload(draftImages: DraftImage[]): [Subject<UploadProgress>, Subject<string[]>] {
     const uploadProgress$ = new ReplaySubject<UploadProgress>();
     const uploadComplete$ = new ReplaySubject<string[]>();
-    const uploadRequests = draftImages.filter(img => img.isFile).map(img => this.getUploadRequest(img));
+    const uploadRequests = draftImages.length > 0 ?
+      draftImages.filter(img => img.isFile).map(img => this.getUploadRequest(img)) :
+      [ of(empty()) ];
+
+    const completeAll = () => {
+      uploadProgress$.complete();
+      uploadComplete$.complete();
+    };
 
     merge(...uploadRequests)
     .pipe(
@@ -79,12 +86,12 @@ export class CloudinaryService {
       })
     ).subscribe(e => {
       if (e.type === HttpEventType.Response && draftImages.every(img => img.src)) {
-        uploadProgress$.complete();
-        uploadComplete$.complete();
+        completeAll();
       }
     }, () => {
-      uploadProgress$.complete();
-      uploadComplete$.complete();
+      completeAll();
+    }, () => {
+      completeAll();
     });
 
     return [uploadProgress$, uploadComplete$];
