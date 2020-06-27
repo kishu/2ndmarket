@@ -72,7 +72,7 @@ export class GoodsWriteComponent implements OnInit {
     const uploadedImageUrls = fill(Array(imageFileOrUrls.length), '');
     const imageFiles = imageFileOrUrls.filter(img => img.type === ImageType.file) as ImageFile[];
     fromPromise(this.goodsService.add(goods)).subscribe(goods => {
-      const [, uploadComplete$] = this.cloudinaryService.upload(goods.id, imageFiles);
+      const [, uploadComplete$] = this.cloudinaryService.upload(imageFiles);
       uploadComplete$.subscribe(uploaded => {
         const order = imageFileOrUrls.findIndex(img => {
           if (img.type === ImageType.file) {
