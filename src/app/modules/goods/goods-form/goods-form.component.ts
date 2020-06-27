@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Goods, ImageFileOrUrl, NewGoods } from '@app/core/model';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Goods, NewGoods, DraftImage } from '@app/core/model';
 import { ImagesControlComponent } from '@app/shared/components/images-control/images-control.component';
 
 @Component({
@@ -8,7 +8,7 @@ import { ImagesControlComponent } from '@app/shared/components/images-control/im
   templateUrl: './goods-form.component.html',
   styleUrls: ['./goods-form.component.scss']
 })
-export class GoodsFormComponent implements OnInit, AfterViewInit {
+export class GoodsFormComponent implements OnInit {
   goodsForm = this.fb.group({
     name: [],
     shared: [],
@@ -23,7 +23,7 @@ export class GoodsFormComponent implements OnInit, AfterViewInit {
 
   @Input() goods: NewGoods | Goods;
   @Input() submitting = false;
-  @Output() formSubmit = new EventEmitter<{ goods: NewGoods | Goods, imageFileOrUrls: ImageFileOrUrl[] }>();
+  @Output() formSubmit = new EventEmitter<{ goods: NewGoods | Partial<Goods>, draftImages: DraftImage[] }>();
   @ViewChild(ImagesControlComponent) imagesCtl: ImagesControlComponent;
 
   get nameCtl() { return this.goodsForm.get('name'); }
@@ -46,14 +46,10 @@ export class GoodsFormComponent implements OnInit, AfterViewInit {
     this.goodsForm.setValue({ name, shared, purchased, condition, price, shipping, contact, memo, soldOut });
   }
 
-  ngAfterViewInit(): void {
-
-  }
-
   onSubmit() {
     this.submitting = true;
     this.goods = { ...this.goods, ...this.goodsForm.value };
-    this.formSubmit.emit({ goods: this.goods, imageFileOrUrls: this.imagesCtl?.imageFileOrUrls });
+    this.formSubmit.emit({ goods: this.goods, draftImages: this.imagesCtl?.draftImages });
   }
 
 }

@@ -16,8 +16,6 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private authService: AuthService
   ) {
-    this.authService.user$.pipe().subscribe(u => console.log('user', u));
-    this.authService.profile$.pipe().subscribe(p => console.log('profile', p));
   }
 
   ngOnInit(): void {

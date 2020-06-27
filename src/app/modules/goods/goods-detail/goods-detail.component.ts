@@ -30,8 +30,7 @@ export class GoodsDetailComponent implements OnInit {
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
-    private goodsFavoritesService: GoodsFavoritesService,
-    private cloudinaryService: CloudinaryService
+    private goodsFavoritesService: GoodsFavoritesService
   ) {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
 
