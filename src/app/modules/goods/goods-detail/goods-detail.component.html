@@ -2,7 +2,7 @@
   <div class="goodsDetail bg-white w-full max-w-xl mx-auto">
     <ul>
       <ng-container *ngFor="let image of goods.images; first as isFirst">
-        <li *ngIf="isFirst"><img [src]="image" alt=""></li>
+        <li *ngIf="isFirst"><img [src]="image.src" alt=""></li>
       </ng-container>
     </ul>
     <div class="px-4 py-3">
@@ -19,9 +19,9 @@
         <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
       </div>
       <ul class="goods-images">
-        <ng-container *ngFor="let image of goods.images; first as isFirst">
+        <ng-container *ngFor="let src of goods.images; first as isFirst">
           <li class="relative border border-white">
-            <div class="attachImage"><img [src]="image" class="image" alt=""></div>
+            <div class="attachImage"><img [src]="src" class="image" alt=""></div>
           </li>
         </ng-container>
       </ul>

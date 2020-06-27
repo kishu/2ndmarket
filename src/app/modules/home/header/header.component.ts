@@ -1,8 +1,7 @@
 import { Observable, of } from 'rxjs';
-import { share, switchMap } from "rxjs/operators";
+import { share, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@app/core/http/auth.service';
-import { GroupsService } from "@app/core/http";
+import { AuthService, GroupsService } from '@app/core/http';
 import { Group, Profile } from '@app/core/model';
 
 @Component({
@@ -27,6 +26,10 @@ export class HeaderComponent implements OnInit {
         }
       })
     );
+
+    // test
+    this.authService.user$.subscribe(u => console.log('user$', u));
+    this.authService.profile$.subscribe(p => console.log('profile$', p));
   }
 
   ngOnInit(): void {

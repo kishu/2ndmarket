@@ -1,22 +1,11 @@
 import * as faker from 'faker';
 faker.locale = 'ko';
-import { fill } from 'lodash-es';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AuthService, CloudinaryService, GoodsService, ProfilesService } from '@app/core/http';
-import {
-  Goods,
-  GoodsCondition,
-  GoodsPurchased,
-  GoodsShipping,
-  ImageFile,
-  ImageFileOrUrl,
-  ImageType,
-  NewGoods
-} from '@app/core/model';
-import { fromPromise } from "rxjs/internal-compatibility";
+import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-write',
@@ -26,7 +15,6 @@ import { fromPromise } from "rxjs/internal-compatibility";
 export class GoodsWriteComponent implements OnInit {
   submitting = false;
   goods$: Observable<NewGoods>;
-  uploadProgress: { loaded: number, total: number };
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -64,24 +52,19 @@ export class GoodsWriteComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit({goods, imageFileOrUrls}: {goods: Partial<Goods>, imageFileOrUrls: ImageFileOrUrl[] }) {
+  onSubmit({goods, draftImages}) {
     if (this.submitting) {
       return;
     }
     this.submitting = true;
-    const uploadedImageUrls = fill(Array(imageFileOrUrls.length), '');
-    const imageFiles = imageFileOrUrls.filter(img => img.type === ImageType.file) as ImageFile[];
-    fromPromise(this.goodsService.add(goods)).subscribe(goods => {
-      const [, uploadComplete$] = this.cloudinaryService.upload(goods.id, imageFiles);
-      uploadComplete$.subscribe(uploaded => {
-        const order = imageFileOrUrls.findIndex(img => {
-          if (img.type === ImageType.file) {
-            const file = img.value as File;
-            return file.name.startsWith(uploaded.filename) && file.size === uploaded.size;
-          }
-        });
-        uploadedImageUrls[order] = uploaded.url;
-        this.goodsService.update(goods.id, { images: uploadedImageUrls });
+    this.goodsService.add(goods).then(addedGoods => {
+      draftImages = draftImages.map(d => {
+        d.context = `type=goods|id=${addedGoods.id}`;
+        return d;
+      });
+      const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
+      uploadComplete$.subscribe(cloudinaryImages => {
+        addedGoods.update({ images: cloudinaryImages });
       }, err => {
         alert(err);
       }, () => {
