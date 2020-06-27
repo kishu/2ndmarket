@@ -64,7 +64,6 @@ export class CloudinaryService {
       }),
       tap(e => {
         if (e.type === HttpEventType.Response) {
-          console.log(e);
           draftImages = draftImages.map(img => {
             if (img.isFile &&
                 img.file.name === `${e.body.original_filename}.${e.body.original_extension}` &&

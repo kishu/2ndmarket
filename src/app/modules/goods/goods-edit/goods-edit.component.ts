@@ -42,7 +42,7 @@ export class GoodsEditComponent implements OnInit {
       }, err => {
         alert(err);
       }, () => {
-        this.router.navigate(['goods']);
+        this.router.navigate(['goods', goods.id], { replaceUrl: true });
       });
     });
   }

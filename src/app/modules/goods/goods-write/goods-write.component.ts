@@ -4,6 +4,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { AuthService, CloudinaryService, GoodsService, ProfilesService } from '@app/core/http';
 import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
 
@@ -17,6 +18,7 @@ export class GoodsWriteComponent implements OnInit {
   goods$: Observable<NewGoods>;
   constructor(
     private router: Router,
+    private location: Location,
     private authService: AuthService,
     private goodsService: GoodsService,
     private profilesService: ProfilesService,
@@ -42,6 +44,7 @@ export class GoodsWriteComponent implements OnInit {
         soldOut: false,
         favoritesCnt: 0,
         commentsCnt: 0,
+        activated: true,
         created: GoodsService.serverTimestamp(),
         updated: GoodsService.serverTimestamp()
       })),
@@ -68,7 +71,7 @@ export class GoodsWriteComponent implements OnInit {
       }, err => {
         alert(err);
       }, () => {
-        this.router.navigate(['goods']);
+        this.router.navigate(['goods', addedGoods.id], { replaceUrl: true });
       });
     });
   }

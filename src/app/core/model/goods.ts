@@ -53,6 +53,7 @@ export interface Goods {
   soldOut: boolean;
   favoritesCnt: number;
   commentsCnt: number;
+  activated: boolean;
   created: firestore.Timestamp;
   updated: firestore.Timestamp;
 }

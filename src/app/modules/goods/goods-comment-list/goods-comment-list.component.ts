@@ -44,8 +44,8 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
                 ...c,
                 seller: this.goods.profileId === c.profileId,
                 permission: c.profileId === profile.id
-              } as GoodsCommentExtend
-            })
+              } as GoodsCommentExtend;
+            });
           }),
           map(comments => {
             return comments.reduce((a, c) => {
@@ -61,7 +61,7 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
               return a;
             }, []);
           })
-        )
+        );
       })
     );
   }

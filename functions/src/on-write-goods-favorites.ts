@@ -9,5 +9,5 @@ export const onWriteGoodsFavorites =
     .onWrite((change: any, context: any) => {
       const increment = change.after.exists ? 1 : -1;
       const doc = change.after.exists ? change.after.data() : change.before.data();
-      return doc.goodsRef.update({ favoritesCnt: admin.firestore.FieldValue.increment(increment) });
+      return doc.goodsRef.update({ favoritesCnt: admin.firestore.FieldValue.increment(increment), updated: admin.firestore.FieldValue.serverTimestamp() });
     });

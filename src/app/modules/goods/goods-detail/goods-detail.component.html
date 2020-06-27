@@ -1,8 +1,8 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="goodsDetail bg-white w-full max-w-xl mx-auto">
     <ul>
-      <ng-container *ngFor="let image of goods.images; first as isFirst">
-        <li *ngIf="isFirst"><img [src]="image.src" alt=""></li>
+      <ng-container *ngFor="let src of goods.images; first as isFirst">
+        <li *ngIf="isFirst"><img [src]="src" alt=""></li>
       </ng-container>
     </ul>
     <div class="px-4 py-3">
@@ -27,7 +27,7 @@
       </ul>
       <div>{{ goods.contact }}</div>
       <ng-container *ngIf="permission$ | async">
-        <a [routerLink]="['edit']">수정</a>
+        <a [routerLink]="['edit']" skipLocationChange>수정</a>
         <button type="button" (click)="onClickDelete()">삭제</button>
       </ng-container>
     </div>

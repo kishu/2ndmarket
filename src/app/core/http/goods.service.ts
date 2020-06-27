@@ -14,7 +14,10 @@ export class GoodsService extends FirestoreService<Goods> {
 
   getAllByGroupId(groupId: string): Observable<Goods[]> {
     return this.query({
-      where: [['groupId', '==', groupId]],
+      where: [
+        ['groupId', '==', groupId],
+        ['activated', '==', true]
+      ],
       orderBy: [['updated', 'desc']]
     });
   }

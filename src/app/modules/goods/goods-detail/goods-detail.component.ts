@@ -1,5 +1,5 @@
 import { forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, share, switchMap } from 'rxjs/operators';
+import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -36,7 +36,8 @@ export class GoodsDetailComponent implements OnInit {
 
     this.goods$ = this.goodsCacheService.getGoods(goodsId).pipe(
       switchMap(g => g ? of(g) : this.goodsService.get(goodsId).pipe(first())),
-      share(),
+      tap(g => console.log('g', g)),
+      share()
     );
 
     this.permission$ = this.authService.profile$.pipe(
