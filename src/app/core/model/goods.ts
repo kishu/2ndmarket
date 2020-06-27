@@ -50,15 +50,19 @@ export interface Goods {
   images: string[]; // url
   contact: string;
   memo: string;
-  soldOut: boolean;
   favoritesCnt: number;
   commentsCnt: number;
   activated: boolean;
+  soldOut: null | firestore.Timestamp;
   created: firestore.Timestamp;
   updated: firestore.Timestamp;
 }
 
 export type NewGoods = Omit<Goods, 'id' | 'created' | 'updated'> & {
   created: firestore.FieldValue,
+  updated: firestore.FieldValue
+};
+
+export type UpdateGoods = Omit<Goods, 'updated'> & {
   updated: firestore.FieldValue
 };

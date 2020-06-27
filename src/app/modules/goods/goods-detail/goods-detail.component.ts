@@ -65,6 +65,10 @@ export class GoodsDetailComponent implements OnInit, OnDestroy {
     this.goodsCacheService.removeGoods();
   }
 
+  onClickSoldOut(soldOut: boolean) {
+
+  }
+
   onClickFavorite(favorite: boolean) {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
     forkJoin([

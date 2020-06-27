@@ -1,8 +1,8 @@
+import { firestore } from 'firebase/app';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { firestore } from 'firebase/app';
 
 export interface QueryOptions {
   where?: [string, firestore.WhereFilterOp, any][];

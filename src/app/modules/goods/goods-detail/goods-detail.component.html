@@ -29,8 +29,9 @@
         </ul>
         <div>{{ goods.contact }}</div>
         <ng-container *ngIf="permission$ | async">
-          <a [routerLink]="['edit']" skipLocationChange>수정</a>
-          <button type="button" (click)="onClickDelete()">삭제</button>
+          <a [routerLink]="['edit']" skipLocationChange>수정</a> |
+          <button type="button" (click)="onClickDelete()">삭제</button> |
+          <button type="button" (click)="onClickSoldOut(true)">판매완료</button>
         </ng-container>
       </div>
     </div>

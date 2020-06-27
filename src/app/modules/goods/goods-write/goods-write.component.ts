@@ -41,7 +41,7 @@ export class GoodsWriteComponent implements OnInit {
         images: [],
         contact: faker.phone.phoneNumber(),
         memo: faker.lorem.paragraphs(),
-        soldOut: false,
+        soldOut: null,
         favoritesCnt: 0,
         commentsCnt: 0,
         activated: true,
