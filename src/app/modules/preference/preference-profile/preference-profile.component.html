@@ -9,18 +9,19 @@
       <div>{{ profile.displayName }}</div>
       <div>{{ profile.email }}</div>
     </div>
+    <div>
+      <a routerLink="/preference/groups">그룹설정</a>
+    </div>
   </div>
 
-  <ul *ngIf="groupWithProfiles$ | async as groups">
-    <li *ngFor="let group of groups">
-      {{ group.name }} / {{ group.profile.displayName }}({{ group.profile.email }}) / {{ group.profile.created | fsTimestamp | formatDistanceToNow }}
-    </li>
-  </ul>
+  <br><br>
 
   <ul>
     <li><button type="button" (click)="onClickGoodsListType('write')">등록한 상품</button></li>
     <li><button type="button" (click)="onClickGoodsListType('favorite')">좋아요 상품</button></li>
   </ul>
+
+  <br><br>
 
   <ng-container [ngSwitch]="goodsListType$ | async">
     <ng-container *ngSwitchCase="'write'">
@@ -46,10 +47,12 @@
 <ng-template #goodsTemplate let-goods="goods" class="goodsItem">
   <div>
     <div class="relative square">
-      <img
-        [src]="goods.images[0]"
-        class="absolute l-0 t-0 w-full h-full object-cover"
-        alt="">
+      <a [routerLink]="['/goods', goods.id]">
+        <img
+          [src]="goods.images[0]"
+          class="absolute l-0 t-0 w-full h-full object-cover"
+          alt="">
+      </a>
     </div>
   </div>
   <!-- <div class="relative md:w-7/12 px-4 py-3 md:pb-16">
