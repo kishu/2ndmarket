@@ -12,7 +12,7 @@
       </div>
       <div class="relative md:w-7/12 px-4 py-3 md:pb-16">
         <h3 class="goodsName">{{ goods.name }} {{ goods.name }} {{ goods.name }}</h3>
-        <div class="font-bold">{{ goods.price | currency:'KRW' }}</div>
+        <div class="font-bold">{{ goods.price | number:'2.' }}원</div>
         <span class="absolute right-0 bottom-0 px-4 py-3 text-sm leading-relaxed text-gray-500">
           댓글 {{ goods.commentsCnt }}개 / 좋아요 {{ goods.favoritesCnt }}개 / {{ goods.created | fsTimestamp | formatDistanceToNow }} 전
         </span>
