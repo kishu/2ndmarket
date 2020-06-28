@@ -20,9 +20,9 @@ export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
     });
   }
 
-  getAllByUserId(userId: string): Observable<GoodsFavorite[]> {
+  getAllByProfileId(profileId: string): Observable<GoodsFavorite[]> {
     return this.query({
-      where: [['userId', '==', userId]]
+      where: [['profileId', '==', profileId]]
     });
   }
 

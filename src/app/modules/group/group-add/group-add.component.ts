@@ -28,7 +28,7 @@ export class GroupAddComponent implements OnInit {
   profiles$ = this.authService.user$.pipe(
     first(),
     filter(u => !!u),
-    switchMap(u => this.userProfilesService.getByUserId(u.id).pipe(first()))
+    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe(first()))
   );
 
   get accountCtl() { return this.emailForm.get('account'); }

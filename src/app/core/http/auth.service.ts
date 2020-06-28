@@ -44,14 +44,14 @@ export class AuthService {
     user$.pipe(
       switchMap(u => {
         if (u) {
-          return this.userProfilesService.getByUserId(u.id).pipe(
+          return this.userProfilesService.getAllByUserId(u.id).pipe(
             first(),
             switchMap(userProfiles => {
-              return userProfiles.length ? this.profilesService.get(userProfiles[0].profileId) : of(null)
+              return userProfiles.length ? this.profilesService.get(userProfiles[0].profileId) : of(null);
             })
-          )
+          );
         } else {
-          return of(null)
+          return of(null);
         }
       })
     ).subscribe(p => this._profile$.next(p));

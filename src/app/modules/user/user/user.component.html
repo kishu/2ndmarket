@@ -1,41 +1,47 @@
 <div class="w-full max-w-xl mx-auto">
   <div
     class="mt-5"
-    *ngIf="user$ | async as user">
+    *ngIf="profile$ | async as profile">
     <div class="w-32 h-32 mx-auto overflow-hidden rounded-full">
-      <img [src]="user.photoURL" class="w-full h-full" alt="">
+      <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-full h-full" alt="">
     </div>
     <div>
-      <div>{{ user.displayName }}</div>
-      <div>{{ user.email }}</div>
+      <div>{{ profile.displayName }}</div>
+      <div>{{ profile.email }}</div>
     </div>
   </div>
 
-<!--  <ul *ngIf="userGroups$ | async as userGroups">-->
-<!--    <li *ngFor="let userGroup of userGroups">-->
-<!--      {{ userGroup.group.name }} {{ userGroup.group.created | fsTimestamp | formatDistanceToNow }}-->
-<!--    </li>-->
-<!--  </ul>-->
+  <ul *ngIf="groupWithProfiles$ | async as groups">
+    <li *ngFor="let group of groups">
+      {{ group.name }} / {{ group.profile.displayName }}({{ group.profile.email }}) / {{ group.profile.created | fsTimestamp | formatDistanceToNow }}
+    </li>
+  </ul>
 
   <ul>
-    <li><a [routerLink]="">등록한 상품</a></li>
-    <li><a [routerLink]="" fragment="favorites">좋아요 상품</a></li>
+    <li><button type="button" (click)="onClickGoodsListType('write')">등록한 상품</button></li>
+    <li><button type="button" (click)="onClickGoodsListType('favorite')">좋아요 상품</button></li>
   </ul>
 
-  <h3>등록한 상품</h3>
-  <ul class="grid grid-cols-3 md:grid-cols-4 gap-1 p-1" *ngIf="goodsList$ | async as goodsList">
-    <li *ngFor="let goods of goodsList">
-      <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
-    </li>
-  </ul>
-
-  <h3>관심 상품</h3>
-  <ul class="grid grid-cols-3 gap-1 p-1" *ngIf="favoriteGoodsList$ | async as favoriteGoodsList">
-    <li *ngFor="let goods of favoriteGoodsList">
-      <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
-    </li>
-  </ul>
+  <ng-container [ngSwitch]="goodsListType$ | async">
+    <ng-container *ngSwitchCase="'write'">
+      <h3>등록한 상품</h3>
+      <ul class="grid grid-cols-3 md:grid-cols-4 gap-1 p-1" *ngIf="writeGoodsList$ | async as goodsList">
+        <li *ngFor="let goods of goodsList">
+          <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-container *ngSwitchCase="'favorite'">
+      <h3>관심 상품</h3>
+      <ul class="grid grid-cols-3 gap-1 p-1" *ngIf="favoriteGoodsList$ | async as goodsList">
+        <li *ngFor="let goods of goodsList">
+          <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+        </li>
+      </ul>
+    </ng-container>
+  </ng-container>
 </div>
+
 
 <ng-template #goodsTemplate let-goods="goods" class="goodsItem">
   <div>

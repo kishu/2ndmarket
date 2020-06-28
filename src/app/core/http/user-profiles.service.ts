@@ -12,7 +12,7 @@ export class UserProfilesService extends FirestoreService<UserProfile> {
     super(afs, 'userProfiles');
   }
 
-  getByUserId(userId: string) {
+  getAllByUserId(userId: string) {
     return this.query({
       where: [['userId', '==', userId]]
     });

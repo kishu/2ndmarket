@@ -22,11 +22,11 @@ export class GoodsService extends FirestoreService<Goods> {
     });
   }
 
-  getAllByUserId(userId: string, limit: number = 100): Observable<Goods[]> {
+  getAllByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
     return this.query({
-      where: [['userId', '==', userId]],
+      where: [['profileId', '==', profileId]],
       orderBy: [['created', 'desc']],
-      limit: limit
+      limit
     });
   }
 

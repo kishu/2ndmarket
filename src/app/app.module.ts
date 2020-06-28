@@ -7,6 +7,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { environment } from '@environments/environment';
 import { CustomRouteReuseStrategy } from '@app/./custom-route-reuse-strategy';
@@ -41,6 +42,7 @@ export function appInitializer(authService: AuthService) {
     AngularFireAuthGuardModule,
     AngularFirestoreModule,
     AngularFireFunctionsModule,
+    AngularFireMessagingModule,
     HomeModule,
     AuthModule,
     GoodsModule,
