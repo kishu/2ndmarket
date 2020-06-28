@@ -129,10 +129,12 @@
   <br>
 
   <h2 class="p-2">프로필 선택</h2>
-  <ul *ngIf="profiles$ | async as profiles">
-    <li class="mb-1" *ngFor="let profile of profiles">
+  <ul *ngIf="groupsWithProfile$ | async as groups">
+    <li class="mb-1" *ngFor="let group of groups">
       <div class="flex justify-between">
-        <span class="flex items-center">{{profile.profileId}}</span>
+        <span class="flex items-center">{{ group.name }}</span>
+        <span class="flex items-center">{{ group.profile.email }}</span>
+        <span class="flex items-center">{{ group.profile.displayName }}</span>
         <button type="button" class="flex-shrink-0">선택</button>
       </div>
     </li>

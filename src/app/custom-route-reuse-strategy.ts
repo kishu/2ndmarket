@@ -1,51 +1,45 @@
-import { RouteReuseStrategy, ActivatedRouteSnapshot, DetachedRouteHandle } from '@angular/router';
+import { ActivatedRouteSnapshot, RouteReuseStrategy, DetachedRouteHandle } from '@angular/router';
 
 export class CustomRouteReuseStrategy implements RouteReuseStrategy {
-  private handlers: { [key: string]: DetachedRouteHandle } = {};
 
+  //  Specify the routes to reuse/cache in an array.
+  routesToCache: string[] = ['goods', 'preference/profile'];
+
+  storedRouteHandles = new Map<string, DetachedRouteHandle>();
+
+  //  Decides if the route should be stored
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
-    if (!route.routeConfig || route.routeConfig.loadChildren) {
-      return false;
-    }
-    let shouldReuse = false;
-    if (route.routeConfig.data) {
-      route.routeConfig.data.reuse ? shouldReuse = true : shouldReuse = false;
-    }
-    return shouldReuse;
+    return this.routesToCache.indexOf(this.getPath(route)) > -1;
   }
 
-  store(route: ActivatedRouteSnapshot, handler: DetachedRouteHandle): void {
-    if (handler) {
-      this.handlers[this.getUrl(route)] = handler;
-    }
+  // Store the information for the route we're destructing
+  store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
+    this.storedRouteHandles.set(this.getPath(route), handle);
   }
 
+  // Return true if we have a stored route object for the next route
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
-    return !!this.handlers[this.getUrl(route)];
+    return this.storedRouteHandles.has(this.getPath(route));
   }
 
+  // If we returned true in shouldAttach(), now return the actual route data for restoration
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
-    if (!route.routeConfig || route.routeConfig.loadChildren) {
-      return null;
-    }
-    return this.handlers[this.getUrl(route)];
+    return this.storedRouteHandles.get(this.getPath(route)) as DetachedRouteHandle;
   }
 
-  shouldReuseRoute(future: ActivatedRouteSnapshot, current: ActivatedRouteSnapshot): boolean {
-    let reUseUrl = false;
-    if (future.routeConfig) {
-      if (future.routeConfig.data) {
-        reUseUrl = future.routeConfig.data.reuse;
-      }
-    }
-    const defaultReuse = (future.routeConfig === current.routeConfig);
-    return reUseUrl || defaultReuse;
+  // Reuse the route if we're going to and from the same route
+  shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
+    return future.routeConfig === curr.routeConfig;
   }
 
-  getUrl(route: ActivatedRouteSnapshot): string {
-    if (route.routeConfig) {
-      return route.routeConfig.path;
+  //  Helper method to return a path,
+  //  since javascript map object returns an object or undefined.
+  private getPath(route: ActivatedRouteSnapshot): string {
+    let path = '';
+    if (route.routeConfig != null && route.routeConfig.path != null) {
+      path = route.routeConfig.path;
     }
+    return path;
   }
 
 }

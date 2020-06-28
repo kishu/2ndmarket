@@ -26,9 +26,4 @@ export class HomeComponent implements OnInit {
     this.authService.signOut();
   }
 
-  test() {
-    console.log('test()');
-    forkJoin([]).subscribe(() => console.log('123'));
-  }
-
 }

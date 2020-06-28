@@ -10,13 +10,12 @@ import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { environment } from '@environments/environment';
-import { CustomRouteReuseStrategy } from '@app/./custom-route-reuse-strategy';
+import { CustomRouteReuseStrategy } from './custom-route-reuse-strategy';
 
 import { HomeModule } from '@app/modules/home/home.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
-import { GroupModule } from '@app/modules/group/group.module';
-import { UserModule } from '@app/modules/user/user.module';
+import { PreferenceModule } from '@app/modules/preference/preference.module';
 
 import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
@@ -46,8 +45,7 @@ export function appInitializer(authService: AuthService) {
     HomeModule,
     AuthModule,
     GoodsModule,
-    GroupModule,
-    UserModule,
+    PreferenceModule,
     AppRoutingModule,
   ],
   providers: [

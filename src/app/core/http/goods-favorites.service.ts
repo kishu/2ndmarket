@@ -14,6 +14,15 @@ export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
     super(afs, 'goodsFavorites');
   }
 
+  getAllByGoodsIdAndProfileId(goodsId: string, profileId: string): Observable<GoodsFavorite[]> {
+    return this.query({
+      where: [
+        ['goodsId', '==', goodsId],
+        ['profileId', '==', profileId]
+      ]
+    });
+  }
+
   getAllByGoodsId(goodsId: string): Observable<GoodsFavorite[]> {
     return this.query({
       where: [['goodsId', '==', goodsId]]

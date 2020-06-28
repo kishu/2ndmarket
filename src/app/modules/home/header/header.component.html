@@ -13,7 +13,7 @@
     </h1>
     <ng-container *ngIf="(profile$ | async) as profile">
       <div class="absolute inset-y-0 right-0 mx-auto py-3 px-2 flex items-center text-xs">
-        <a [routerLink]="['/user']">{{ profile.displayName || profile.email.split('@')[0] }}</a>
+        <a [routerLink]="['/preference/profile']">{{ profile.displayName || profile.email.split('@')[0] }}</a>
       </div>
     </ng-container>
   </div>

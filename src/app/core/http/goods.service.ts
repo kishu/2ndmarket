@@ -30,4 +30,8 @@ export class GoodsService extends FirestoreService<Goods> {
     });
   }
 
+  updateSoldOut(goodsId: string, soldOut: boolean) {
+    return this.update(goodsId, { soldOut: soldOut ? GoodsService.serverTimestamp() : false } as any);
+  }
+
 }

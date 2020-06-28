@@ -1,8 +1,8 @@
-import { forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, publish, refCount, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { filter, first, map, partition, share, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsCacheService, GoodsFavoritesService, ProfilesService } from '@app/core/http';
+import { AuthService, GoodsService, GoodsFavoritesService, ProfilesService } from '@app/core/http';
 import { Goods, NewGoodsFavorite } from '@app/core/model';
 
 @Component({
@@ -10,11 +10,26 @@ import { Goods, NewGoodsFavorite } from '@app/core/model';
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss']
 })
-export class GoodsDetailComponent implements OnInit, OnDestroy {
-  goods$: Observable<Goods | Partial<Goods>>;
-  favoritesCount$: Observable<number>;
-  favorited$: Observable<boolean>;
-  permission$: Observable<boolean>;
+export class GoodsDetailComponent implements OnInit {
+  goods$: Observable<Goods> = this.goodsService.get(this.goodsId).pipe(shareReplay());
+  empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
+  permission$: Observable<boolean> = combineLatest([
+    this.goods$,
+    this.authService.profile$.pipe(filter(p => !!p), first())
+  ]).pipe(
+    map(([g, p]) => g.profileId === p.id)
+  );
+  favorited$: Observable<boolean> = combineLatest([
+    this.goods$,
+    this.authService.profile$.pipe(filter(p => !!p), first())
+  ]).pipe(
+    switchMap(([g, p]) => this.goodsFavoritesService.getAllByGoodsIdAndProfileId(g.id, p.id)),
+    map(f => f.length > 0)
+  );
+
+  private get goodsId() {
+    return this.activatedRoute.snapshot.paramMap.get('goodsId');
+  }
 
   constructor(
     private router: Router,
@@ -22,73 +37,54 @@ export class GoodsDetailComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
-    private goodsCacheService: GoodsCacheService,
     private goodsFavoritesService: GoodsFavoritesService
   ) {
-    const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-
-    this.goods$ = this.goodsCacheService.getGoods(goodsId).pipe(
-      switchMap(g => g ? of(g) : this.goodsService.get(goodsId).pipe(first())),
-      map(g => g ? g : { id: '' }),
-      share()
-    );
-
-    this.permission$ = this.goods$.pipe(
-      switchMap(g => {
-        return this.authService.profile$.pipe(
-          first(),
-          filter(p => !!p),
-          map(p => p.id === g.profileId)
-        );
-      })
-    );
-
-    const goodsFavorites$ = this.goodsFavoritesService.getAllByGoodsId(goodsId);
-
-    this.favoritesCount$ = goodsFavorites$.pipe(map(f => f.length));
-    this.favorited$ = goodsFavorites$.pipe(
-      switchMap(favorites => {
-        return this.authService.user$.pipe(
-          first(),
-          filter(u => !!u)
-        ).pipe(
-          map(u => favorites.some(f => f.userId === u.id))
-        );
-      })
-    );
   }
 
   ngOnInit(): void {
   }
 
-  ngOnDestroy() {
-    this.goodsCacheService.removeGoods();
+  onClickSoldOut() {
+    const goodsId = this.goodsId;
+    this.goodsService.get(goodsId).pipe(
+      first(),
+      filter(g => !!g),
+      map(g => !!g.soldOut),
+      switchMap(soldOut => this.goodsService.updateSoldOut(goodsId, !soldOut))
+    ).subscribe(
+      () => {},
+      err => alert(err)
+    );
   }
 
-  onClickSoldOut(soldOut: boolean) {
-
-  }
-
-  onClickFavorite(favorite: boolean) {
-    const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-    forkJoin([
+  onClickFavorite() {
+    const goodsId = this.goodsId;
+    const add$ = combineLatest([
       this.authService.user$.pipe(first(), filter(u => !!u)),
       this.authService.profile$.pipe(first(), filter(p => !!p))
     ]).pipe(
       switchMap(([u, p]) => {
-        if (favorite) {
-          return this.goodsFavoritesService.deleteByGoodsIdAndProfileId(goodsId, p.id);
-        } else {
-          const newGoodsFavorite: NewGoodsFavorite = {
-            userId: u.id,
-            profileId: p.id,
-            goodsId,
-            created: GoodsFavoritesService.serverTimestamp()
-          };
-          return this.goodsFavoritesService.add(newGoodsFavorite);
-        }
+        return this.goodsFavoritesService.add({
+          userId: u.id,
+          profileId: p.id,
+          goodsId,
+          created: GoodsFavoritesService.serverTimestamp()
+        } as NewGoodsFavorite);
       })
-    ).subscribe();
+    );
+    const delete$ = combineLatest([
+      this.authService.profile$.pipe(first(), filter(p => !!p))
+    ]).pipe(
+      switchMap(([p]) => this.goodsFavoritesService.deleteByGoodsIdAndProfileId(goodsId, p.id))
+    );
+
+    this.favorited$.pipe(
+      first(),
+      switchMap(f => !f ? add$ : delete$)
+    ).subscribe(
+      () => {},
+      err => alert(err)
+    );
   }
 
   onClickDelete() {

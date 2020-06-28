@@ -22,7 +22,7 @@ export class SignInComponent implements OnInit {
       .then(c => {
         if (c?.user) {
           c.additionalUserInfo?.isNewUser ?
-            this.router.navigate(['/groups/add']) :
+            this.router.navigate(['preference/groups']) :
             this.router.navigate(['']);
         } else {
           this.redirect$.next(false);

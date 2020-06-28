@@ -1,23 +1,27 @@
 import { random } from 'lodash-es';
-import { BehaviorSubject, empty, of } from 'rxjs';
+import { BehaviorSubject, empty, forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { NewProfile, NewUserProfile } from '@app/core/model';
+import { Group, NewProfile, NewUserProfile, Profile } from '@app/core/model';
 
 enum GroupAddStep {
   email = 'email',
   verify = 'verify'
 }
 
+export interface GroupWithProfile extends Group{
+  profile: Profile;
+}
+
 @Component({
-  selector: 'app-group-add',
-  templateUrl: './group-add.component.html',
-  styleUrls: ['./group-add.component.scss']
+  selector: 'app-preference-groups',
+  templateUrl: './preference-groups.component.html',
+  styleUrls: ['./preference-groups.component.scss']
 })
-export class GroupAddComponent implements OnInit {
+export class PreferenceGroupsComponent implements OnInit {
   private code: number;
   submitting = false;
   emailForm: FormGroup;
@@ -29,6 +33,22 @@ export class GroupAddComponent implements OnInit {
     first(),
     filter(u => !!u),
     switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe(first()))
+  );
+  groupsWithProfile$: Observable<GroupWithProfile[]> = this.authService.user$.pipe(
+    first(),
+    filter(u => !!u),
+    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe(first())),
+    switchMap(userProfiles => {
+      return forkJoin(...userProfiles.map(userProfile => this.profilesService.get(userProfile.profileId).pipe(first())));
+    }),
+    switchMap(profiles => {
+      return forkJoin(...profiles.map(profile => {
+        return this.groupsService.get(profile.groupId).pipe(
+          first(),
+          map(group => ({ ...group, profile }))
+        );
+      }));
+    })
   );
 
   get accountCtl() { return this.emailForm.get('account'); }
@@ -46,7 +66,7 @@ export class GroupAddComponent implements OnInit {
     private userProfilesService: UserProfilesService
   ) {
     this.step$.subscribe(step => {
-      switch(step) {
+      switch (step) {
         case GroupAddStep.email:
           this.emailForm = this.fb.group({
             account: [''],
