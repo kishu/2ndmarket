@@ -17,6 +17,7 @@
           formControlName="name"
           placeholder="상품명을 입력해주세요."
           minlength="2"
+          maxlength="200"
           required>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
@@ -96,7 +97,8 @@
             type="tel"
             formControlName="price"
             placeholder="판매금액을 입력해주세요."
-            min="0"
+            minlength="1"
+            maxlength="10"
             required>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             원
@@ -159,6 +161,7 @@
           formControlName="contact"
           placeholder="연락처"
           minlength="2"
+          maxlength="200"
           required>
       </div>
       <p *ngIf="contactCtl.invalid && (contactCtl.dirty || contactCtl.touched)" class="text-red-500 text-xs">연락처를 적어주세요.</p>
@@ -178,6 +181,7 @@
           placeholder="내용"
           rows="10"
           minlength="2"
+          maxlength="2000"
           required></textarea>
       </div>
       <p *ngIf="memoCtl.invalid && (memoCtl.dirty || memoCtl.touched)" class="text-red-500 text-xs">내용을 적어주세요.</p>
