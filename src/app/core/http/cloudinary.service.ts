@@ -1,5 +1,5 @@
 import * as sha1 from 'sha1';
-import { empty, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
@@ -55,7 +55,7 @@ export class CloudinaryService {
     const uploadComplete$ = new ReplaySubject<string[]>();
     const uploadRequests = draftImages.length > 0 ?
       draftImages.filter(img => img.isFile).map(img => this.getUploadRequest(img)) :
-      [ of(empty()) ];
+      [ of(null) ];
 
     const completeAll = () => {
       uploadProgress$.complete();

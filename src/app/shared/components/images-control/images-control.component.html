@@ -1,7 +1,7 @@
 <ul class="p-3 goods-images">
   <li
     class="relative border border-white"
-    *ngFor="let image of draftImages; let i = index; first as isFirst; last as isLast">
+    *ngFor="let image of _draftImages; let i = index; first as isFirst; last as isLast">
     <div
       class="attachImage"
       [ngClass]="{'selected': image.selected}"

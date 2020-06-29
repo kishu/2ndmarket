@@ -1,4 +1,5 @@
 import * as arrayMove from 'array-move';
+import { parse } from 'url-parser';
 import { Component, Input, OnInit } from '@angular/core';
 import { DraftImage } from '@app/core/model';
 
@@ -9,10 +10,28 @@ import { DraftImage } from '@app/core/model';
 })
 export class ImagesControlComponent implements OnInit {
   @Input() maxlength = 10;
-  @Input() set images(images: string[]) {
-    this.draftImages = images.map(src => ({isFile: false, src, rotate: 0}));
+  @Input() set images(images: string/* url */[]) {
+    this._draftImages = images.map(src => ({ isFile: false, src, rotate: 0 }));
   }
-  draftImages: DraftImage[] = [];
+
+  _draftImages: DraftImage[] = [];
+
+  get draftImages() {
+    return this._draftImages.map(img => {
+      if (!img.isFile && img.rotate > 0) {
+        const origin = parse(img.src);
+        const pathnames = origin.pathname.split('/');
+        const options = pathnames[4]?.split(',');
+        if (options[3]?.startsWith('a_')) {
+          const rotate = parseInt(options[3].replace('a_', ''), 10);
+          options[3] = `a_${(img.rotate + rotate) % 360}`;
+          pathnames[4] = options.join(',');
+        }
+        img.src = `${origin.protocol}//${origin.host}${pathnames.join('/')}`;
+      }
+      return img;
+    });
+  }
 
   constructor() { }
 
@@ -21,14 +40,14 @@ export class ImagesControlComponent implements OnInit {
 
   onChangeFile(e: Event) {
     const target = e.target as HTMLInputElement;
-    this.draftImages = this.draftImages.concat(
+    this._draftImages = this._draftImages.concat(
       Array.from(target.files).map(file => ({ isFile: true, file, rotate: 0 } as DraftImage))
     );
     target.value = '';
   }
 
   onSelectImage(target: DraftImage) {
-    this.draftImages.filter(image => image.selected).map(image => delete image.selected);
+    this._draftImages.filter(image => image.selected).map(image => delete image.selected);
     target.selected = true;
   }
 
@@ -39,10 +58,10 @@ export class ImagesControlComponent implements OnInit {
   onClickMoveImage(from: number, to: number) {
     if (
       from !== to &&
-      (from >= 0 && from < this.draftImages.length) &&
-      (to >= 0 && to < this.draftImages.length)
+      (from >= 0 && from < this._draftImages.length) &&
+      (to >= 0 && to < this._draftImages.length)
     ) {
-      this.draftImages = arrayMove(this.draftImages, from, to);
+      this._draftImages = arrayMove(this._draftImages, from, to);
     }
   }
 
@@ -51,7 +70,7 @@ export class ImagesControlComponent implements OnInit {
   }
 
   onClickDeleteImage(target: DraftImage) {
-    this.draftImages = this.draftImages.filter(image =>  image !== target );
+    this._draftImages = this._draftImages.filter(image =>  image !== target );
   }
 
 }

@@ -1,5 +1,6 @@
-import { filter, first, mergeMap, mergeMapTo, switchMap, withLatestFrom } from 'rxjs/operators';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { filter, first, switchMap, withLatestFrom } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { AuthService, FcmTokensService } from '@app/core/http';
 import { NewFcmToken } from '@app/core/model';
@@ -11,6 +12,8 @@ import { NewFcmToken } from '@app/core/model';
 })
 export class AppComponent implements OnInit {
   constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private afMessaging: AngularFireMessaging,
     private authService: AuthService,
     private fcmTokensService: FcmTokensService
@@ -30,7 +33,7 @@ export class AppComponent implements OnInit {
       alert(err);
     });
 
-    this.afMessaging.onMessage((payload) => {
+    this.afMessaging.onMessage(payload => {
       console.log(payload);
     });
 

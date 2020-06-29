@@ -29,6 +29,7 @@
     "rxjs": "~6.5.4",
     "sha1": "^1.1.1",
     "tslib": "^1.10.0",
+    "url-parser": "0.0.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
