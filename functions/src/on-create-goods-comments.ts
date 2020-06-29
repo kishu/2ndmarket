@@ -28,10 +28,11 @@ export const onCreateGoodsComments =
   .firestore
   .document('goodsComments/{goodsCommentId}')
   .onCreate(async (snapshot) => {
-    const goodsId = snapshot.data().goodsId;
-    const body = snapshot.data().body;
+    const goodsId = snapshot.get('goodsId');
+    const profileId = snapshot.get('profileId');
+    const body = snapshot.get('body');
     const goods = await db.doc(`goods/${goodsId}`).get();
-    if (goods.exists) {
+    if (goods.exists && goods.get('profileId') !== profileId) {
       const payload = {
         notification: {
           title: `[세컨드마켓] '${goods.get('name')}'에 새로운 댓글이 달렸습니다.`,
