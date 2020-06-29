@@ -1,15 +1,15 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="goodsDetail bg-white w-full max-w-xl mx-auto">
-    <ul>
-      <ng-container *ngFor="let src of goods.images; first as isFirst">
-        <li *ngIf="isFirst"><img [src]="src" alt=""></li>
-      </ng-container>
-    </ul>
-    <div class="px-4 py-3">
-      <h2 class="goodsName text-lg">{{ goods.name }}</h2>
+    <ng-container *ngFor="let src of goods.images; first as isFirst">
+      <div *ngIf="isFirst"><img [src]="src" alt=""></div>
+    </ng-container>
+    <div class="relative px-4 pb-3">
+      <div class="block sticky w-full py-3 bg-white z-20" style="top: 48px;">
+        <h2 class="goodsName text-lg">{{ goods.name }}</h2>
+        <div class="my-3"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
+      </div>
       <button type="button" (click)="onClickFavorite()">좋아요<span *ngIf="favorited$ | async">(했음)</span></button>
       <span>{{ goods.favoritesCnt }}</span>
-      <div class="my-3"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
       <p class="leading-tight">{{ goods.memo }}</p>
       <div class="my-3 text-sm">
         <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>

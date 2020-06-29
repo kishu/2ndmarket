@@ -1,6 +1,6 @@
 <form
   *ngIf="goods"
-  class="w-full max-w-xl mx-auto p-2"
+  class="goods-form"
   [formGroup]="goodsForm"
   (ngSubmit)="onSubmit()">
   <div class="form-row">
@@ -189,15 +189,13 @@
   </div>
   <div class="flex items-center justify-between">
     <button
-      class=""
       type="button">
       취소
     </button>
     <button
-      class=""
       type="submit"
       [disabled]="goodsForm.invalid || submitting">
-      상품등록
+      저장
     </button>
   </div>
 </form>

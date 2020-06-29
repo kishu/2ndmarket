@@ -1,6 +1,6 @@
-<div class="w-full max-w-sm mx-auto px-2">
-  <h2 class="p-2">그룹 추가</h2>
-  <ng-container *ngIf="(step$ | async) === 'email'">
+<div class="w-full max-w-sm mx-auto p-4">
+<h2 class="p-2 text-blue-700">Step-1. 메일주소 입력</h2>
+ <ng-container *ngIf="(step$ | async) === 'email'">
     <form
       [formGroup]="emailForm"
       (ngSubmit)="onEmailSubmit()">
@@ -8,7 +8,7 @@
         <div class="form-col w-full">
           <div class="bg-white">
             <div class="flex">
-              <div class="w-5/12">
+              <div class="w-4/12">
                 <label class="form-label" for="account">이메일</label>
                 <div class="relative">
                   <input
@@ -16,16 +16,18 @@
                     name="account"
                     type="text"
                     formControlName="account"
+                    class="text-sm"
                     required>
                 </div>
               </div>
-              <div class="w-7/12">
+              <div class="w-8/12">
                 <label class="form-label opacity-0" for="domain">Domain</label>
                 <div class="relative">
                   <select
                     id="domain"
                     name="domain"
                     formControlName="domain"
+                    class="text-sm"
                     required>
                     <option value="">@ 도메인 선택</option>
                     <option *ngFor="let domain of (domains$ | async)" [value]="domain">@ {{ domain }}</option>
@@ -44,10 +46,14 @@
       <div>
         <button
           type="submit"
+          class="btn-sm block w-full"
           [disabled]="!emailForm.valid">
           {{ submitting ? '보내는 중...' : '이메일 보내기' }}
         </button>
       </div>
+      <p class="p-2 text-gray-500 text-xs">
+        회사 메일 인증 후 서비스를 이용할 수 있습니다.
+      </p>
     </form>
   </ng-container>
 
@@ -65,6 +71,7 @@
                 name="email"
                 type="text"
                 formControlName="email"
+                class="text-sm"
                 disabled>
               <button
                 class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 bg-transparent border-transparent"
@@ -75,11 +82,15 @@
           </div>
           <p class="p-2 text-gray-500 text-xs">
             위 메일 주소로 인증 메일을 보냈습니다.<br>
-            메일에 포함된 링크를 클릭하신 후 서비스를 이용할 수 있습니다.<br>
-            인증 메일을 받지 못하셨다면 재전송 버튼을 클릭해주세요.
+            메일에 포함된 인증번호를 아래 입력창에 입력하시면 서비스를 이용할 수 있습니다.<br>
+            인증 메일을 받지 못하셨다면 재전송 버튼을 다시 한 번 눌러주세요.
           </p>
         </div>
       </div>
+
+      <div class="w-1/2 mx-auto h-px my-8 bg-gray-400"></div>
+
+      <h2 class="p-2 text-blue-700">Step-2. 인증번호 입력</h2>
       <div class="form-row">
         <div class="form-col w-full">
           <div class="bg-white">
@@ -91,6 +102,7 @@
                 name="code"
                 type="tel"
                 formControlName="code"
+                class="text-sm"
                 required>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 text-xs font-mono">
                 <app-limit-timer [time]="1000 * 60 * 3" (timeover)="onTimeoverLimitTimer()"></app-limit-timer>
@@ -110,11 +122,13 @@
       </div>
       <div class="flex justify-between">
         <button
-          type="button">
+          type="button"
+          class="btn-sm bg-transparent text-blue-500">
           인증번호 재전송
         </button>
         <button
           type="submit"
+          class="btn-sm"
           [disabled]="!verifyForm.valid">
           인증
         </button>

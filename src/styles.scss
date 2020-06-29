@@ -17,12 +17,21 @@ body {
   // padding-bottom:env(safe-area-inset-bottom);
 }
 
-button {
+.wrap {
+  position: relative;
+}
+
+button,
+.btn {
   @apply py-2 px-4;
   @apply border border-blue-500 bg-blue-500;
   @apply text-white;
   &:disabled {
     @apply opacity-50;
+  }
+
+  &.btn-sm {
+    @apply py-1 px-3 text-sm;
   }
 }
 
@@ -34,6 +43,10 @@ textarea {
   @apply appearance-none;
   &:focus {
     @apply bg-white border-gray-500;
+  }
+
+  &.input-sm {
+    @apply py-1 px-3 text-sm;
   }
 }
 
@@ -69,7 +82,7 @@ textarea {
 }
 
 .soldout {
-  opacity: 0.3;
+  @apply bg-transparent shadow-none opacity-25;
 }
 
 .talk {
@@ -123,7 +136,6 @@ textarea {
   padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
 }
 
-
 .goods-images {
   overflow: hidden;
   li {
@@ -176,4 +188,21 @@ textarea {
       }
     }
   }
+}
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.goods-form {
+  @apply w-full max-w-xl mx-auto p-2;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 0.5rem);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+}
+
+.header,
+app-header {
+  @apply block sticky top-0 z-30;
 }
