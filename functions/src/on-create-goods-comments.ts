@@ -36,15 +36,13 @@ export const onCreateGoodsComments =
         notification: {
           title: `[세컨드마켓] '${goods.get('name')}'에 새로운 댓글이 달렸습니다.`,
           body: body ? (body.length <= 100 ? body : body.substring(0, 97) + '...') : '',
-          icon: snapshot.data().profilePicUrl || '/images/profile_placeholder.png',
+          icon: goods.get('images')[0],
           click_action: `https://dev.2ndmarket.co/goods/${goods.id}`
         }
       };
-      const allTokens = await admin.firestore().collection('fcmTokens').get();
+      const allTokens = await admin.firestore().collection('fcmTokens').where('profileId', '==', goods.get('profileId')).get();
       const tokens: string[] = [];
-      allTokens.forEach((tokenDoc) => {
-        tokens.push(tokenDoc.id);
-      });
+      allTokens.forEach(doc => tokens.push(doc.get('token')));
       if (tokens.length > 0) {
         const response = await admin.messaging().sendToDevice(tokens, payload);
         await cleanupTokens(response, tokens);

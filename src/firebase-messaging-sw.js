@@ -1,5 +1,5 @@
-importScripts('https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/7.13.2/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/7.15.0/firebase-messaging.js');
 
 firebase.initializeApp({
   apiKey: 'AIzaSyDIxclHmmpVb629IOsci0jqufEhgd0gy38',
@@ -13,3 +13,4 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
+messaging.usePublicVapidKey('BKtncKieRyTFSHCyteFJ0UqIMMjpf-nUs7qbWAxJm5Jnzbp-J9q6ACrx2sS2ePyQOwNFEHMgwBL3_oLPMsOT8VI');

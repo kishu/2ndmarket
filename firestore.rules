@@ -4,18 +4,21 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+    match /fcmTokens/{fcmToken} {
+      allow read, write: if request.auth.uid != null;
+    }
     match /goods/{goods} {
       allow read, write: if true;
     }
     match /goodsComments/{goodsComment} {
       allow read: if true;
       allow create: if request.auth.uid != null;
-      allow delete: if request.auth.uid == resource.data.userId;
+      allow delete: if request.auth.uid != null;
     }
     match /goodsFavorites/{goodsFavorite} {
       allow read: if true;
       allow create: if request.auth.uid != null;
-      allow delete: if request.auth.uid == resource.data.userId;
+      allow delete: if request.auth.uid != null;
     }
     match /groups/{group} {
       allow read: if true;
