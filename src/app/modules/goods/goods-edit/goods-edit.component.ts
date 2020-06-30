@@ -37,16 +37,17 @@ export class GoodsEditComponent implements OnInit {
       images: draftImages.filter(img => !img.isFile).map(img => img.src),
       processing: true
     };
-    this.goodsService.update(goods.id, goods).then(() => {
+    this.goodsService.update(goods.id, updateGoods).then(() => {
       draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${goods.id}`}));
-      this.router.navigate(['goods', goods.id], { replaceUrl: true });
-      const upload$ = this.cloudinaryService.upload2(draftImages);
-      upload$.subscribe(uploadedImages => {
-        this.goodsService.updateImages(goods.id, uploadedImages);
-      }, err => {
-        alert(err);
-      }, () => {
-        this.goodsService.updateProcessed(goods.id);
+      this.router.navigate(['goods', goods.id], { replaceUrl: true }).then(() => {
+        const upload$ = this.cloudinaryService.upload2(draftImages);
+        upload$.subscribe(uploadedImages => {
+          this.goodsService.updateImages(goods.id, uploadedImages);
+        }, err => {
+          alert(err);
+        }, () => {
+          this.goodsService.updateProcessed(goods.id);
+        });
       });
     });
     // const uploadedImages = draftImages.filter(img => !img.isFile).map(img => img.src);

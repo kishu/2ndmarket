@@ -63,14 +63,15 @@ export class GoodsWriteComponent implements OnInit {
     this.submitting = true;
     this.goodsService.add(goods).then(addedGoods => {
       draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
-      this.router.navigate(['goods', addedGoods.id], { replaceUrl: true });
-      const upload$ = this.cloudinaryService.upload2(draftImages);
-      upload$.subscribe(uploadedImages => {
-        this.goodsService.updateImages(addedGoods.id, uploadedImages);
-      }, err => {
-        alert(err);
-      }, () => {
-        this.goodsService.updateProcessed(addedGoods.id);
+      this.router.navigate(['goods', addedGoods.id], { replaceUrl: true }).then(() => {
+        const upload$ = this.cloudinaryService.upload2(draftImages);
+        upload$.subscribe(uploadedImages => {
+          this.goodsService.updateImages(addedGoods.id, uploadedImages);
+        }, err => {
+          alert(err);
+        }, () => {
+          this.goodsService.updateProcessed(addedGoods.id);
+        });
       });
     });
     // this.goodsService.add(goods).then(addedGoods => {
