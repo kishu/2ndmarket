@@ -1,5 +1,8 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="goodsDetail bg-white w-full max-w-xl mx-auto">
+    <div *ngIf="goods.processing" class="text-lg">
+      이미지를 처리하고 있습니다.
+    </div>
     <ng-container *ngFor="let src of goods.images; first as isFirst">
       <div *ngIf="isFirst"><img [src]="src" alt=""></div>
     </ng-container>

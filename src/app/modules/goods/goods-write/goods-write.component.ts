@@ -46,7 +46,8 @@ export class GoodsWriteComponent implements OnInit {
         commentsCnt: 0,
         activated: true,
         created: GoodsService.serverTimestamp(),
-        updated: GoodsService.serverTimestamp()
+        updated: GoodsService.serverTimestamp(),
+        processing: true
       })),
       switchMap((g: NewGoods) => of(g))
     );
@@ -55,22 +56,34 @@ export class GoodsWriteComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit({goods, draftImages}) {
+  onSubmit({ goods, draftImages }) {
     if (this.submitting) {
       return;
     }
     this.submitting = true;
     this.goodsService.add(goods).then(addedGoods => {
-      draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${addedGoods.id}`}));
-      const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
-      uploadComplete$.subscribe(cloudinaryImages => {
-        addedGoods.update({ images: cloudinaryImages });
+      draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
+      this.router.navigate(['goods', addedGoods.id], { replaceUrl: true });
+      const upload$ = this.cloudinaryService.upload2(draftImages);
+      upload$.subscribe(uploadedImages => {
+        this.goodsService.updateImages(addedGoods.id, uploadedImages);
       }, err => {
         alert(err);
       }, () => {
-        this.router.navigate(['goods', addedGoods.id], { replaceUrl: true });
+        this.goodsService.updateProcessed(addedGoods.id);
       });
     });
+    // this.goodsService.add(goods).then(addedGoods => {
+    //   draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${addedGoods.id}`}));
+    //   const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
+    //   uploadComplete$.subscribe(cloudinaryImages => {
+    //     addedGoods.update({ images: cloudinaryImages });
+    //   }, err => {
+    //     alert(err);
+    //   }, () => {
+    //      this.router.navigate(['goods', addedGoods.id], { replaceUrl: true });
+    //   });
+    // });
   }
 
 }

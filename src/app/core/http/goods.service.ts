@@ -43,6 +43,14 @@ export class GoodsService extends FirestoreService<Goods> {
     });
   }
 
+  updateImages(goodsId: string, images: string/* url */[]) {
+    return super.update(goodsId, { images });
+  }
+
+  updateProcessed(goodsId: string) {
+    return super.update(goodsId, { processing: false });
+  }
+
   updateSoldOut(goodsId: string, soldOut: boolean) {
     return super.update(goodsId, { soldOut: soldOut ? GoodsService.serverTimestamp() : false });
   }

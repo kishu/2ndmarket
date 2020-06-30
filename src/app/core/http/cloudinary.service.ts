@@ -50,6 +50,38 @@ export class CloudinaryService {
     return this.http.request(request);
   }
 
+  private getUpdateRequest() {
+
+  }
+
+  upload2(draftImages: DraftImage[]) {
+    const upload$ = new Subject<string[]>();
+    const uploadRequests = draftImages.length > 0 ?
+      draftImages.filter(img => img.isFile).map(img => this.getUploadRequest(img)) :
+      [ of(null).pipe(tap(() => upload$.complete())) ];
+
+    merge(...uploadRequests).subscribe(e => {
+      if (e.type === HttpEventType.Response) {
+        draftImages = draftImages.map(img => {
+          if (img.isFile &&
+            img.file.name === `${e.body.original_filename}.${e.body.original_extension}` &&
+            img.file.size === e.body.bytes) {
+            img.isFile = false;
+            img.src = e.body.eager[0].secure_url;
+          }
+          return img;
+        });
+        const uploadImages = draftImages.filter(img => !img.isFile).map(img => img.src);
+        upload$.next(uploadImages);
+        if (uploadImages.length === uploadRequests.length) {
+          upload$.complete();
+        }
+      }
+    });
+
+    return upload$;
+  }
+
   upload(draftImages: DraftImage[]): [Subject<UploadProgress>, Subject<string[]>] {
     const uploadProgress$ = new ReplaySubject<UploadProgress>();
     const uploadComplete$ = new ReplaySubject<string[]>();

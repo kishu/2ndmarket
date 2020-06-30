@@ -26,23 +26,41 @@ export class GoodsEditComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit({goods, draftImages}) {
+  onSubmit({ goods, draftImages }) {
     if (this.submitting) {
       return;
     }
     this.submitting = true;
-    const uploadedImages = draftImages.filter(img => !img.isFile).map(img => img.src);
-    this.goodsService.update(goods.id, { ...goods, images: uploadedImages}).then(() => {
-      draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${goods.id}`}));
-      const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
-      uploadComplete$.subscribe(cloudinaryImages => {
-        this.goodsService.update(goods.id, { images: cloudinaryImages });
+    const updatedImages = draftImages.filter(img => !img.isFile).map(img => img.src);
+    const updateGoods: Goods = {
+      ...goods,
+      images: draftImages.filter(img => !img.isFile).map(img => img.src),
+      processing: true
+    };
+    this.goodsService.update(goods.id, goods).then(() => {
+      draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${goods.id}`}));
+      this.router.navigate(['goods', goods.id], { replaceUrl: true });
+      const upload$ = this.cloudinaryService.upload2(draftImages);
+      upload$.subscribe(uploadedImages => {
+        this.goodsService.updateImages(goods.id, uploadedImages);
       }, err => {
         alert(err);
       }, () => {
-        this.router.navigate(['goods', goods.id], { replaceUrl: true });
+        this.goodsService.updateProcessed(goods.id);
       });
     });
+    // const uploadedImages = draftImages.filter(img => !img.isFile).map(img => img.src);
+    // this.goodsService.update(goods.id, { ...goods, images: uploadedImages}).then(() => {
+    //   draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${goods.id}`}));
+    //   const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
+    //   uploadComplete$.subscribe(cloudinaryImages => {
+    //     this.goodsService.update(goods.id, { images: cloudinaryImages });
+    //   }, err => {
+    //     alert(err);
+    //   }, () => {
+    //     this.router.navigate(['goods', goods.id], { replaceUrl: true });
+    //   });
+    // });
   }
 
 }
