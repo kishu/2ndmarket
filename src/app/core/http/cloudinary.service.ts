@@ -50,11 +50,7 @@ export class CloudinaryService {
     return this.http.request(request);
   }
 
-  private getUpdateRequest() {
-
-  }
-
-  upload2(draftImages: DraftImage[]) {
+  upload(draftImages: DraftImage[]) {
     const upload$ = new Subject<string[]>();
     const uploadRequests = draftImages.length > 0 ?
       draftImages.filter(img => img.isFile).map(img => this.getUploadRequest(img)) :
@@ -82,7 +78,10 @@ export class CloudinaryService {
     return upload$;
   }
 
-  upload(draftImages: DraftImage[]): [Subject<UploadProgress>, Subject<string[]>] {
+  /*
+   * @deprecated
+   */
+  __upload__(draftImages: DraftImage[]): [Subject<UploadProgress>, Subject<string[]>] {
     const uploadProgress$ = new ReplaySubject<UploadProgress>();
     const uploadComplete$ = new ReplaySubject<string[]>();
     const uploadRequests = draftImages.length > 0 ?

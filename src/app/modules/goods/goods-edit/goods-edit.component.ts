@@ -31,7 +31,6 @@ export class GoodsEditComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    const updatedImages = draftImages.filter(img => !img.isFile).map(img => img.src);
     const updateGoods: Goods = {
       ...goods,
       images: draftImages.filter(img => !img.isFile).map(img => img.src),
@@ -40,7 +39,7 @@ export class GoodsEditComponent implements OnInit {
     this.goodsService.update(goods.id, updateGoods).then(() => {
       draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${goods.id}`}));
       this.router.navigate(['goods', goods.id], { replaceUrl: true }).then(() => {
-        const upload$ = this.cloudinaryService.upload2(draftImages);
+        const upload$ = this.cloudinaryService.upload(draftImages);
         upload$.subscribe(uploadedImages => {
           this.goodsService.updateImages(goods.id, uploadedImages);
         }, err => {
@@ -50,18 +49,6 @@ export class GoodsEditComponent implements OnInit {
         });
       });
     });
-    // const uploadedImages = draftImages.filter(img => !img.isFile).map(img => img.src);
-    // this.goodsService.update(goods.id, { ...goods, images: uploadedImages}).then(() => {
-    //   draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${goods.id}`}));
-    //   const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
-    //   uploadComplete$.subscribe(cloudinaryImages => {
-    //     this.goodsService.update(goods.id, { images: cloudinaryImages });
-    //   }, err => {
-    //     alert(err);
-    //   }, () => {
-    //     this.router.navigate(['goods', goods.id], { replaceUrl: true });
-    //   });
-    // });
   }
 
 }

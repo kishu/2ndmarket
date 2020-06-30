@@ -64,7 +64,7 @@ export class GoodsWriteComponent implements OnInit {
     this.goodsService.add(goods).then(addedGoods => {
       draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
       this.router.navigate(['goods', addedGoods.id], { replaceUrl: true }).then(() => {
-        const upload$ = this.cloudinaryService.upload2(draftImages);
+        const upload$ = this.cloudinaryService.upload(draftImages);
         upload$.subscribe(uploadedImages => {
           this.goodsService.updateImages(addedGoods.id, uploadedImages);
         }, err => {
