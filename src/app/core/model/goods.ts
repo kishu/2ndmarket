@@ -47,7 +47,7 @@ export interface Goods {
   condition: GoodsCondition;
   price: number;
   shipping: GoodsShipping;
-  images: string[]; // url
+  images: string/* url */[];
   contact: string;
   memo: string;
   favoritesCnt: number;
@@ -63,6 +63,6 @@ export type NewGoods = Omit<Goods, 'id' | 'created' | 'updated'> & {
   updated: firestore.FieldValue
 };
 
-export type UpdateGoods = Omit<Goods, 'updated'> & {
-  updated: firestore.FieldValue
+export type UpdateGoods = Omit<Partial<Goods>, 'updated'> & {
+  updated: firestore.FieldValue;
 };

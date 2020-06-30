@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, GoodsCacheService, GroupsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
-import { filter, first, map, switchMap } from 'rxjs/operators';
+import { filter, first, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-goods-list',

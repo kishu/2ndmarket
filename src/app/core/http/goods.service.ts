@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
-import { Goods } from '@app/core/model';
+import { Goods, NewGoods, UpdateGoods } from '@app/core/model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,19 @@ import { Goods } from '@app/core/model';
 export class GoodsService extends FirestoreService<Goods> {
   constructor(protected afs: AngularFirestore) {
     super(afs, 'goods');
+  }
+
+  add(newGoods: NewGoods) {
+    return super.add(newGoods);
+  }
+
+  update(goodsId: string, goods: Partial<Goods>) {
+    const updateGoods: UpdateGoods = {
+      ...goods,
+      updated: FirestoreService.serverTimestamp()
+    };
+    delete updateGoods.id;
+    return super.update(goodsId, updateGoods);
   }
 
   getAllByGroupId(groupId: string): Observable<Goods[]> {
@@ -31,7 +44,7 @@ export class GoodsService extends FirestoreService<Goods> {
   }
 
   updateSoldOut(goodsId: string, soldOut: boolean) {
-    return this.update(goodsId, { soldOut: soldOut ? GoodsService.serverTimestamp() : false } as any);
+    return super.update(goodsId, { soldOut: soldOut ? GoodsService.serverTimestamp() : false });
   }
 
 }

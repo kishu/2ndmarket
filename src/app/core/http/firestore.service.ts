@@ -18,52 +18,43 @@ export interface QueryOptions {
   providedIn: 'root'
 })
 export abstract class FirestoreService<T> {
-  protected collection: AngularFirestoreCollection<any>;
+  protected collection: AngularFirestoreCollection<Omit<T, 'id'>>;
 
   protected constructor(
     protected afs: AngularFirestore,
     @Inject(String) protected path: string) {
-    this.collection = afs.collection<any>(this.path);
+    this.collection = afs.collection(this.path);
   }
 
   public static serverTimestamp() {
     return firestore.FieldValue.serverTimestamp();
   }
 
-  public create(id: string, doc: Partial<T>) {
+  protected create(id: string, doc: unknown) {
     return this.collection.doc(id).set(doc);
   }
 
-  public add(doc: Partial<T>) {
-    return this.collection.add(doc);
-  }
-
-  public getDocRef(docId: string) {
-    return this.afs.doc(`${this.path}/${docId}`).ref;
+  protected add(doc: unknown) {
+    return this.collection.add(doc as any);
   }
 
   public get(docId: string): Observable<T> {
     return this.collection.doc(docId)
       .snapshotChanges()
       .pipe(
-        map(a => {
-          if (a.payload.exists) {
-            const id = a.payload.id;
-            const data = a.payload.data();
-            // @ts-ignore
-            return {id, ...data} as T;
-          } else {
-            return null;
-          }
+        map(doc => {
+          const id = doc.payload.id;
+          const data = doc.payload.data() as object;
+          return {id, ...data} as unknown as T;
         })
       );
   }
 
-  public getAll(orderBy: [string, firestore.OrderByDirection?][]) {
+  public getAll(orderBy: [string, firestore.OrderByDirection?][]): Observable<T[]> {
     return this.query({ orderBy });
   }
 
-  public update(docId: string, doc: Partial<T>) {
+  protected update(docId: string, doc: unknown) {
     return this.collection.doc(docId).update(doc);
   }
 
@@ -71,7 +62,7 @@ export abstract class FirestoreService<T> {
     return this.collection.doc(docId).delete();
   }
 
-  protected query(options: QueryOptions) {
+  protected query(options: QueryOptions): Observable<T[]> {
     return this.afs.collection<T>(this.collection.ref, ref => {
       let query: firestore.CollectionReference | firestore.Query = ref;
       if (options.where) {
@@ -108,7 +99,7 @@ export abstract class FirestoreService<T> {
       map( actions => actions.map(a => {
         const id = a.payload.doc.id;
         const data = a.payload.doc.data();
-        return { id, ...data };
+        return { id, ...data } as unknown as T;
       }))
     );
   }

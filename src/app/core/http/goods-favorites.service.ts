@@ -3,7 +3,7 @@ import { first, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
-import { GoodsFavorite } from '@app/core/model';
+import { GoodsFavorite, NewGoodsFavorite } from '@app/core/model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,10 @@ export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
 
   constructor(protected afs: AngularFirestore) {
     super(afs, 'goodsFavorites');
+  }
+
+  add(newGoodsFavorite: NewGoodsFavorite) {
+    return super.add(newGoodsFavorite);
   }
 
   getAllByGoodsIdAndProfileId(goodsId: string, profileId: string): Observable<GoodsFavorite[]> {
