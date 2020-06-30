@@ -33,7 +33,7 @@ export class CloudinaryService {
     const cloudinary = environment.cloudinary;
     const folder = cloudinary.folder;
     const eager = `f_auto,q_auto,w_375,a_${image.rotate},dpr_2.0,c_limit`;
-    const eagerAsync = false;
+    const eagerAsync = true;
     const timestamp = Date.now();
     // Sort all the parameters in alphabetical order.
     const signature = `context=${image.context}&eager=${eager}&eager_async=${eagerAsync}&folder=${cloudinary.folder}&timestamp=${timestamp}${cloudinary.apiSecret}`;

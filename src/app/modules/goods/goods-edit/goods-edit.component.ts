@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CloudinaryService, GoodsService } from '@app/core/http';

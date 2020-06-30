@@ -20,7 +20,7 @@ export const onWriteGoodsFavorites =
           }
         } else {
           update = {
-            commentsCnt: admin.firestore.FieldValue.increment(increment)
+            favoritesCnt: admin.firestore.FieldValue.increment(increment)
           };
         }
         return goods.ref.update(update);

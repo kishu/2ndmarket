@@ -74,17 +74,6 @@ export class GoodsWriteComponent implements OnInit {
         });
       });
     });
-    // this.goodsService.add(goods).then(addedGoods => {
-    //   draftImages = draftImages.map(d => ({ ...d, context: `type=goods|id=${addedGoods.id}`}));
-    //   const [, uploadComplete$] = this.cloudinaryService.upload(draftImages);
-    //   uploadComplete$.subscribe(cloudinaryImages => {
-    //     addedGoods.update({ images: cloudinaryImages });
-    //   }, err => {
-    //     alert(err);
-    //   }, () => {
-    //      this.router.navigate(['goods', addedGoods.id], { replaceUrl: true });
-    //   });
-    // });
   }
 
 }

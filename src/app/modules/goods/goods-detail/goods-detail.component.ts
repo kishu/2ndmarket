@@ -14,13 +14,8 @@ import { Goods, Group, NewGoodsFavorite, Profile } from '@app/core/model';
 export class GoodsDetailComponent implements OnInit, OnDestroy {
   profile$: Observable<Profile> = this.authService.profile$.pipe(share());
   group$: Observable<Group | null> = this.profile$.pipe(
-    switchMap(p => {
-      if (p) {
-        return this.groupService.get(p.groupId);
-      } else {
-        return of(null);
-      }
-    })
+    filter(p => !!p),
+    switchMap(p => this.groupService.get(p.groupId))
   );
   goods$: Observable<Goods> = this.goodsService.get(this.goodsId).pipe(shareReplay());
   empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
