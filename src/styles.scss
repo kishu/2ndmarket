@@ -68,7 +68,7 @@ textarea {
   @apply bg-white shadow-lg;
 
   .goodsName {
-    @apply overflow-hidden mb-2 leading-tight;
+    @apply overflow-hidden mb-2 text-lg leading-tight;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* 라인 수 */
     -webkit-box-orient: vertical;

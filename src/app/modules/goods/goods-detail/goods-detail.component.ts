@@ -1,10 +1,10 @@
-import { combineLatest, Observable } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { filter, first, map, share, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsFavoritesService, ProfilesService } from '@app/core/http';
+import { AuthService, GoodsService, GoodsFavoritesService, GroupsService, ProfilesService } from '@app/core/http';
 import { HeaderService } from '@app/shared/services';
-import { Goods, NewGoodsFavorite } from '@app/core/model';
+import { Goods, Group, NewGoodsFavorite, Profile } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-detail',
@@ -12,6 +12,16 @@ import { Goods, NewGoodsFavorite } from '@app/core/model';
   styleUrls: ['./goods-detail.component.scss']
 })
 export class GoodsDetailComponent implements OnInit, OnDestroy {
+  profile$: Observable<Profile> = this.authService.profile$.pipe(share());
+  group$: Observable<Group | null> = this.profile$.pipe(
+    switchMap(p => {
+      if (p) {
+        return this.groupService.get(p.groupId);
+      } else {
+        return of(null);
+      }
+    })
+  );
   goods$: Observable<Goods> = this.goodsService.get(this.goodsId).pipe(shareReplay());
   empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
   permission$: Observable<boolean> = combineLatest([
@@ -36,6 +46,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
+    private groupService: GroupsService,
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
     private goodsFavoritesService: GoodsFavoritesService,

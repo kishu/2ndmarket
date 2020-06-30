@@ -11065,6 +11065,11 @@ url-parse@^1.4.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
+url-parser@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/url-parser/-/url-parser-0.0.1.tgz#6f8115bfe93db096e8febb991232a2544d800fa9"
+  integrity sha1-b4EVv+k9sJbo/ruZEjKiVE2AD6k=
+
 url@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
