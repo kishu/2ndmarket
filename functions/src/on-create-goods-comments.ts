@@ -22,15 +22,14 @@ function cleanupTokens(response: any, tokens: any) {
   return Promise.all(tokensDelete);
 }
 
-export const onCreateGoodsComments =
-  functions
+export const onCreateGoodsComments = functions
   .region('asia-northeast1')
   .firestore
   .document('goodsComments/{goodsCommentId}')
-  .onCreate(async (snapshot) => {
-    const goodsId = snapshot.get('goodsId');
-    const profileId = snapshot.get('profileId');
-    const body = snapshot.get('body');
+  .onCreate(async (goodsCommentDoc) => {
+    const goodsId = goodsCommentDoc.get('goodsId');
+    const profileId = goodsCommentDoc.get('profileId');
+    const body = goodsCommentDoc.get('body');
     const goods = await db.doc(`goods/${goodsId}`).get();
     if (goods.exists && goods.get('profileId') !== profileId) {
       const payload = {

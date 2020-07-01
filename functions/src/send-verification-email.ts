@@ -5,7 +5,8 @@ import * as cors from 'cors';
 const corsHandler = cors({origin: true});
 sgMail.setApiKey(functions.config().sendgrid.key);
 
-export const sendVerificationEmail = functions.region('asia-northeast1')
+export const sendVerificationEmail = functions
+  .region('asia-northeast1')
   .https.onRequest((req, res) => {
     return corsHandler(req, res, () => {
       const {to, code} = req.body.data;

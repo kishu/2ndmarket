@@ -46,7 +46,7 @@ export function appInitializer(authService: AuthService) {
     AuthModule,
     GoodsModule,
     PreferenceModule,
-    AppRoutingModule,
+    AppRoutingModule
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
