@@ -47,7 +47,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy {
     private goodsFavoritesService: GoodsFavoritesService,
     private headerService: HeaderService,
   ) {
-    this.headerService.hidden$.next(true);
+    // this.headerService.hidden$.next(true);
   }
 
   ngOnInit(): void {

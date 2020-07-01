@@ -204,5 +204,13 @@ textarea {
 
 .header,
 app-header {
-  @apply block sticky top-0 z-30;
+  @apply bg-white shadow;
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.goods-name {
+  @apply w-full px-4 py-3 bg-white text-lg;
+  padding-top: calc(constant(safe-area-inset-top) + 0.75rem);
+  padding-top: calc(env(safe-area-inset-top) + 0.75rem);
 }

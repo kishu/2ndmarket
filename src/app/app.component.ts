@@ -6,7 +6,7 @@ import { AuthService, FcmTokensService } from '@app/core/http';
 import { NewFcmToken } from '@app/core/model';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-root, [app-root]',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

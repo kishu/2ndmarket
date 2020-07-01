@@ -1,47 +1,25 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="goodsDetail w-full">
     <div class="relative">
-      <div class="block sticky header bg-white shadow">
-        <div class="relative w-full max-w-xl mx-auto py-3 px-2">
-          <a [routerLink]="['/']" class="absolute inset-y-0 left-0 py-3 px-2 flex items-center border-white bg-white">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-          </a>
-          <h1 class="font-bold text-center">
-            <ng-container *ngIf="(group$ | async) as group">
-              <a [routerLink]="['/goods']">
-                <span>세컨드마켓@</span>
-                <span class="uppercase">{{ group.name }}</span>
-              </a>
-            </ng-container>
-          </h1>
-          <ng-container *ngIf="(profile$ | async) as profile">
-            <div class="absolute inset-y-0 right-0 mx-auto flex">
-              <a [routerLink]="['goods/new/edit']" class="py-3 px-4 text-sm flex items-center">등록</a>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-      <div *ngIf="goods.processing" class="text-lg">
-        이미지를 처리하고 있습니다.
-      </div>
-      <ng-container *ngFor="let src of goods.images; first as isFirst">
-        <div *ngIf="isFirst" class="max-w-xl mx-auto"><img [src]="src" alt=""></div>
-      </ng-container>
+      <div app-header class="sticky top-0 z-30"></div>
+      <div *ngIf="goods.images.length > 0" class="max-w-xl mx-auto"><img [src]="goods.images[0]" alt=""></div>
     </div>
     <div class="relative max-w-xl mx-auto bg-white">
-      <div class="sticky top-0 w-full px-4 py-3 bg-white z-20 text-lg">
-        <h2 class="goodsName">{{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }}</h2>
-        <div class="flex mt-3 justify-between">
-          <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
-          <div class="flex-shrink-0">
-            <span>{{ goods.favoritesCnt }}</span>
-            <button type="button" class="btn-sm" (click)="onClickFavorite()">좋<span *ngIf="favorited$ | async">(했)</span></button>
-            <ng-container *ngIf="permission$ | async as p">
-              <a [routerLink]="['edit']" class="btn btn-sm" skipLocationChange>수정</a> |
-              <button type="button" class="btn-sm" (click)="onClickDelete()">삭제</button> |
-              <button type="button" class="btn-sm" (click)="onClickSoldOut()">{{ goods.soldOut ? '판매됨' : '판매완료하기' }}</button>
-              <span *ngIf="goods.soldOut">{{ goods.soldOut | fsTimestamp | formatDistanceToNow }}</span>
-            </ng-container>
+      <div class="sticky top-0 z-20">
+        <div class="goods-name">
+          <h2 class="goodsName">{{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }}</h2>
+          <div class="flex mt-3 justify-between">
+            <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
+            <div class="flex-shrink-0">
+              <span>{{ goods.favoritesCnt }}</span>
+              <button type="button" class="btn-sm" (click)="onClickFavorite()">좋<span *ngIf="favorited$ | async">(했)</span></button>
+              <ng-container *ngIf="permission$ | async as p">
+                <a [routerLink]="['edit']" class="btn btn-sm" skipLocationChange>수정</a> |
+                <button type="button" class="btn-sm" (click)="onClickDelete()">삭제</button> |
+                <button type="button" class="btn-sm" (click)="onClickSoldOut()">{{ goods.soldOut ? '판매됨' : '판매완료하기' }}</button>
+                <span *ngIf="goods.soldOut">{{ goods.soldOut | fsTimestamp | formatDistanceToNow }}</span>
+              </ng-container>
+            </div>
           </div>
         </div>
       </div>
@@ -52,9 +30,12 @@
           <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
         </div>
         <ng-container *ngIf="goods.images.length > 1">
+          <div *ngIf="goods.processing" class="text-lg">
+            이미지를 처리하고 있습니다.
+          </div>
           <ul class="goods-images">
             <ng-container *ngFor="let src of goods.images; first as isFirst">
-              <li class="relative border border-white">
+              <li class="relative border border-white" *ngIf="!isFirst">
                 <div class="attachImage"><img [src]="src" class="image" alt=""></div>
               </li>
             </ng-container>

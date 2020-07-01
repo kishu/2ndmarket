@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
 import { GoodsRoutingModule } from './goods-routing.module';
+import { HomeModule } from '@app/modules/home/home.module';
 import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsFormComponent } from './goods-form/goods-form.component';
@@ -28,6 +29,7 @@ import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-fo
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    HomeModule,
     GoodsRoutingModule
   ]
 })

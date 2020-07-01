@@ -6,7 +6,7 @@ import { HeaderService } from '@app/shared/services';
 import { Group, Profile } from '@app/core/model';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-header, [app-header]',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
