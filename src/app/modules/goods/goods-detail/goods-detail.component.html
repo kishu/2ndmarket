@@ -1,10 +1,10 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="goodsDetail w-full">
-    <div class="relative">
+    <div class="sticky-wrap">
       <div app-header class="sticky top-0 z-30"></div>
       <div *ngIf="goods.images.length > 0" class="max-w-xl mx-auto"><img [src]="goods.images[0]" alt=""></div>
     </div>
-    <div class="relative max-w-xl mx-auto bg-white">
+    <div class="sticky-wrap max-w-xl mx-auto bg-white">
       <div class="sticky top-0 z-20">
         <div class="goods-name">
           <h2 class="goodsName">{{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }}</h2>

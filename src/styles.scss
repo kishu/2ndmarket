@@ -214,3 +214,11 @@ app-header {
   padding-top: calc(constant(safe-area-inset-top) + 0.75rem);
   padding-top: calc(env(safe-area-inset-top) + 0.75rem);
 }
+
+.sticky-wrap {
+  @apply relative;
+  & + & {
+    margin-top: constant(safe-area-inset-top);
+    margin-top: env(safe-area-inset-top);
+  }
+}
