@@ -10,5 +10,5 @@ export interface Profile {
 }
 
 export type NewProfile = Omit<Profile, 'id' | 'created'> & {
-  created: firestore.FieldValue,
+  created: firestore.FieldValue;
 };

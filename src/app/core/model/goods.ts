@@ -60,8 +60,8 @@ export interface Goods {
 }
 
 export type NewGoods = Omit<Goods, 'id' | 'created' | 'updated'> & {
-  created: firestore.FieldValue,
-  updated: firestore.FieldValue
+  created: firestore.FieldValue;
+  updated: firestore.FieldValue;
 };
 
 export type UpdateGoods = Omit<Partial<Goods>, 'updated'> & {

@@ -10,5 +10,5 @@ export interface GoodsComment {
 }
 
 export type NewGoodsComment = Omit<GoodsComment, 'id' | 'created'> & {
-  created: firestore.FieldValue
+  created: firestore.FieldValue;
 };

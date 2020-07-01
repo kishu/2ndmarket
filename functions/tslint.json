@@ -105,10 +105,10 @@
     "unified-signatures": {"severity": "warning"},
 
     // Prefer const for values that will not change. This better documents code.
-    "prefer-const": {"severity": "warning"},
+    "prefer-const": {"severity": "warning"}
 
     // Multi-line object literals and function calls should have a trailing comma. This helps avoid merge conflicts.
-    "trailing-comma": {"severity": "warning"}
+    // "trailing-comma": {"severity": "warning"}
   },
 
   "defaultSeverity": "error"

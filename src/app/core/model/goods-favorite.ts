@@ -9,5 +9,5 @@ export interface GoodsFavorite {
 }
 
 export type NewGoodsFavorite = Omit<GoodsFavorite, 'id' | 'created'> & {
-  created: firestore.FieldValue
+  created: firestore.FieldValue;
 };

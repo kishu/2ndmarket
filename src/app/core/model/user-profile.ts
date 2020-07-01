@@ -1,4 +1,4 @@
-import { firestore } from "firebase/app";
+import { firestore } from 'firebase/app';
 
 export interface UserProfile {
   id: string;
@@ -10,5 +10,5 @@ export interface UserProfile {
 }
 
 export type NewUserProfile = Omit<UserProfile, 'id' | 'created'> & {
-  created: firestore.FieldValue
+  created: firestore.FieldValue;
 };
