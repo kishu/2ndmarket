@@ -6,7 +6,7 @@ import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http'
 import { NewGoodsComment } from '@app/core/model';
 
 @Component({
-  selector: 'app-goods-comment-form',
+  selector: 'app-goods-comment-form, [app-goods-comment-form]',
   templateUrl: './goods-comment-form.component.html',
   styleUrls: ['./goods-comment-form.component.scss']
 })

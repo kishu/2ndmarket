@@ -19,6 +19,12 @@ body {
 
 .wrap {
   position: relative;
+  &:before {
+    @apply sticky top-0 block w-full bg-blue-700 z-40;
+    height: constant(safe-area-inset-top);
+    height: env(safe-area-inset-top);
+    content: '';
+  }
 }
 
 button,
@@ -131,9 +137,7 @@ textarea {
 }
 
 .comment-wrap {
-  @apply w-full max-w-xl mx-auto p-4 bg-gray-500;
-  padding-bottom: calc(constant(safe-area-inset-bottom) + 1rem);
-  padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+  @apply w-full max-w-xl mx-auto bg-gray-500;
 }
 
 .goods-images {
@@ -205,20 +209,17 @@ textarea {
 .header,
 app-header {
   @apply bg-white shadow;
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
 }
 
 .goods-name {
   @apply w-full px-4 py-3 bg-white text-lg;
-  padding-top: calc(constant(safe-area-inset-top) + 0.75rem);
-  padding-top: calc(env(safe-area-inset-top) + 0.75rem);
 }
 
 .sticky-wrap {
   @apply relative;
-  & + & {
-    margin-top: -constant(safe-area-inset-top);
-    margin-top: -env(safe-area-inset-top);
-  }
+}
+
+.safe-top {
+  top: constant(safe-area-inset-top);
+  top: env(safe-area-inset-top);
 }

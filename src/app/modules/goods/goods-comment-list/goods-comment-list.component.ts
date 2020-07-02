@@ -11,7 +11,7 @@ export interface GoodsCommentExtend extends GoodsComment {
 }
 
 @Component({
-  selector: 'app-goods-comment-list',
+  selector: 'app-goods-comment-list, [app-goods-comment-list]',
   templateUrl: './goods-comment-list.component.html',
   styleUrls: ['./goods-comment-list.component.scss']
 })
