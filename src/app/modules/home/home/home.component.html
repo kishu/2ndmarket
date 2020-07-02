@@ -1,26 +1,20 @@
-<div class="fixed inset-y-0 left-0 bg-white w-9/12 overflow-hidden shadow z-20">
+  <div app-header class="sticky safe-top z-30"></div>
   <h2 class="flex p-2 justify-between">
-    <a [routerLink]="['preference/profile']" class="flex">
-      <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
-      <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
-        <span class="block text-sm ellipsis">{{ (user$ | async)?.displayName }}</span>
-      </span>
-    </a>
-    <button
-      type="button"
-      class="flex-grow-0 flex-shrink-0 w-8 border-0 p-0 bg-transparent flex justify-center items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="16px" height="16px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-    </button>
-  </h2>
-  <ul>
-    <li><a [routerLink]="['goods']">상품목록</a></li>
-    <li><a [routerLink]="['goods/new/edit']">상품등록</a></li>
-    <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
-    <li *ngIf="!(user$ | async)"><a [routerLink]="['sign-in']">sign-in</a></li>
-  </ul>
-  <div class="absolute left-0 right-0 bottom-0 w-full p-2">
-    <a
-      class="block btn btn-sm"
-      (click)="onClickSignOut($event)">sign-out</a>
-  </div>
+  <a [routerLink]="['preference/profile']" class="flex">
+    <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
+    <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+      <span class="block text-sm ellipsis">{{ (user$ | async)?.displayName }}</span>
+    </span>
+  </a>
+</h2>
+<ul>
+  <li><a [routerLink]="['goods']">상품목록</a></li>
+  <li><a [routerLink]="['goods/new/edit']">상품등록</a></li>
+  <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
+  <li *ngIf="!(user$ | async)"><a [routerLink]="['sign-in']">sign-in</a></li>
+</ul>
+<div class="w-full p-2">
+  <a
+    class="block btn btn-sm"
+    (click)="onClickSignOut($event)">sign-out</a>
 </div>

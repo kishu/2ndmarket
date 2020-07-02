@@ -1,22 +1,20 @@
-<div [ngClass]="{ 'hidden': hidden$ | async }">
-  <div class="header bg-white shadow">
-    <div class="relative w-full max-w-xl mx-auto py-3 px-2">
-      <a [routerLink]="['/']" class="absolute inset-y-0 left-0 py-3 px-2 flex items-center border-white bg-white">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-      </a>
-      <h1 class="font-bold text-center">
-        <ng-container *ngIf="(group$ | async) as group">
-          <a [routerLink]="['/goods']">
-            <span>세컨드마켓@</span>
-            <span class="uppercase">{{ group.name }}</span>
-          </a>
-        </ng-container>
-      </h1>
-      <ng-container *ngIf="(profile$ | async) as profile">
-        <div class="absolute inset-y-0 right-0 mx-auto flex">
-          <a [routerLink]="['goods/new/edit']" class="py-3 px-4 text-sm flex items-center">등록</a>
-        </div>
+<div class="header bg-white shadow">
+  <div class="relative w-full max-w-xl mx-auto py-3 px-2">
+    <a [routerLink]="['/']" class="absolute inset-y-0 left-0 py-3 px-2 flex items-center border-white bg-white">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </a>
+    <h1 class="font-bold text-center">
+      <ng-container *ngIf="(group$ | async) as group">
+        <a [routerLink]="['/goods']">
+          <span>세컨드마켓@</span>
+          <span class="uppercase">{{ group.name }}</span>
+        </a>
+      </ng-container>
+    </h1>
+    <ng-container *ngIf="(profile$ | async) as profile">
+      <div class="absolute inset-y-0 right-0 mx-auto flex">
+        <a [routerLink]="['/goods/new/edit']" class="py-3 px-4 text-sm flex items-center">등록</a>
+      </div>
       </ng-container>
     </div>
-  </div>
 </div>

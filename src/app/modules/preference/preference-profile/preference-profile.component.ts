@@ -10,7 +10,7 @@ enum GoodsListType {
 }
 
 @Component({
-  selector: 'app-preference-profile',
+  selector: 'app-preference-profile, [app-preference-profile]',
   templateUrl: './preference-profile.component.html',
   styleUrls: ['./preference-profile.component.scss']
 })
