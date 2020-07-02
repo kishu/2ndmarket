@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
 import { NewUserProfile, UserProfile } from '@app/core/model';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class UserProfilesService extends FirestoreService<UserProfile> {
     });
   }
 
-  getByUserIdAndProfileId(userId: string, profileId: string) {
+  getAllByUserIdAndProfileId(userId: string, profileId: string) {
     return this.query({
       where: [
         ['userId', '==', userId],

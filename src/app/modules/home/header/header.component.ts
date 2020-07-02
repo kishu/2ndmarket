@@ -21,15 +21,14 @@ export class HeaderComponent implements OnInit {
       }
     })
   );
-  hidden$ = this.headerService.hidden$;
+
   constructor(
     private authService: AuthService,
     private groupService: GroupsService,
-    private headerService: HeaderService,
   ) {
     // test
-    this.authService.user$.subscribe(u => console.log('user$', u));
-    this.authService.profile$.subscribe(p => console.log('profile$', p));
+    this.authService.user2$.subscribe(u => console.log('user$', u));
+    this.authService.profile2$.subscribe(p => console.log('profile$', p));
   }
 
   ngOnInit(): void {

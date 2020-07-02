@@ -1,11 +1,12 @@
 import { auth } from 'firebase/app';
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
+import { first, map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ProfilesService } from "@app/core/http/profiles.service";
-import { UserProfilesService } from "@app/core/http/user-profiles.service";
-import { Group, Profile, User } from '@app/core/model';
+import { SelectProfileService } from '@app/core/storage';
+import { ProfilesService } from '@app/core/http/profiles.service';
+import { UserProfilesService } from '@app/core/http/user-profiles.service';
+import { Profile, User } from '@app/core/model';
 
 enum AuthProvider {
   google = 'google',
@@ -23,10 +24,49 @@ export class AuthService {
   get user$(): Observable<User | null> { return this._user$; }
   get profile$(): Observable<Profile | null > { return this._profile$; }
 
+  user2$ = this.afAuth.user.pipe(
+    map(user => {
+      if (user) {
+        return {
+          id: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          email: user.email
+        };
+      } else {
+        return null;
+      }
+    }),
+  );
+
+  profile2$ = combineLatest([
+    this.afAuth.user,
+    this.selectProfileService.profileId$
+  ]).pipe(
+    switchMap(([user, profileId]) => {
+      if (user && profileId) {
+        return this.userProfilesService.getAllByUserIdAndProfileId(user.uid, profileId).pipe(
+          switchMap(userProfiles => {
+            if (userProfiles.length > 0) {
+              return this.profilesService.get(userProfiles[0].profileId);
+            } else {
+              return of(null);
+            }
+          })
+        );
+      } else {
+        return of(null);
+      }
+    }),
+    tap(t => console.log('profile', t)),
+    shareReplay()
+  );
+
   constructor(
     private afAuth: AngularFireAuth,
     private userProfilesService: UserProfilesService,
-    private profilesService: ProfilesService
+    private profilesService: ProfilesService,
+    private selectProfileService: SelectProfileService
   ) {
     const user$ = this.afAuth.user.pipe(
       map(u => {

@@ -1,10 +1,11 @@
 import { random } from 'lodash-es';
-import { BehaviorSubject, empty, forkJoin, Observable, of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
+import { SelectProfileService } from '@app/core/storage';
 import { Group, NewProfile, NewUserProfile, Profile } from '@app/core/model';
 
 enum GroupAddStep {
@@ -29,27 +30,12 @@ export class PreferenceGroupsComponent implements OnInit {
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
   groups$ = this.groupsService.getAll([['created', 'desc']]).pipe(first(), share());
   domains$ = this.groups$.pipe(map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort()));
-  profiles$ = this.authService.user$.pipe(
+  userProfileList$ = this.authService.user2$.pipe(
     first(),
     filter(u => !!u),
-    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe(first()))
+    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe())
   );
-  groupsWithProfile$: Observable<GroupWithProfile[]> = this.authService.user$.pipe(
-    first(),
-    filter(u => !!u),
-    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe(first())),
-    switchMap(userProfiles => {
-      return forkJoin(...userProfiles.map(userProfile => this.profilesService.get(userProfile.profileId).pipe(first())));
-    }),
-    switchMap(profiles => {
-      return forkJoin(...profiles.map(profile => {
-        return this.groupsService.get(profile.groupId).pipe(
-          first(),
-          map(group => ({ ...group, profile }))
-        );
-      }));
-    })
-  );
+  selectedProfileId$ = this.selectProfileService.profileId$.pipe(share());
 
   get accountCtl() { return this.emailForm.get('account'); }
   get domainCtl() { return this.emailForm.get('domain'); }
@@ -63,7 +49,8 @@ export class PreferenceGroupsComponent implements OnInit {
     private authService: AuthService,
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
-    private userProfilesService: UserProfilesService
+    private userProfilesService: UserProfilesService,
+    private selectProfileService: SelectProfileService
   ) {
     this.step$.subscribe(step => {
       switch (step) {
@@ -96,6 +83,7 @@ export class PreferenceGroupsComponent implements OnInit {
       // this is just tricky code.
       this.ngZone.run(() => {
         this.code = code;
+        console.log('code', code);
         this.submitting = false;
         this.step$.next(GroupAddStep.verify);
       });
@@ -133,7 +121,7 @@ export class PreferenceGroupsComponent implements OnInit {
                 email,
                 photoURL: '',
                 created: ProfilesService.serverTimestamp()
-              } as NewProfile).then(p => p.id)
+              } as NewProfile).then(p => p.id);
             }
           )
         );
@@ -143,11 +131,11 @@ export class PreferenceGroupsComponent implements OnInit {
           first(),
           tap(u => console.log('user', u)),
           switchMap(u => {
-            return this.userProfilesService.getByUserIdAndProfileId(u.id, profileId).pipe(
+            return this.userProfilesService.getAllByUserIdAndProfileId(u.id, profileId).pipe(
               first(),
               switchMap(userProfiles => {
                 return userProfiles.length ?
-                  empty() :
+                  of(null) :
                   this.userProfilesService.add({
                     userId: u.id,
                     userEmail: u.email,
@@ -156,7 +144,7 @@ export class PreferenceGroupsComponent implements OnInit {
                     created: UserProfilesService.serverTimestamp()
                   } as NewUserProfile);
               })
-            )
+            );
           })
         );
       })
@@ -164,6 +152,11 @@ export class PreferenceGroupsComponent implements OnInit {
       () => {},
       err => alert(err)
     );
+  }
+
+  onClickSelectProfile(profile: Profile) {
+    console.log('select', profile);
+    this.selectProfileService.select(profile.id);
   }
 
 }
