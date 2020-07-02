@@ -6,5 +6,6 @@ export * from './goods-cache.service';
 export * from './goods-comments.service';
 export * from './goods-favorites.service';
 export * from './groups.service';
+export * from './notices.service';
 export * from './profiles.service';
 export * from './user-profiles.service';

@@ -4,9 +4,9 @@ export interface Notice {
   id: string;
   profileId: string;
   goodsId: string;
-  commentId: string;
+  goodsCommentId: string;
   read: boolean | firestore.Timestamp;
-  created: string;
+  created: firestore.Timestamp;
 }
 
 export type NewNotice = Omit<Notice, 'id' | 'created'> & {

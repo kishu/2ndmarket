@@ -16,6 +16,23 @@
   </div>
 
   <br><br>
+  <h2>알림</h2>
+
+  <ul *ngIf="noticeList$ | async as noticeList">
+    <li *ngFor="let notice of noticeList">
+      <ng-container *ngIf="notice.goodsId | fsDocument:'goods' | async as goods">
+        <ng-container *ngIf="notice.goodsCommentId | fsDocument: 'goodsComments' | async as goodsComment">
+          <a [routerLink]="['/goods', notice.goodsId]" [fragment]="'goodsComments/' + notice.goodsCommentId" (click)="onClickNotice($event, notice)">
+            <img [src]="goods.images[0]" width="40"> {{ goods.name }}의 댓글 /
+            {{ goodsComment.body }} /
+            {{ notice.created | fsTimestamp | formatDistanceToNow }}
+          </a>
+        </ng-container>
+      </ng-container>
+    </li>
+  </ul>
+
+  <br><br>
 
   <ul>
     <li><button type="button" (click)="onClickGoodsListType('write')">등록한 상품</button></li>
@@ -35,9 +52,11 @@
     </ng-container>
     <ng-container *ngSwitchCase="'favorite'">
       <h3>관심 상품</h3>
-      <ul class="grid grid-cols-3 gap-1 p-1" *ngIf="favoriteGoodsList$ | async as goodsList">
-        <li *ngFor="let goods of goodsList">
-          <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+      <ul class="grid grid-cols-3 gap-1 p-1" *ngIf="goodsFavoriteList$ | async as goodsFavoriteList">
+        <li *ngFor="let goodsFavorite of goodsFavoriteList">
+          <ng-container *ngIf="goodsFavorite.goodsId | fsDocument:'goods' | async as goods">
+            <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+          </ng-container>
         </li>
       </ul>
     </ng-container>

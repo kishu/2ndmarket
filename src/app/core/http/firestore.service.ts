@@ -50,8 +50,12 @@ export abstract class FirestoreService<T> {
       );
   }
 
-  public getAll(orderBy: [string, firestore.OrderByDirection?][]): Observable<T[]> {
-    return this.query({ orderBy });
+  public getAll(orderBy: [string, firestore.OrderByDirection?][], limit?: number): Observable<T[]> {
+    let options: QueryOptions = { orderBy };
+    if (typeof limit === 'number') {
+      options = {...options, limit };
+    }
+    return this.query(options);
   }
 
   protected update(docId: string, doc: unknown) {

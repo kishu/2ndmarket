@@ -20,7 +20,7 @@ export const onWriteGoodsComments = functions
         const newNotice = {
           profileId: goodsData?.profileId,
           goodsId: goodsDoc.id,
-          commentId: goodsCommentDoc.id,
+          goodsCommentId: goodsCommentDoc.id,
           read: false,
           created: admin.firestore.FieldValue.serverTimestamp()
         }
@@ -33,7 +33,7 @@ export const onWriteGoodsComments = functions
           commentsCnt: admin.firestore.FieldValue.increment(-1)
         };
         const deleteNotices = db.collection('notice')
-          .where('commentId', '==', goodsCommentDoc.id)
+          .where('goodsCommentId', '==', goodsCommentDoc.id)
           .get()
           .then(querySnapshot => Promise.all(querySnapshot.docs.map(doc => doc.ref.delete())));
         return Promise.all([

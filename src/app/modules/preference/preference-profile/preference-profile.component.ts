@@ -1,8 +1,8 @@
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { filter, first, shareReplay, switchMap, } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GoodsFavoritesService, GoodsService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
-import { Group, Profile } from '@app/core/model';
+import { AuthService, GoodsFavoritesService, GoodsService, NoticesService  } from '@app/core/http';
+import { Notice } from '@app/core/model';
 
 enum GoodsListType {
   write = 'write',
@@ -15,25 +15,32 @@ enum GoodsListType {
   styleUrls: ['./preference-profile.component.scss']
 })
 export class PreferenceProfileComponent implements OnInit {
-  goodsListType$ = new BehaviorSubject<GoodsListType>(GoodsListType.write);
-  profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), share());
+  profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), shareReplay());
+  noticeList$ = this.profile$.pipe(
+    switchMap(p => this.noticesService.getAllByRead(false).pipe(first())),
+  );
   writeGoodsList$ = this.profile$.pipe(
     switchMap(p => this.goodsService.getAllByProfileId(p.id).pipe(first()))
   );
-  favoriteGoodsList$ = this.profile$.pipe(
-    switchMap(p => this.goodsFavoriteService.getAllByProfileId(p.id).pipe(first())),
-    map(fs => fs.map(f => this.goodsService.get(f.goodsId).pipe(first()))),
-    switchMap(goods$ => forkJoin([...goods$]))
+  goodsFavoriteList$ = this.profile$.pipe(
+    switchMap(p => this.goodsFavoriteService.getAllByProfileId(p.id).pipe(first()))
   );
+  goodsListType$ = new BehaviorSubject<GoodsListType>(GoodsListType.write);
 
   constructor(
     private authService: AuthService,
     private goodsService: GoodsService,
-    private goodsFavoriteService: GoodsFavoritesService
+    private goodsFavoriteService: GoodsFavoritesService,
+    private noticesService: NoticesService
   ) {
   }
 
   ngOnInit(): void {
+  }
+
+  onClickNotice(e: Event, notice: Notice) {
+    e.preventDefault();
+    this.noticesService.updateRead(notice.id);
   }
 
   onClickGoodsListType(type: string) {
