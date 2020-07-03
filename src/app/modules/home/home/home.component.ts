@@ -1,8 +1,9 @@
-import { map } from "rxjs/operators";
+import { forkJoin, Observable } from "rxjs";
+import { first, filter, switchMap } from "rxjs/operators";
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@app/core/http/auth.service';
-import { forkJoin, merge } from "rxjs";
+import { AuthService, ProfilesService, UserProfilesService } from '@app/core/http';
+import { Profile } from '@app/core/model';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +12,20 @@ import { forkJoin, merge } from "rxjs";
 })
 export class HomeComponent implements OnInit {
   user$ = this.authService.user$;
+  profiles$: Observable<Profile[]> = this.authService.user$.pipe(
+    first(),
+    filter(u => !!u),
+    switchMap(u => this.userProfilesService.getAllByUserId(u.id)),
+    switchMap(userProfiles => {
+      return forkJoin(...userProfiles.map(userProfile => this.profilesService.get(userProfile.profileId).pipe(first())));
+    })
+  );
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private profilesService: ProfilesService,
+    private userProfilesService: UserProfilesService
   ) {
   }
 

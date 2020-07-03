@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
-import { filter, first, shareReplay, switchMap, } from 'rxjs/operators';
+import { filter, first, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GoodsFavoritesService, GoodsService, NoticesService  } from '@app/core/http';
+import { AuthService, GoodsFavoritesService, GoodsService, NoticesService } from '@app/core/http';
 import { Notice } from '@app/core/model';
 
 enum GoodsListType {
@@ -31,7 +31,7 @@ export class PreferenceProfileComponent implements OnInit {
     private authService: AuthService,
     private goodsService: GoodsService,
     private goodsFavoriteService: GoodsFavoritesService,
-    private noticesService: NoticesService
+    private noticesService: NoticesService,
   ) {
   }
 

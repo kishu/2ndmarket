@@ -27,13 +27,9 @@ export class PreferenceGroupsComponent implements OnInit {
   emailForm: FormGroup;
   verifyForm: FormGroup;
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
-  groups$ = this.groupsService.getAll([['created', 'desc']]).pipe(first(), share());
+groups$ = this.groupsService.getAll([['created', 'desc']]).pipe(first(), share());
   domains$ = this.groups$.pipe(map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort()));
-  profiles$ = this.authService.user$.pipe(
-    first(),
-    filter(u => !!u),
-    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe(first()))
-  );
+  user$ = this.authService.user$;
   groupsWithProfile$: Observable<GroupWithProfile[]> = this.authService.user$.pipe(
     first(),
     filter(u => !!u),

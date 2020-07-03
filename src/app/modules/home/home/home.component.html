@@ -1,20 +1,48 @@
-  <div app-header class="sticky safe-top z-30"></div>
-  <h2 class="flex p-2 justify-between">
-  <a [routerLink]="['preference/profile']" class="flex">
-    <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
-    <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
-      <span class="block text-sm ellipsis">{{ (user$ | async)?.displayName }}</span>
-    </span>
-  </a>
-</h2>
-<ul>
-  <li><a [routerLink]="['goods']">상품목록</a></li>
-  <li><a [routerLink]="['goods/new/edit']">상품등록</a></li>
-  <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
-  <li *ngIf="!(user$ | async)"><a [routerLink]="['sign-in']">sign-in</a></li>
-</ul>
-<div class="w-full p-2">
-  <a
-    class="block btn btn-sm"
-    (click)="onClickSignOut($event)">sign-out</a>
+<div app-header class="sticky safe-top z-30"></div>
+<div class="max-w-xl mx-auto p-2">
+  <ng-container *ngIf="user$ | async as user">
+    <h2 class="flex justify-between">
+      <a [routerLink]="['preference/profile']" class="flex">
+        <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
+        <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+          <span class="block text-sm ellipsis">{{ user.displayName }} 프로필 설정</span>
+        </span>
+      </a>
+    </h2>
+  </ng-container>
+
+  <ul class="mb-4">
+    <li><a [routerLink]="['goods']">등록한 물품(5)</a></li>
+    <li><a [routerLink]="['goods/new/edit']">관심 물품(15)</a></li>
+  </ul>
+
+  <ul>
+    <li><a [routerLink]="['goods']">상품목록</a></li>
+    <li><a [routerLink]="['goods/new/edit']">상품등록</a></li>
+    <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
+    <li *ngIf="!(user$ | async)"><a [routerLink]="['sign-in']">sign-in</a></li>
+  </ul>
+
+  <div>
+    <h2 class="p-2 text-blue-700">프로필 전환</h2>
+    <ul class="border border-blue-500 bg-white" *ngIf="profiles$ | async as profiles">
+      <li ngClass="border-blue-500 border border-l-0 border-r-0 border-b-0" *ngFor="let profile of profiles">
+        <button
+          type="button"
+          class="flex justify-between items-center w-full p-2 border-0 bg-transparent text-blue-700">
+          <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2" alt="">
+          <span class="flex-grow text-left text-sm ellipsis">{{ profile.displayName }}</span>
+          <ng-container *ngIf="profile.groupId | fsDocument: 'groups' | async as group">
+            <span class="inline-block px-2 py-1 bg-blue-500 text-white text-xs leading-tight uppercase">{{group.name}}</span>
+          </ng-container>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <a
+      class="block btn btn-sm"
+      (click)="onClickSignOut($event)">sign-out</a>
+  </div>
 </div>

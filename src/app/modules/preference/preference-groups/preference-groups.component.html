@@ -1,6 +1,6 @@
 <div class="w-full max-w-sm mx-auto p-4">
-<h2 class="p-2 text-blue-700">Step-1. 메일주소 입력</h2>
- <ng-container *ngIf="(step$ | async) === 'email'">
+  <h2 class="p-2 text-blue-700">Step-1. 메일주소 입력</h2>
+  <ng-container *ngIf="(step$ | async) === 'email'">
     <form
       [formGroup]="emailForm"
       (ngSubmit)="onEmailSubmit()">
@@ -141,16 +141,4 @@
   <br>
   <br>
   <br>
-
-  <h2 class="p-2">프로필 선택</h2>
-  <ul *ngIf="groupsWithProfile$ | async as groups">
-    <li class="mb-1" *ngFor="let group of groups">
-      <div class="flex justify-between">
-        <span class="flex items-center">{{ group.name }}</span>
-        <span class="flex items-center">{{ group.profile.email }}</span>
-        <span class="flex items-center">{{ group.profile.displayName }}</span>
-        <button type="button" class="flex-shrink-0">선택</button>
-      </div>
-    </li>
-  </ul>
 </div>
