@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, GoodsCacheService, GroupsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
-import { filter, first, switchMap } from 'rxjs/operators';
+import { filter, first, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-goods-list',
@@ -14,6 +14,7 @@ export class GoodsListComponent implements OnInit {
   goodsList$ = this.authService.profile$.pipe(
     first(),
     filter(p => !!p),
+    tap(t => console.log('goodsList', t)),
     switchMap(p => this.goodsService.getAllByGroupId(p.groupId).pipe())
   );
 

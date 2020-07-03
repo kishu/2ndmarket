@@ -18,13 +18,13 @@ export class UserProfilesService extends FirestoreService<UserProfile> {
   }
 
   getAllByUserId(userId: string) {
-    return this.query({
+    return super.query({
       where: [['userId', '==', userId]]
     });
   }
 
   getAllByUserIdAndProfileId(userId: string, profileId: string) {
-    return this.query({
+    return super.query({
       where: [
         ['userId', '==', userId],
         ['profileId', '==', profileId]

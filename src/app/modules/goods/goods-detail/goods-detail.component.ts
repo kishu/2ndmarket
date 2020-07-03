@@ -1,9 +1,8 @@
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { filter, first, map, share, shareReplay, switchMap } from 'rxjs/operators';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, GoodsFavoritesService, GroupsService, ProfilesService } from '@app/core/http';
-import { HeaderService } from '@app/shared/services';
 import { Goods, Group, NewGoodsFavorite, Profile } from '@app/core/model';
 
 @Component({
@@ -11,7 +10,7 @@ import { Goods, Group, NewGoodsFavorite, Profile } from '@app/core/model';
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss']
 })
-export class GoodsDetailComponent implements OnInit, OnDestroy {
+export class GoodsDetailComponent implements OnInit {
   profile$: Observable<Profile> = this.authService.profile$.pipe(share());
   group$: Observable<Group | null> = this.profile$.pipe(
     filter(p => !!p),
@@ -44,17 +43,11 @@ export class GoodsDetailComponent implements OnInit, OnDestroy {
     private groupService: GroupsService,
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
-    private goodsFavoritesService: GoodsFavoritesService,
-    private headerService: HeaderService,
+    private goodsFavoritesService: GoodsFavoritesService
   ) {
-    // this.headerService.hidden$.next(true);
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnDestroy() {
-    this.headerService.hidden$.next(false);
   }
 
   onClickSoldOut() {

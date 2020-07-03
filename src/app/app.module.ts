@@ -26,13 +26,13 @@ import { combineLatest } from 'rxjs';
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
     return new Promise(resolve => {
-      // authService.user$.pipe(first()).subscribe(() => resolve());
-      combineLatest(
-        authService.user2$,
-        authService.profile2$
-      ).pipe(
+      combineLatest([
+        authService.user$,
+        authService.profile$
+      ]).pipe(
         first()
       ).subscribe(([user, profile]) => {
+        console.log('appInitializer', user, profile);
         if (!user) {
           alert('로그인해 주세요!');
           router.navigate(['/sign-in']);

@@ -6,15 +6,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
 import { SelectProfileService } from '@app/core/storage';
-import { Group, NewProfile, NewUserProfile, Profile } from '@app/core/model';
+import { NewProfile, NewUserProfile, Profile } from '@app/core/model';
 
 enum GroupAddStep {
   email = 'email',
   verify = 'verify'
-}
-
-export interface GroupWithProfile extends Group{
-  profile: Profile;
 }
 
 @Component({
@@ -30,12 +26,13 @@ export class PreferenceGroupsComponent implements OnInit {
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
   groups$ = this.groupsService.getAll([['created', 'desc']]).pipe(first(), share());
   domains$ = this.groups$.pipe(map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort()));
-  userProfileList$ = this.authService.user2$.pipe(
+  userProfileList$ = this.authService.user$.pipe(
     first(),
     filter(u => !!u),
-    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe())
+    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe()),
+    tap(t => console.log('profile list', t))
   );
-  selectedProfileId$ = this.selectProfileService.profileId$.pipe(share());
+  selectedProfileId$ = this.selectProfileService.profileId$.pipe();
 
   get accountCtl() { return this.emailForm.get('account'); }
   get domainCtl() { return this.emailForm.get('domain'); }
@@ -155,7 +152,6 @@ export class PreferenceGroupsComponent implements OnInit {
   }
 
   onClickSelectProfile(profile: Profile) {
-    console.log('select', profile);
     this.selectProfileService.select(profile.id);
   }
 
