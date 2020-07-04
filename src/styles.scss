@@ -4,9 +4,13 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+html {
+  @apply h-full;
+}
+
 body {
   min-width: 320px;
-  @apply bg-gray-200;
+  @apply h-full bg-gray-200;
   // padding-left:constant(safe-area-inset-left);
   // padding-left:env(safe-area-inset-left);
   // padding-right:constant(safe-area-inset-right);
@@ -18,13 +22,19 @@ body {
 }
 
 .wrap {
-  position: relative;
+  @apply relative h-full;
   &:before {
     @apply sticky top-0 block w-full bg-blue-700 z-40;
     height: constant(safe-area-inset-top);
     height: env(safe-area-inset-top);
     content: '';
   }
+}
+
+.sign-wrap {
+  @apply w-full h-full;
+  @apply flex flex-col justify-center items-center;
+  @apply bg-white;
 }
 
 button,
