@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit {
 
   onClickSignOut(e: Event) {
     e.preventDefault();
+    console.log('sign-out');
     this.authService.signOut();
   }
 

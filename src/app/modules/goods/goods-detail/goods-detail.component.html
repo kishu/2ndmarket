@@ -11,9 +11,9 @@
           <div class="flex mt-3 justify-between">
             <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
             <div class="flex-shrink-0">
-              <span>{{ goods.favoritesCnt }}</span>
-              <button type="button" class="btn-sm" (click)="onClickFavorite()">좋<span *ngIf="favorited$ | async">(했)</span></button>
-              <ng-container *ngIf="permission$ | async as p">
+              <span>{{ favoriteCount$ | async }}</span>
+              <button type="button" [disabled]="permission$ | async" class="btn-sm" (click)="onClickFavorite()">좋<span *ngIf="favorited$ | async">(했)</span></button>
+              <ng-container *ngIf="permission$ | async">
                 <a [routerLink]="['edit']" class="btn btn-sm" skipLocationChange>수정</a> |
                 <button type="button" class="btn-sm" (click)="onClickDelete()">삭제</button> |
                 <button type="button" class="btn-sm" (click)="onClickSoldOut()">{{ goods.soldOut ? '판매됨' : '판매완료하기' }}</button>

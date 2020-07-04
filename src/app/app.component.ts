@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
       })
     ).subscribe((token) => {
     }, err => {
-      alert(err);
+      console.log(err);
     });
 
     this.afMessaging.onMessage(payload => {
