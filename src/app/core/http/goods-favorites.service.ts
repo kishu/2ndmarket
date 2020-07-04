@@ -18,8 +18,8 @@ export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
     return super.add(newGoodsFavorite);
   }
 
-  getAllByGoodsIdAndProfileId(goodsId: string, profileId: string): Observable<GoodsFavorite[]> {
-    return this.query({
+  getQueryByGoodsIdAndProfileId(goodsId: string, profileId: string): Observable<GoodsFavorite[]> {
+    return super.getQuery({
       where: [
         ['goodsId', '==', goodsId],
         ['profileId', '==', profileId]
@@ -27,26 +27,25 @@ export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
     });
   }
 
-  getAllByGoodsId(goodsId: string): Observable<GoodsFavorite[]> {
-    return this.query({
+  getQueryByGoodsId(goodsId: string): Observable<GoodsFavorite[]> {
+    return super.getQuery({
       where: [['goodsId', '==', goodsId]]
     });
   }
 
-  getAllByProfileId(profileId: string): Observable<GoodsFavorite[]> {
-    return this.query({
+  getQueryByProfileId(profileId: string): Observable<GoodsFavorite[]> {
+    return super.getQuery({
       where: [['profileId', '==', profileId]]
     });
   }
 
-  deleteByGoodsIdAndProfileId(goodsId: string, profileId: string, ) {
-    return this.query({
+  deleteByGoodsIdAndProfileId(goodsId: string, profileId: string) {
+    return super.getQuery({
       where: [
         ['goodsId', '==', goodsId],
         ['profileId', '==', profileId]
       ]
     }).pipe(
-      first(),
       map(f => f.map(i => this.delete(i.id))),
       switchMap(d => forkJoin(...d))
     );

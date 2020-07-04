@@ -1,8 +1,6 @@
-import { map } from "rxjs/operators";
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '@app/core/http/auth.service';
-import { forkJoin, merge } from "rxjs";
+import { share } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +8,10 @@ import { forkJoin, merge } from "rxjs";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  user$ = this.authService.user$;
+  profile$ = this.authService.profile$.pipe(share());
 
   constructor(
-    private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
   }
 

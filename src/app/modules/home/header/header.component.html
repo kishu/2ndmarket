@@ -5,7 +5,7 @@
     </a>
     <h1 class="font-bold text-center">
       <ng-container *ngIf="(group$ | async) as group">
-        <a [routerLink]="['/goods']">
+        <a [routerLink]="['/groups', group.id, 'goods']">
           <span>세컨드마켓@</span>
           <span class="uppercase">{{ group.name }}</span>
         </a>
@@ -13,8 +13,8 @@
     </h1>
     <ng-container *ngIf="(profile$ | async) as profile">
       <div class="absolute inset-y-0 right-0 mx-auto flex">
-        <a [routerLink]="['/goods/new/edit']" class="py-3 px-4 text-sm flex items-center">등록</a>
+        <a [routerLink]="['/groups', profile.groupId, '/goods/new/edit']" class="py-3 px-4 text-sm flex items-center">등록</a>
       </div>
-      </ng-container>
-    </div>
+    </ng-container>
+  </div>
 </div>

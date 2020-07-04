@@ -37,7 +37,7 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
       first(),
       filter(p => !!p),
       switchMap(profile => {
-        return this.commentsService.getAllByGoodsId(goodsId).pipe(
+        return this.commentsService.valueChangesQueryByGoodsId(goodsId).pipe(
           map(comments => {
             return comments.map(c => {
               return {

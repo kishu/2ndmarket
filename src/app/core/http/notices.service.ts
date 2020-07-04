@@ -13,8 +13,8 @@ export class NoticesService extends FirestoreService<Notice> {
     super(afs, 'notices');
   }
 
-  getAllByRead(read: boolean) {
-    return this.query({
+  getQueryByRead(read: boolean) {
+    return this.getQuery({
       where: [['read', '==', read]],
       orderBy: [['created', 'desc']],
       limit: 100

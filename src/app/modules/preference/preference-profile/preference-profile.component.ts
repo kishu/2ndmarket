@@ -17,13 +17,13 @@ enum GoodsListType {
 export class PreferenceProfileComponent implements OnInit {
   profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), shareReplay());
   noticeList$ = this.profile$.pipe(
-    switchMap(p => this.noticesService.getAllByRead(false).pipe(first())),
+    switchMap(p => this.noticesService.getQueryByRead(false))
   );
   writeGoodsList$ = this.profile$.pipe(
-    switchMap(p => this.goodsService.getAllByProfileId(p.id).pipe(first()))
+    switchMap(p => this.goodsService.getQueryByProfileId(p.id))
   );
   goodsFavoriteList$ = this.profile$.pipe(
-    switchMap(p => this.goodsFavoriteService.getAllByProfileId(p.id).pipe(first()))
+    switchMap(p => this.goodsFavoriteService.getQueryByProfileId(p.id))
   );
   goodsListType$ = new BehaviorSubject<GoodsListType>(GoodsListType.write);
 

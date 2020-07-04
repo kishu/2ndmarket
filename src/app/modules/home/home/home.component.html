@@ -1,20 +1,29 @@
-  <div app-header class="sticky safe-top z-30"></div>
-  <h2 class="flex p-2 justify-between">
-  <a [routerLink]="['preference/profile']" class="flex">
-    <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
-    <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
-      <span class="block text-sm ellipsis">{{ (user$ | async)?.displayName }}</span>
-    </span>
-  </a>
-</h2>
-<ul>
-  <li><a [routerLink]="['goods']">상품목록</a></li>
-  <li><a [routerLink]="['goods/new/edit']">상품등록</a></li>
-  <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
-  <li *ngIf="!(user$ | async)"><a [routerLink]="['sign-in']">sign-in</a></li>
-</ul>
-<div class="w-full p-2">
-  <a
-    class="block btn btn-sm"
-    (click)="onClickSignOut($event)">sign-out</a>
-</div>
+<div app-header class="sticky safe-top z-30"></div>
+
+<ng-container *ngIf="(profile$ | async) as profile else signInTemplate">
+  <h2 class="flex p-2 justify-between" >
+    <a [routerLink]="['preference/profile']" class="flex">
+      <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
+      <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+        <span class="block text-sm ellipsis">{{ profile.displayName }}</span>
+      </span>
+    </a>
+  </h2>
+
+  <ul>
+    <li><a [routerLink]="['groups', profile.groupId, 'goods']">상품목록</a></li>
+    <li><a [routerLink]="['groups', profile.groupId, 'goods','new', 'edit']">상품등록</a></li>
+    <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
+  </ul>
+
+  <div class="w-full p-2">
+    <a class="block btn btn-sm"
+      (click)="onClickSignOut($event)">
+      sign-out
+    </a>
+  </div>
+</ng-container>
+
+<ng-template #signInTemplate>
+  <a [routerLink]="['sign-in']">sign-in</a>
+</ng-template>

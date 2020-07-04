@@ -14,8 +14,12 @@ export class GroupsService extends FirestoreService<Group> {
     super(afs, 'groups');
   }
 
-  getByDomain(domain: string): Observable<Group | null> {
-    return this.query({
+  getAll() {
+    return super.getQuery({});
+  }
+
+  getQueryByDomain(domain: string): Observable<Group | null> {
+    return super.getQuery({
       where: [['domains', 'array-contains', domain]],
       limit: 1
     }).pipe(

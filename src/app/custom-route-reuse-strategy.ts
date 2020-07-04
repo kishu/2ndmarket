@@ -3,7 +3,8 @@ import { ActivatedRouteSnapshot, RouteReuseStrategy, DetachedRouteHandle } from 
 export class CustomRouteReuseStrategy implements RouteReuseStrategy {
 
   //  Specify the routes to reuse/cache in an array.
-  routesToCache: string[] = ['goods', 'preference/profile'];
+  routesToCache: string[] = [];
+  // routesToCache: string[] = ['groups/:groupId/goods', 'preference/profile'];
 
   storedRouteHandles = new Map<string, DetachedRouteHandle>();
 

@@ -17,8 +17,8 @@ export class ProfilesService extends FirestoreService<Profile> {
     return super.add(newProfile);
   }
 
-  getBy(email: string, groupId: string): Observable<Profile[]> {
-    return this.query({
+  getQueryByEmailAndGroupId(email: string, groupId: string): Observable<Profile[]> {
+    return super.getQuery({
       where: [
         ['groupId', '==', groupId],
         ['email', '==', email]

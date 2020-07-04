@@ -25,8 +25,8 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.update(goodsId, updateGoods);
   }
 
-  getAllByGroupId(groupId: string): Observable<Goods[]> {
-    return this.query({
+  getQueryByGroupId(groupId: string): Observable<Goods[]> {
+    return super.getQuery({
       where: [
         ['groupId', '==', groupId],
         ['activated', '==', true]
@@ -35,8 +35,8 @@ export class GoodsService extends FirestoreService<Goods> {
     });
   }
 
-  getAllByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
-    return this.query({
+  getQueryByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
+    return super.getQuery({
       where: [['profileId', '==', profileId]],
       orderBy: [['created', 'desc']],
       limit

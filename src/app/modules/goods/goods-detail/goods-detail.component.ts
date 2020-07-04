@@ -1,9 +1,8 @@
-import { combineLatest, Observable, of } from 'rxjs';
-import { filter, first, map, share, shareReplay, switchMap } from 'rxjs/operators';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, Observable } from 'rxjs';
+import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, GoodsFavoritesService, GroupsService, ProfilesService } from '@app/core/http';
-import { HeaderService } from '@app/shared/services';
 import { Goods, Group, NewGoodsFavorite, Profile } from '@app/core/model';
 
 @Component({
@@ -11,25 +10,20 @@ import { Goods, Group, NewGoodsFavorite, Profile } from '@app/core/model';
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss']
 })
-export class GoodsDetailComponent implements OnInit, OnDestroy {
-  profile$: Observable<Profile> = this.authService.profile$.pipe(share());
-  group$: Observable<Group | null> = this.profile$.pipe(
-    filter(p => !!p),
-    switchMap(p => this.groupService.get(p.groupId))
-  );
-  goods$: Observable<Goods> = this.goodsService.get(this.goodsId).pipe(shareReplay());
+export class GoodsDetailComponent implements OnInit {
+  goods$: Observable<Goods> = this.goodsService.get(this.goodsId).pipe(shareReplay(1));
   empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
   permission$: Observable<boolean> = combineLatest([
     this.goods$,
-    this.authService.profile$.pipe(filter(p => !!p), first())
+    this.authService.profile$.pipe(first(), filter(p => !!p))
   ]).pipe(
     map(([g, p]) => g.profileId === p.id)
   );
   favorited$: Observable<boolean> = combineLatest([
     this.goods$,
-    this.authService.profile$.pipe(filter(p => !!p), first())
+    this.authService.profile$
   ]).pipe(
-    switchMap(([g, p]) => this.goodsFavoritesService.getAllByGoodsIdAndProfileId(g.id, p.id)),
+    switchMap(([g, p]) => this.goodsFavoritesService.getQueryByGoodsIdAndProfileId(g.id, p.id)),
     map(f => f.length > 0)
   );
 
@@ -45,16 +39,10 @@ export class GoodsDetailComponent implements OnInit, OnDestroy {
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
     private goodsFavoritesService: GoodsFavoritesService,
-    private headerService: HeaderService,
   ) {
-    // this.headerService.hidden$.next(true);
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnDestroy() {
-    this.headerService.hidden$.next(false);
   }
 
   onClickSoldOut() {

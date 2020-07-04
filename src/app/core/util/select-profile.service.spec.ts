@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HeaderService } from './header.service';
+import { SelectProfileService } from './select-profile.service';
 
-describe('HeaderService', () => {
-  let service: HeaderService;
+describe('SelectProfileService', () => {
+  let service: SelectProfileService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(HeaderService);
+    service = TestBed.inject(SelectProfileService);
   });
 
   it('should be created', () => {

@@ -143,14 +143,23 @@
   <br>
 
   <h2 class="p-2">프로필 선택</h2>
-  <ul *ngIf="groupsWithProfile$ | async as groups">
-    <li class="mb-1" *ngFor="let group of groups">
-      <div class="flex justify-between">
-        <span class="flex items-center">{{ group.name }}</span>
-        <span class="flex items-center">{{ group.profile.email }}</span>
-        <span class="flex items-center">{{ group.profile.displayName }}</span>
-        <button type="button" class="flex-shrink-0">선택</button>
-      </div>
+  <ul *ngIf="userProfileList$ | async as userProfileList">
+    <li *ngFor="let userProfile of userProfileList" class="mb-1">
+      <ng-container *ngIf="userProfile.profileId | fsDocument:'profiles' | async as profile">
+        <ng-container *ngIf="profile.groupId | fsDocument:'groups' | async as group">
+          <div class="flex justify-between">
+            <span class="flex items-center">{{ group.name }}</span>
+            <span class="flex items-center">{{ profile.email }}</span>
+            <span class="flex items-center">{{ profile.displayName }}</span>
+            <button
+              type="button" class="flex-shrink-0"
+              [disabled]="(selectedProfileId$ | async) === profile.id"
+              (click)="onClickSelectProfile(profile)">
+              {{ (selectedProfileId$ | async) === profile.id ? '선택됨' : '선택' }}
+            </button>
+          </div>
+        </ng-container>
+      </ng-container>
     </li>
   </ul>
 </div>
