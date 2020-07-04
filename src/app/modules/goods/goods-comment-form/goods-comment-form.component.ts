@@ -1,4 +1,4 @@
-import { forkJoin } from "rxjs";
+import { forkJoin } from 'rxjs';
 import { first, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';

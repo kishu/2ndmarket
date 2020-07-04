@@ -18,7 +18,7 @@ export class FcmTokensService extends FirestoreService<FcmToken> {
     return super.getQuery({
       where: [['profileId', '==', token.profileId]]
     }).pipe(
-      switchMap(col => col.length > 0 ? forkJoin(...col.map(doc => this.delete(doc.id))) : of(null)),
+      switchMap(col => col.length > 0 ? forkJoin(col.map(doc => this.delete(doc.id))) : of(null)),
       switchMap(() => this.add(token))
     );
   }

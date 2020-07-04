@@ -47,7 +47,7 @@ export class GoodsFavoritesService extends FirestoreService<GoodsFavorite> {
       ]
     }).pipe(
       map(f => f.map(i => this.delete(i.id))),
-      switchMap(d => forkJoin(...d))
+      switchMap(d => forkJoin(d))
     );
   }
 

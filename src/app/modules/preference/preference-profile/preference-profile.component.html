@@ -67,11 +67,11 @@
 <ng-template #goodsTemplate let-goods="goods" class="goodsItem">
   <div>
     <div class="relative square">
-      <a [routerLink]="['/goods', goods.id]">
+      <a [routerLink]="['/groups', goods.groupId, 'goods', goods.id]">
         <img
           [src]="goods.images[0]"
           class="absolute l-0 t-0 w-full h-full object-cover"
-          alt="">
+          alt="{{ goods.name }}">
       </a>
     </div>
   </div>

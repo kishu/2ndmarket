@@ -3,7 +3,7 @@ import { combineLatest, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { SelectProfileService } from '@app/core/util';
+import { ProfileSelectService } from '@app/core/util';
 import { ProfilesService } from '@app/core/http/profiles.service';
 import { UserProfilesService } from '@app/core/http/user-profiles.service';
 import { GroupsService } from '@app/core/http/groups.service';
@@ -62,7 +62,7 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private userProfilesService: UserProfilesService,
     private profilesService: ProfilesService,
-    private selectProfileService: SelectProfileService,
+    private selectProfileService: ProfileSelectService,
     private groupsService: GroupsService
   ) {
     // const user$ = this.afAuth.user.pipe(

@@ -13,9 +13,12 @@ export class NoticesService extends FirestoreService<Notice> {
     super(afs, 'notices');
   }
 
-  getQueryByRead(read: boolean) {
+  getQueryByProfileIdAndUnread(profileId: string) {
     return this.getQuery({
-      where: [['read', '==', read]],
+      where: [
+        ['profileId', '==', profileId],
+        ['read', '==', false]
+      ],
       orderBy: [['created', 'desc']],
       limit: 100
     });

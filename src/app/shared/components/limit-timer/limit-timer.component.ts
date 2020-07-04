@@ -32,7 +32,9 @@ export class LimitTimerComponent implements OnInit, OnDestroy {
 
   clearTimer(emit: boolean) {
     clearInterval(this.timerId);
-    emit && this.timeover.emit();
+    if (emit) {
+      this.timeover.emit();
+    }
   }
 
 }

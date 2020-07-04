@@ -4,7 +4,7 @@ import { Observable, ReplaySubject, Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class SelectProfileService implements OnDestroy {
+export class ProfileSelectService implements OnDestroy {
   profileId$ = new ReplaySubject<string| null>(1);
 
   constructor() {

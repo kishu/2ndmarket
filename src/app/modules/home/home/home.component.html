@@ -11,8 +11,9 @@
     </h2>
 
     <ul class="mb-4">
-      <li><a [routerLink]="['groups', profile.groupId, 'goods']">등록한 물품(5)</a></li>
-      <li><a [routerLink]="['groups', profile.groupId, 'goods']">관심 물품(15)</a></li>
+      <li><a [routerLink]="['preference/profile']">알림({{ noticeCount$ | async }})</a></li>
+      <li><a [routerLink]="['preference/profile']">등록한 물품({{ writeGoodsCount$ | async }})</a></li>
+      <li><a [routerLink]="['preference/profile']">관심 물품({{ favoriteGoodsCount$ | async}})</a></li>
     </ul>
 
     <ul>
@@ -23,17 +24,24 @@
 
     <div>
       <h2 class="p-2 text-blue-700">프로필 전환</h2>
-      <ul class="border border-blue-500 bg-white" *ngIf="profiles$ | async as profiles">
-        <li class="border-blue-500 border border-l-0 border-r-0 border-b-0" *ngFor="let profile of profiles">
-          <button
-            type="button"
-            class="flex justify-between items-center w-full p-2 border-0 bg-transparent text-blue-700">
-            <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2" alt="">
-            <span class="flex-grow text-left text-sm ellipsis">{{ profile.displayName }}</span>
-            <ng-container *ngIf="profile.groupId | fsDocument: 'groups' | async as group">
-              <span class="inline-block px-2 py-1 bg-blue-500 text-white text-xs leading-tight uppercase">{{group.name}}</span>
+      <ul class="border border-blue-500 bg-white" *ngIf="userProfileList$ | async as userProfileList">
+        <li class="border-blue-500 border border-l-0 border-r-0 border-b-0" *ngFor="let userProfile of userProfileList">
+          <ng-container *ngIf="userProfile.profileId | fsDocument:'profiles' | async as profile">
+            <ng-container *ngIf="profile.groupId | fsDocument:'groups' | async as group">
+              <button
+                type="button"
+                [disabled]="(selectedProfileId$ | async) === profile.id"
+                (click)="onClickSelectProfile(profile)"
+                class="flex justify-between items-center w-full p-2 border-0 bg-transparent text-blue-700">
+                <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2" alt="">
+                <span class="flex-grow text-left text-sm ellipsis">{{ profile.displayName }}</span>
+                <span class="inline-block px-2 py-1 bg-blue-500 text-white text-xs leading-tight uppercase">
+                  {{ group.name }}
+                  {{ (selectedProfileId$ | async) === profile.id ? '선택됨' : '' }}
+                </span>
+              </button>
             </ng-container>
-          </button>
+          </ng-container>
         </li>
       </ul>
     </div>

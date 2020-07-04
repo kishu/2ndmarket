@@ -1,12 +1,11 @@
 import { random } from 'lodash-es';
 import { BehaviorSubject, of } from 'rxjs';
-import { filter, first, map, share, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
-import { SelectProfileService } from '@app/core/util';
-import { NewProfile, NewUserProfile, Profile } from '@app/core/model';
+import { NewProfile, NewUserProfile } from '@app/core/model';
 
 enum GroupAddStep {
   email = 'email',
@@ -26,12 +25,6 @@ export class PreferenceGroupsComponent implements OnInit {
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
   groups$ = this.groupsService.getAll().pipe(shareReplay(1));
   domains$ = this.groups$.pipe(map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort()));
-  userProfileList$ = this.authService.user$.pipe(
-    first(),
-    filter(u => !!u),
-    switchMap(u => this.userProfilesService.getQueryByUserId(u.id).pipe())
-  );
-  selectedProfileId$ = this.selectProfileService.profileId$.pipe();
 
   get accountCtl() { return this.emailForm.get('account'); }
   get domainCtl() { return this.emailForm.get('domain'); }
@@ -45,8 +38,7 @@ export class PreferenceGroupsComponent implements OnInit {
     private authService: AuthService,
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
-    private userProfilesService: UserProfilesService,
-    private selectProfileService: SelectProfileService
+    private userProfilesService: UserProfilesService
   ) {
     this.step$.subscribe(step => {
       switch (step) {
@@ -145,10 +137,6 @@ export class PreferenceGroupsComponent implements OnInit {
       () => {},
       err => alert(err)
     );
-  }
-
-  onClickSelectProfile(profile: Profile) {
-    this.selectProfileService.select(profile.id);
   }
 
 }

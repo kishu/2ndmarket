@@ -17,7 +17,7 @@ enum GoodsListType {
 export class PreferenceProfileComponent implements OnInit {
   profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), shareReplay());
   noticeList$ = this.profile$.pipe(
-    switchMap(p => this.noticesService.getQueryByRead(false))
+    switchMap(p => this.noticesService.getQueryByProfileIdAndUnread(p.id))
   );
   writeGoodsList$ = this.profile$.pipe(
     switchMap(p => this.goodsService.getQueryByProfileId(p.id))
