@@ -1,6 +1,6 @@
 <div app-header class="sticky safe-top z-30"></div>
 <div class="max-w-xl mx-auto p-2">
-  <ng-container *ngIf="(profile$ | async) as profile else signInTemplate">
+  <ng-container *ngIf="(profile$ | async) as profile">
     <h2 class="flex justify-between">
       <a [routerLink]="['preference/profile']" class="flex">
         <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
@@ -21,6 +21,7 @@
       <li><a [routerLink]="['groups', profile.groupId, 'goods','new', 'edit']">상품등록</a></li>
       <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
     </ul>
+  </ng-container>
 
     <div>
       <h2 class="p-2 text-blue-700">프로필 전환</h2>
@@ -49,9 +50,5 @@
     <div>
       <a class="block btn btn-sm" (click)="onClickSignOut($event)">sign-out</a>
     </div>
-  </ng-container>
 
-  <ng-template #signInTemplate>
-    <a [routerLink]="['sign-in']">sign-in</a>
-  </ng-template>
 </div>

@@ -25,14 +25,19 @@ export class AuthService {
   // get user$(): Observable<User | null> { return this._user$; }
   // get profile$(): Observable<Profile | null > { return this._profile$; }
 
-  user$: Observable<User> = this.afAuth.user.pipe(
-    filter(user => !!user),
-    map(user => ({
-      id: user.uid,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      email: user.email
-    } as User)),
+  user$: Observable<User | null> = this.afAuth.user.pipe(
+    map(user => {
+      if (user) {
+        return {
+          id: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          email: user.email
+        } as User;
+      } else {
+        return null;
+      }
+    }),
     shareReplay(1)
   );
 
@@ -40,13 +45,15 @@ export class AuthService {
     this.afAuth.user,
     this.selectProfileService.profileId$
   ]).pipe(
-    filter(([user, profileId]) => !!user && !!profileId),
     switchMap(([user, profileId]) => {
-      return this.userProfilesService.getQueryByUserIdAndProfileId(user.uid, profileId).pipe(
-        first(),
-        filter(userProfiles => userProfiles.length > 0),
-        switchMap(userProfiles => this.profilesService.get(userProfiles[0].profileId).pipe(first()))
-      );
+      if (user && profileId) {
+        return this.userProfilesService.getQueryByUserIdAndProfileId(user.uid, profileId).pipe(
+          filter(userProfiles => userProfiles.length > 0),
+          switchMap(userProfiles => this.profilesService.get(userProfiles[0].profileId))
+        );
+      } else {
+        return of(null);
+      }
     }),
     tap(t => console.log('switched profile', t)),
     shareReplay(1)
