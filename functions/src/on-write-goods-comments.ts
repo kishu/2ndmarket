@@ -12,7 +12,12 @@ export const onWriteGoodsComments = functions
       const goodsCommentData = goodsCommentDoc.data();
       const goodsDoc = await db.doc(`goods/${goodsCommentData.goodsId}`).get();
       const goodsData = goodsDoc.data();
-      if (created && goodsCommentData.profileId !== goodsData?.profileId) {
+      if (created && goodsCommentData.profileId === goodsData?.profileId) {
+        const partialGoods= {
+          commentsCnt: admin.firestore.FieldValue.increment(1),
+        };
+        return goodsDoc.ref.update(partialGoods);
+      } else if (created && goodsCommentData.profileId !== goodsData?.profileId) {
         const partialGoods= {
           commentsCnt: admin.firestore.FieldValue.increment(1),
           updated: admin.firestore.FieldValue.serverTimestamp()
@@ -28,7 +33,7 @@ export const onWriteGoodsComments = functions
           goodsDoc.ref.update(partialGoods),
           db.collection('notices').add(newNotice)
         ]);
-      } else if(!created) {
+      } else if (!created) {
         const partialGoods = {
           commentsCnt: admin.firestore.FieldValue.increment(-1)
         };
@@ -41,5 +46,5 @@ export const onWriteGoodsComments = functions
           deleteNotices
         ]);
       }
-      return Promise.resolve();
+      return;
     });

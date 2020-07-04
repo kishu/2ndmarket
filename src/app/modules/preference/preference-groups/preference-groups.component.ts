@@ -1,11 +1,11 @@
 import { random } from 'lodash-es';
 import { BehaviorSubject, of } from 'rxjs';
-import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, share, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
-import { SelectProfileService } from '@app/core/storage';
+import { SelectProfileService } from '@app/core/util';
 import { NewProfile, NewUserProfile, Profile } from '@app/core/model';
 
 enum GroupAddStep {
@@ -24,13 +24,12 @@ export class PreferenceGroupsComponent implements OnInit {
   emailForm: FormGroup;
   verifyForm: FormGroup;
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
-  groups$ = this.groupsService.getAll([['created', 'desc']]).pipe(first(), share());
+  groups$ = this.groupsService.getAll().pipe(shareReplay(1));
   domains$ = this.groups$.pipe(map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort()));
   userProfileList$ = this.authService.user$.pipe(
     first(),
     filter(u => !!u),
-    switchMap(u => this.userProfilesService.getAllByUserId(u.id).pipe()),
-    tap(t => console.log('profile list', t))
+    switchMap(u => this.userProfilesService.getQueryByUserId(u.id).pipe())
   );
   selectedProfileId$ = this.selectProfileService.profileId$.pipe();
 
@@ -107,8 +106,7 @@ export class PreferenceGroupsComponent implements OnInit {
     this.groups$.pipe(
       map(groups => groups.find(g => g.domains.some(d => d === domain))),
       switchMap(group => {
-        return this.profilesService.getBy(email, group.id).pipe(
-          first(),
+        return this.profilesService.getQueryByEmailAndGroupId(email, group.id).pipe(
           switchMap(profiles => {
             return profiles.length ?
               of(profiles[0].id) :
@@ -126,10 +124,8 @@ export class PreferenceGroupsComponent implements OnInit {
       switchMap(profileId => {
         return this.authService.user$.pipe(
           first(),
-          tap(u => console.log('user', u)),
           switchMap(u => {
-            return this.userProfilesService.getAllByUserIdAndProfileId(u.id, profileId).pipe(
-              first(),
+            return this.userProfilesService.getQueryByUserIdAndProfileId(u.id, profileId).pipe(
               switchMap(userProfiles => {
                 return userProfiles.length ?
                   of(null) :

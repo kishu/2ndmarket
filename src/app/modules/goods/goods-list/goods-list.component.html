@@ -8,7 +8,7 @@
       <div
         class="md:w-5/12 h-40 md:h-auto bg-gray-200">
         <ng-container *ngFor="let src of goods.images; first as isFirst">
-          <a href class="block w-full h-full overflow-hidden flex" (click)="onClickGoods($event, goods)"><img [src]="src" class="object-cover" *ngIf="isFirst"></a>
+          <a [routerLink]="[goods.id]" class="block w-full h-full overflow-hidden flex"><img [src]="src" class="object-cover" *ngIf="isFirst"></a>
         </ng-container>
       </div>
       <div class="relative md:w-7/12 px-4 py-3 md:pb-16">

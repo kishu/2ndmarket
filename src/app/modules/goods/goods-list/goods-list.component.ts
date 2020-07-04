@@ -1,25 +1,27 @@
-import { Observable, of } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsCacheService, GroupsService } from '@app/core/http';
+import { AuthService, GoodsService, } from '@app/core/http';
 import { Goods } from '@app/core/model';
-import { filter, first, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-goods-list',
   templateUrl: './goods-list.component.html',
   styleUrls: ['./goods-list.component.scss']
 })
-export class GoodsListComponent implements OnInit {
-  goodsList$ = this.authService.profile$.pipe(
-    first(),
-    filter(p => !!p),
-    tap(t => console.log('goodsList', t)),
-    switchMap(p => this.goodsService.getAllByGroupId(p.groupId).pipe())
+export class GoodsListComponent implements OnInit, OnDestroy {
+  groupId$ = this.activatedRoute.paramMap.pipe(
+    map(m => m.get('groupId')),
+    shareReplay(1)
+  );
+
+  goodsList$ = this.groupId$.pipe(
+    switchMap(groupId => this.goodsService.getQueryByGroupId(groupId))
   );
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private goodsService: GoodsService
   ) {
@@ -28,9 +30,7 @@ export class GoodsListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onClickGoods(e: Event, goods: Goods) {
-    e.preventDefault();
-    this.router.navigate(['goods', goods.id]);
+  ngOnDestroy() {
   }
 
 }

@@ -17,8 +17,8 @@ export class GoodsCommentsService extends FirestoreService<GoodsComment> {
     return super.add(newGoodsComment);
   }
 
-  getAllByGoodsId(goodsId: string) {
-    return this.query({
+  valueChangesQueryByGoodsId(goodsId: string) {
+    return super.valueChangesQuery({
       where: [['goodsId', '==', goodsId]],
       orderBy: [['created', 'asc']]
     });

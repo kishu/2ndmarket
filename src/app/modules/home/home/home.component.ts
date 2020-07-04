@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '@app/core/http/auth.service';
+import { share } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +8,9 @@ import { AuthService } from '@app/core/http/auth.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  user$ = this.authService.user$;
+  profile$ = this.authService.profile$.pipe(share());
 
   constructor(
-    private router: Router,
     private authService: AuthService,
   ) {
   }

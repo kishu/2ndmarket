@@ -10,20 +10,11 @@ import { Group, Profile } from '@app/core/model';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  profile$: Observable<Profile> = this.authService.profile$;
-  group$: Observable<Group | null> = this.profile$.pipe(
-    switchMap(p => {
-      if (p) {
-        return this.groupService.get(p.groupId);
-      } else {
-        return of(null);
-      }
-    })
-  );
+  profile$: Observable<Profile> = this.authService.profile$.pipe(share());
+  group$: Observable<Group > = this.authService.group$.pipe(share());
 
   constructor(
-    private authService: AuthService,
-    private groupService: GroupsService,
+    private authService: AuthService
   ) {
   }
 
