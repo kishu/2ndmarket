@@ -22,7 +22,7 @@
     <li *ngFor="let notice of noticeList trackBy:trackById" [id]="notice.id">
       <ng-container *ngIf="notice.goodsId | fsDocument:'goods' | async as goods">
         <ng-container *ngIf="notice.goodsCommentId | fsDocument: 'goodsComments' | async as goodsComment">
-          <a [routerLink]="['/goods', notice.goodsId]" [fragment]="'goodsComments/' + notice.goodsCommentId" (click)="onClickNotice($event, notice)">
+          <a [routerLink]="['/groups', goods.groupId, 'goods', notice.goodsId]" [fragment]="'goodsComments/' + notice.goodsCommentId" (click)="onClickNotice($event, notice)">
             <img [src]="goods.images[0]" width="40"> {{ goods.name }}의 댓글 /
             {{ goodsComment.body }} /
             {{ notice.created | fsTimestamp | formatDistanceToNow }} /
