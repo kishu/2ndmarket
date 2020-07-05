@@ -14,7 +14,18 @@ export class NoticesService extends FirestoreService<Notice> {
   }
 
   getQueryByProfileIdAndUnread(profileId: string) {
-    return this.getQuery({
+    return super.getQuery({
+      where: [
+        ['profileId', '==', profileId],
+        ['read', '==', false]
+      ],
+      orderBy: [['created', 'desc']],
+      limit: 100
+    });
+  }
+
+  valueChangesQueryByProfileIdAndUnread(profileId: string) {
+    return super.valueChangesQuery({
       where: [
         ['profileId', '==', profileId],
         ['read', '==', false]

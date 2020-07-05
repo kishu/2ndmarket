@@ -1,7 +1,7 @@
-import { Observable, of } from 'rxjs';
-import { share, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, first, map, share, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GroupsService } from '@app/core/http';
+import { AuthService, NoticesService } from '@app/core/http';
 import { Group, Profile } from '@app/core/model';
 
 @Component({
@@ -10,11 +10,18 @@ import { Group, Profile } from '@app/core/model';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  profile$: Observable<Profile> = this.authService.profile$.pipe(share());
+  profile$: Observable<Profile> = this.authService.profile$.pipe(shareReplay(1));
   group$: Observable<Group > = this.authService.group$.pipe(share());
+  noticeCount$: Observable<number> = this.profile$.pipe(
+    first(),
+    filter(p => !!p),
+    switchMap(p => this.noticesService.valueChangesQueryByProfileIdAndUnread(p.id)),
+    map(list => list.length)
+  );
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private noticesService: NoticesService
   ) {
   }
 

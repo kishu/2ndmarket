@@ -2,7 +2,7 @@ import * as faker from 'faker';
 faker.locale = 'ko';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AuthService, CloudinaryService, GoodsService, ProfilesService } from '@app/core/http';
@@ -18,6 +18,7 @@ export class GoodsWriteComponent implements OnInit {
   goods$: Observable<NewGoods>;
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private location: Location,
     private authService: AuthService,
     private goodsService: GoodsService,
@@ -63,16 +64,15 @@ export class GoodsWriteComponent implements OnInit {
     this.submitting = true;
     this.goodsService.add(goods).then(addedGoods => {
       draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
-      this.router.navigate(['goods', addedGoods.id], { replaceUrl: true }).then(() => {
-        const upload$ = this.cloudinaryService.upload(draftImages);
-        upload$.subscribe(uploadedImages => {
-          this.goodsService.updateImages(addedGoods.id, uploadedImages);
-        }, err => {
-          alert(err);
-        }, () => {
-          this.goodsService.updateProcessed(addedGoods.id);
-        });
+      const upload$ = this.cloudinaryService.upload(draftImages);
+      upload$.subscribe(uploadedImages => {
+        this.goodsService.updateImages(addedGoods.id, uploadedImages);
+      }, err => {
+        alert(err);
+      }, () => {
+        this.goodsService.updateProcessed(addedGoods.id);
       });
+      this.router.navigate(['../../', addedGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute });
     });
   }
 
