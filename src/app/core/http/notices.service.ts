@@ -13,6 +13,16 @@ export class NoticesService extends FirestoreService<Notice> {
     super(afs, 'notices');
   }
 
+  valueChangesQueryByProfileId(profileId: string) {
+    return super.valueChangesQuery({
+      where: [
+        ['profileId', '==', profileId]
+      ],
+      orderBy: [['created', 'desc']],
+      limit: 100
+    });
+  }
+
   getQueryByProfileIdAndUnread(profileId: string) {
     return super.getQuery({
       where: [

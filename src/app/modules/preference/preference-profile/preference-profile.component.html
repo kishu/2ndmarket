@@ -19,14 +19,16 @@
   <h2>알림</h2>
 
   <ul *ngIf="noticeList$ | async as noticeList">
-    <li *ngFor="let notice of noticeList">
+    <li *ngFor="let notice of noticeList trackBy:trackById" [id]="notice.id">
       <ng-container *ngIf="notice.goodsId | fsDocument:'goods' | async as goods">
         <ng-container *ngIf="notice.goodsCommentId | fsDocument: 'goodsComments' | async as goodsComment">
           <a [routerLink]="['/goods', notice.goodsId]" [fragment]="'goodsComments/' + notice.goodsCommentId" (click)="onClickNotice($event, notice)">
             <img [src]="goods.images[0]" width="40"> {{ goods.name }}의 댓글 /
             {{ goodsComment.body }} /
-            {{ notice.created | fsTimestamp | formatDistanceToNow }}
+            {{ notice.created | fsTimestamp | formatDistanceToNow }} /
+            {{ notice.read ? '읽었음' : '안읽음' }}
           </a>
+          <button type="button" (click)="onClickDeleteNotice(notice)">삭제</button>
         </ng-container>
       </ng-container>
     </li>

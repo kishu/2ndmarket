@@ -37,7 +37,7 @@ export const onCreateGoodsComments = functions
           title: `[세컨드마켓] '${goods.get('name')}'에 새로운 댓글이 달렸습니다.`,
           body: body ? (body.length <= 100 ? body : body.substring(0, 97) + '...') : '',
           icon: goods.get('images')[0],
-          click_action: `https://dev.2ndmarket.co/goods/${goods.id}`
+          click_action: `https://dev.2ndmarket.co/groups/${goods.get('groupId')}/goods/${goods.id}`
         }
       };
       const allTokens = await admin.firestore().collection('fcmTokens').where('profileId', '==', goods.get('profileId')).get();

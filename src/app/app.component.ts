@@ -1,6 +1,8 @@
+import { parse } from 'url-parser';
 import { filter, first, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { AuthService, FcmTokensService } from '@app/core/http';
 import { NewFcmToken } from '@app/core/model';
@@ -13,7 +15,7 @@ import { NewFcmToken } from '@app/core/model';
 export class AppComponent implements OnInit {
   constructor(
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private location: Location,
     private afMessaging: AngularFireMessaging,
     private authService: AuthService,
     private fcmTokensService: FcmTokensService
@@ -33,8 +35,18 @@ export class AppComponent implements OnInit {
       console.log(err);
     });
 
+    // https://dev.2ndmarket.co/groups/0GdquHWyuHiuEeQEm9eF/goods/9ttxfqJLcGMUqYbrcuZ1
+    // var urlObj = new DefaultUrlSerializer('https://dev.2ndmarket.co/groups/0GdquHWyuHiuEeQEm9eF/goods/9ttxfqJLcGMUqYbrcuZ1');
+
     this.afMessaging.onMessage(payload => {
-      console.log(payload);
+      console.log('onMessage', payload);
+      const { body, title, click_action} = payload.notification;
+      if (!this.location.isCurrentPathEqualTo('/preference/profile')) {
+        if (confirm(`${title}\n${body}`)) {
+          const pathname = parse(click_action).pathname;
+          this.router.navigateByUrl(pathname);
+        }
+      }
     });
 
     // this.afMessaging.messages.subscribe((message) => { console.log(message); });

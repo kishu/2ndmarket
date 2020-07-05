@@ -32,6 +32,10 @@ export class GoodsDetailComponent implements OnInit {
     shareReplay(1)
   );
 
+  private get groupId() {
+    return this.activatedRoute.snapshot.paramMap.get('groupId');
+  }
+
   private get goodsId() {
     return this.activatedRoute.snapshot.paramMap.get('goodsId');
   }
