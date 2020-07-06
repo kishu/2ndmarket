@@ -42,9 +42,26 @@ export class AuthService {
     switchMap(([user, profileId]) => {
       if (user && profileId) {
         return this.userProfilesService.getQueryByUserIdAndProfileId(user.uid, profileId).pipe(
-          filter(userProfiles => userProfiles.length > 0),
-          switchMap(userProfiles => this.profilesService.get(userProfiles[0].profileId))
+          switchMap(userProfiles => {
+            if (userProfiles.length > 0) {
+              return this.profilesService.get(userProfiles[0].profileId);
+            } else {
+              return of(null);
+            }
+          })
         );
+      } else if (user && !profileId) {
+        return this.userProfilesService.getQueryByUserId(user.uid).pipe(
+          switchMap(userProfiles => {
+            if (userProfiles.length > 0) {
+              const profileId = userProfiles[0].profileId;
+              this.selectProfileService.select(profileId, false);
+              return this.profilesService.get(profileId);
+            } else {
+              return of(null);
+            }
+          })
+        )
       } else {
         return of(null);
       }

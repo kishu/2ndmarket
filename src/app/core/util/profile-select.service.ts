@@ -16,9 +16,11 @@ export class ProfileSelectService implements OnDestroy {
     this.profileId$.complete();
   }
 
-  select(id: string) {
+  select(id: string, next: boolean = true) {
     localStorage.setItem('profileId', id);
-    this.profileId$.next(id);
+    if (next) {
+      this.profileId$.next(id);
+    }
   }
 
 }
