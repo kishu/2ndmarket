@@ -60,14 +60,16 @@ export class CloudinaryService {
       if (e.type === HttpEventType.Response) {
         draftImages = draftImages.map(img => {
           if (img.isFile &&
-            img.file.name === `${e.body.original_filename}.${e.body.original_extension}` &&
+            img.file.name.startsWith(e.body.original_filename) &&
             img.file.size === e.body.bytes) {
             img.isFile = false;
             img.src = e.body.eager[0].secure_url;
           }
           return img;
         });
-        const uploadImages = draftImages.filter(img => !img.isFile).map(img => img.src);
+        const uploadImages = draftImages.filter(img => !img.isFile).map(img => {
+          return img.src
+        });
         upload$.next(uploadImages);
         if (uploadImages.length === uploadRequests.length) {
           upload$.complete();

@@ -38,7 +38,7 @@ export function appInitializer(router: Router, authService: AuthService) {
           router.navigate(['/sign-in']);
         } else if (!profile) {
           alert('프로파일을 등록해 주세요!');
-          router.navigate(['/preference', 'profile']);
+          router.navigate(['/preference', 'groups']);
         }
         resolve();
       });
