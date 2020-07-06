@@ -62,18 +62,27 @@ export class GoodsWriteComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    this.goodsService.add(goods).then(addedGoods => {
-      draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
-      const upload$ = this.cloudinaryService.upload(draftImages);
-      upload$.subscribe(uploadedImages => {
-        this.goodsService.updateImages(addedGoods.id, uploadedImages);
-      }, err => {
-        alert(err);
-      }, () => {
-        this.goodsService.updateProcessed(addedGoods.id);
+    this.goodsService.add(goods).then((addedGoods) => {
+      this.router.navigate(['../../', addedGoods.id], {
+        replaceUrl: true,
+        relativeTo: this.activatedRoute,
+        state: {
+          files: draftImages.map(img => img.file)
+        }
       });
-      this.router.navigate(['../../', addedGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute });
     });
+    // this.goodsService.add(goods).then(addedGoods => {
+    //   draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
+    //   const upload$ = this.cloudinaryService.upload(draftImages);
+    //   upload$.subscribe(uploadedImages => {
+    //     this.goodsService.updateImages(addedGoods.id, uploadedImages);
+    //   }, err => {
+    //     alert(err);
+    //   }, () => {
+    //     this.goodsService.updateProcessed(addedGoods.id);
+    //   });
+    //   this.router.navigate(['../../', addedGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute });
+    // });
   }
 
 }

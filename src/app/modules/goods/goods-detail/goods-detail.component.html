@@ -27,9 +27,6 @@
           <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
         </div>
         <ng-container *ngIf="goods.images.length > 1">
-          <div *ngIf="goods.processing" class="text-lg">
-            이미지를 처리하고 있습니다.
-          </div>
           <ul class="goods-images">
             <ng-container *ngFor="let src of goods.images; first as isFirst">
               <li class="relative border border-white" *ngIf="!isFirst">
