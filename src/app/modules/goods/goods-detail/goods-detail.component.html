@@ -1,13 +1,9 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="goodsDetail w-full">
-    <div class="sticky-wrap z-30">
-      <div app-header class="sticky safe-top"></div>
-      <div *ngIf="goods.images.length > 0" class="max-w-xl mx-auto"><img [src]="goods.images[0]" alt=""></div>
-    </div>
     <div class="sticky-wrap z-20 max-w-xl mx-auto bg-white">
       <div class="sticky safe-top z-20">
         <div class="goods-name overflow-hidden">
-          <h2 class="goodsName">{{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }} {{ goods.name }}</h2>
+          <h2 class="goodsName">{{ goods.name }}</h2>
           <div class="flex mt-3 justify-between">
             <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
             <div class="flex-shrink-0">
@@ -44,9 +40,9 @@
         <div>{{ goods.contact }}</div>
       </div>
     </div>
-    <div class="comment-wrap relative pt-4">
-      <div app-goods-comment-form class="block sticky z-10" style="top: calc(100% - 152px);" [goodsId]="goods.id"></div>
-      <div app-goods-comment-list class="p-4 pt-0" style="margin-top: -152px; padding-bottom: 160px;" [goods]="goods"></div>
+    <div class="comment-wrap relative">
+      <div app-goods-comment-list class="p-4" [goods]="goods"></div>
+      <div app-goods-comment-form [goodsId]="goods.id"></div>
     </div>
   </div>
 </ng-container>

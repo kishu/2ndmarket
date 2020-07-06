@@ -6,11 +6,13 @@ import { HomeModule } from '@app/modules/home/home.module';
 import { PreferenceRoutingModule } from './preference-routing.module';
 import { PreferenceProfileComponent } from './preference-profile/preference-profile.component';
 import { PreferenceGroupsComponent } from './preference-groups/preference-groups.component';
+import { PreferenceMessagesComponent } from './preference-messages/preference-messages.component';
 
 @NgModule({
   declarations: [
     PreferenceProfileComponent,
-    PreferenceGroupsComponent
+    PreferenceGroupsComponent,
+    PreferenceMessagesComponent
   ],
   imports: [
     CommonModule,

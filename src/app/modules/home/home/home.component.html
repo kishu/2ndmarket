@@ -1,5 +1,4 @@
-<div app-header class="sticky safe-top z-30"></div>
-<div class="max-w-xl mx-auto p-2">
+<div class="w-full max-w-xl py-2 mx-auto">
   <ng-container *ngIf="(profile$ | async) as profile">
     <h2 class="flex justify-between">
       <a [routerLink]="['preference/profile']" class="flex">
@@ -10,23 +9,30 @@
       </a>
     </h2>
 
-    <ul class="mb-4">
-      <li><a [routerLink]="['preference/profile']">알림({{ noticeCount$ | async }})</a></li>
-      <li><a [routerLink]="['preference/profile']">등록한 물품({{ writeGoodsCount$ | async }})</a></li>
-      <li><a [routerLink]="['preference/profile']">관심 물품({{ favoriteGoodsCount$ | async}})</a></li>
-    </ul>
+    <div class="bg-white shadow">
+      <ul class="mb-4">
+        <li>
+          <a
+            class="block p-2 text-gray-700"
+            [routerLink]="['preference/profile']">등록한 물품({{ writeGoodsCount$ | async }})</a>
+        </li>
+        <li class="border-t border-gray-300">
+          <a
+            class="block p-2 text-gray-700"
+            [routerLink]="['preference/profile']">관심 물품({{ favoriteGoodsCount$ | async}})</a>
+        </li>
+      </ul>
+    </div>
 
-    <ul>
+    <!-- <ul>
       <li><a [routerLink]="['groups', profile.groupId, 'goods']">상품목록</a></li>
       <li><a [routerLink]="['groups', profile.groupId, 'goods','new', 'edit']">상품등록</a></li>
-      <li><a [routerLink]="['preference/groups']">그룹설정</a></li>
-    </ul>
-  </ng-container>
+    </ul> -->
 
-    <div>
+    <div class="bg-white shadow">
       <h2 class="p-2 text-blue-700">프로필 전환</h2>
-      <ul class="border border-blue-500 bg-white" *ngIf="userProfileList$ | async as userProfileList">
-        <li class="border-blue-500 border border-l-0 border-r-0 border-b-0" *ngFor="let userProfile of userProfileList">
+      <ul *ngIf="userProfileList$ | async as userProfileList">
+        <li class="border-t border-gray-300" *ngFor="let userProfile of userProfileList">
           <ng-container *ngIf="userProfile.profileId | fsDocument:'profiles' | async as profile">
             <ng-container *ngIf="profile.groupId | fsDocument:'groups' | async as group">
               <button
@@ -45,10 +51,7 @@
           </ng-container>
         </li>
       </ul>
+      <a [routerLink]="['preference/groups']" class="block p-2 bg-blue-500 text-white text-center text-sm">그룹추가</a>
     </div>
-
-    <div>
-      <a class="block btn btn-sm" (click)="onClickSignOut($event)">sign-out</a>
-    </div>
-
+  </ng-container>
 </div>

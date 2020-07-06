@@ -48,10 +48,4 @@ export class HomeComponent implements OnInit {
     this.profileSelectService.select(profile.id);
   }
 
-  onClickSignOut(e: Event) {
-    e.preventDefault();
-    console.log('sign-out');
-    this.authService.signOut();
-  }
-
 }

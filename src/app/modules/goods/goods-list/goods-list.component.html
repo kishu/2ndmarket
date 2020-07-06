@@ -1,5 +1,4 @@
 <ng-container *ngIf="(goodsList$ | async) as goodsList">
-  <div app-header class="sticky safe-top z-30"></div>
   <ul class="w-full max-w-xl py-2 mx-auto">
     <li
       class="goodsItem relative"
@@ -8,7 +7,7 @@
       <a [routerLink]="[goods.id]" class="flex flex-col md:flex-row w-full md:h-40">
         <div
           class="md:w-5/12 h-40 md:h-auto bg-gray-200">
-          <span class="w-full h-full overflow-hidden flex"><img [src]="goods.images[0]" class="object-cover" *ngIf="goods.images.length > 1"></span>
+          <span class="w-full h-full overflow-hidden flex"><img [src]="goods.images[0]" class="object-cover" *ngIf="goods.images.length > 0"></span>
         </div>
         <div class="relative md:w-7/12 px-4 py-3 md:pb-16">
           <h3 class="goodsName">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>

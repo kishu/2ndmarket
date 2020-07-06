@@ -58,4 +58,9 @@ export class PreferenceProfileComponent implements OnInit {
     ).subscribe(nl => this.noticeList$ = of(nl));
   }
 
+  onClickSignOut(e: Event) {
+    e.preventDefault();
+    console.log('sign-out');
+    this.authService.signOut();
+  }
 }
