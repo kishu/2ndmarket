@@ -1,5 +1,5 @@
-  <div app-header class="sticky safe-top z-30"></div>
-  <div class="w-full max-w-xl mx-auto">
+<div app-header class="sticky safe-top z-30"></div>
+<div class="w-full max-w-xl py-2 mx-auto">
   <div
     class="mt-5"
     *ngIf="profile$ | async as profile">
@@ -14,66 +14,85 @@
       <a routerLink="/preference/groups">그룹설정</a>
     </div>
   </div>
-
-  <br><br>
-  <h2>알림</h2>
-
-  <ul *ngIf="noticeList$ | async as noticeList">
-    <li *ngFor="let notice of noticeList trackBy:trackById" [id]="notice.id">
-      <ng-container *ngIf="notice.goodsId | fsDocument:'goods' | async as goods">
-        <ng-container *ngIf="notice.goodsCommentId | fsDocument: 'goodsComments' | async as goodsComment">
-          <a [routerLink]="['/groups', goods.groupId, 'goods', notice.goodsId]" [fragment]="'goodsComments/' + notice.goodsCommentId" (click)="onClickNotice($event, notice)">
-            <img [src]="goods.images[0]" width="40"> {{ goods.name }}의 댓글 /
-            {{ goodsComment.body }} /
-            {{ notice.created | fsTimestamp | formatDistanceToNow }} /
-            {{ notice.read ? '읽었음' : '안읽음' }}
-          </a>
-          <button type="button" (click)="onClickDeleteNotice(notice)">삭제</button>
+  <div class="bg-white shadow" *ngIf="noticeList$ | async as noticeList">
+    <h2 class="p-2 text-blue-700">알림 ({{noticeList.length}})</h2>
+    <ul>
+      <li
+        class="relative border-t"
+        [ngClass]="{'border-gray-300': isFirst, 'border-gray-200': !isFirst }" *ngFor="let notice of noticeList trackBy:trackById; first as isFirst" [id]="notice.id">
+        <ng-container *ngIf="notice.goodsId | fsDocument:'goods' | async as goods">
+          <ng-container *ngIf="notice.goodsCommentId | fsDocument: 'goodsComments' | async as goodsComment">
+            <a
+              class="flex items-start p-2"
+              [ngClass]="{'opacity-50': notice.read}"
+              [routerLink]="['/groups', goods.groupId, 'goods', notice.goodsId]"
+              [fragment]="'goodsComments/' + notice.goodsCommentId"
+              (click)="onClickNotice($event, notice)">
+              <img [src]="goods.images[0]" class="w-12 h-12 mr-2">
+              <div class="leading-tight">
+                <p class="mb-1 text-xs text-gray-500">
+                  새 댓글이 달렸습니다.
+                  <span class="text-gray-400">{{ notice.created | fsTimestamp | formatDistanceToNow }} 전</span>
+                </p>
+                <p class="text-sm text-gray-700">{{ goodsComment.body }}</p>
+              </div>
+            </a>
+            <button
+              type="button"
+              class="absolute right-0 top-0 m-1 p-1 border-transparent bg-transparent"
+              (click)="onClickDeleteNotice(notice)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#cbd5e0" width="16px" height="16px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+            </button>
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </li>
-  </ul>
-
-  <br><br>
+      </li>
+    </ul>
+  </div>
 
   <ul>
     <li><button type="button" (click)="onClickGoodsListType('write')">등록한 상품</button></li>
     <li><button type="button" (click)="onClickGoodsListType('favorite')">좋아요 상품</button></li>
   </ul>
 
-  <br><br>
-
   <ng-container [ngSwitch]="goodsListType$ | async">
     <ng-container *ngSwitchCase="'write'">
-      <h3>등록한 상품</h3>
-      <ul class="grid grid-cols-3 md:grid-cols-4 gap-1 p-1" *ngIf="writeGoodsList$ | async as goodsList">
-        <li *ngFor="let goods of goodsList">
-          <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
-        </li>
-      </ul>
+      <div class="bg-white shadow">
+        <h3 class="p-2 text-blue-700">등록한 상품</h3>
+        <ul class="border-t border-gray-300 grid grid-cols-3 md:grid-cols-4 gap-px p-2" *ngIf="writeGoodsList$ | async as goodsList">
+          <li *ngFor="let goods of goodsList">
+            <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+          </li>
+        </ul>
+      </div>
     </ng-container>
     <ng-container *ngSwitchCase="'favorite'">
-      <h3>관심 상품</h3>
-      <ul class="grid grid-cols-3 gap-1 p-1" *ngIf="goodsFavoriteList$ | async as goodsFavoriteList">
-        <li *ngFor="let goodsFavorite of goodsFavoriteList">
-          <ng-container *ngIf="goodsFavorite.goodsId | fsDocument:'goods' | async as goods">
-            <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
-          </ng-container>
-        </li>
-      </ul>
+      <div class="bg-white shadow">
+        <h3 class="p-2 text-blue-700">관심 상품</h3>
+        <ul class="border-t border-gray-300 grid grid-cols-3 md:grid-cols-4 gap-px p-2" *ngIf="goodsFavoriteList$ | async as goodsFavoriteList">
+          <li *ngFor="let goodsFavorite of goodsFavoriteList">
+            <ng-container *ngIf="goodsFavorite.goodsId | fsDocument:'goods' | async as goods">
+              <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
+            </ng-container>
+          </li>
+        </ul>
+      </div>
     </ng-container>
   </ng-container>
 </div>
 
-
 <ng-template #goodsTemplate let-goods="goods" class="goodsItem">
   <div>
     <div class="relative square">
-      <a [routerLink]="['/groups', goods.groupId, 'goods', goods.id]">
+      <a
+        class="absolute left-0 top-0 w-full h-full"
+        [routerLink]="['/groups', goods.groupId, 'goods', goods.id]">
         <img
+          *ngIf="!!goods.images[0]"
           [src]="goods.images[0]"
-          class="absolute l-0 t-0 w-full h-full object-cover"
+          class="block w-full h-full object-cover"
+          [ngClass]="{'opacity-50': goods.soldOut}"
           alt="{{ goods.name }}">
+        <span class="absolute left-0 right-0 top-0 bottom-0 h-8 bg-black bg-opacity-75 text-white text-sm m-auto flex justify-center items-center" *ngIf="goods.soldOut">판매완료</span>
       </a>
     </div>
   </div>

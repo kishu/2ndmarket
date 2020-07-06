@@ -1,7 +1,8 @@
 <div class="header bg-white shadow">
   <div class="relative w-full max-w-xl mx-auto py-3 px-2">
-    <a [routerLink]="['/']" class="absolute inset-y-0 left-0 py-3 px-2 flex items-center border-white bg-white">
+    <a [routerLink]="['/']" class="absolute inset-y-0 left-0 p-3 flex items-center border-white bg-white">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-500"></span>
     </a>
     <h1 class="font-bold text-center">
       <ng-container *ngIf="(group$ | async) as group">
@@ -12,9 +13,10 @@
       </ng-container>
     </h1>
     <ng-container *ngIf="(profile$ | async) as profile">
-      <a [routerLink]="['/preference', 'profile']" class="absolute inset-y-0 right-0 mx-auto flex justify-center items-center w-12 h-12">
+      <a [routerLink]="['/preference', 'profile']" class="absolute inset-y-0 right-0 mx-auto flex justify-center items-center h-12 p-3">
+        <!-- <ng-container *ngIf="(noticeCount$ | async) as noticeCount"><span *ngIf=" noticeCount > 0">{{ noticeCount }}</span></ng-container> -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
-        <ng-container *ngIf="(noticeCount$ | async) as noticeCount"><span *ngIf=" noticeCount > 0">{{ noticeCount }}</span></ng-container>
+        <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-500"></span>
       </a>
     </ng-container>
   </div>
