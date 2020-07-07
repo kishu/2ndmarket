@@ -109,7 +109,7 @@ textarea {
 
 .talk {
   border-radius: 1rem;
-  @apply py-2 px-3 bg-gray-300 rounded-tl-none;
+  @apply py-2 px-3 bg-gray-200 rounded-tl-none;
   @apply leading-tight;
 
   .mine & {
@@ -153,7 +153,7 @@ textarea {
 }
 
 .comment-wrap {
-  @apply w-full max-w-xl mx-auto bg-gray-500;
+  @apply w-full max-w-xl mx-auto bg-gray-400;
 }
 
 .goods-images {
@@ -243,4 +243,15 @@ app-header {
 .safe-top {
   top: calc(constant(safe-area-inset-top) + 49px);
   top: calc(env(safe-area-inset-top) + 49px);
+}
+
+.image-list {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.image-item {
+	scroll-snap-align: start;
 }

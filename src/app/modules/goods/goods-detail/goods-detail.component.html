@@ -1,5 +1,5 @@
 <ng-container *ngIf="goods$ | async as goods">
-  <div class="goodsDetail w-full">
+  <div class="goodsDetail w-full shadow">
     <div *ngIf="goods.images.length > 0" class="max-w-xl mx-auto"><img [src]="goods.images[0]" alt=""></div>
     <div class="sticky-wrap z-20 max-w-xl mx-auto bg-white">
       <div class="sticky safe-top z-20">
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="comment-wrap relative">
-      <div app-goods-comment-list class="p-4" [goods]="goods"></div>
+      <div app-goods-comment-list [goods]="goods"></div>
       <div app-goods-comment-form [goodsId]="goods.id"></div>
     </div>
   </div>

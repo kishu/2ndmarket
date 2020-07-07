@@ -1,19 +1,27 @@
 <ng-container *ngIf="commentList$ | async as commentList">
-  <ul>
+  <ul class="p-3">
     <li
       class="py-1"
       *ngFor="let comment of commentList">
       <div
-        class="flex"
+        class="flex -mx-1"
         *ngFor="let talk of comment; first as isFirst; last as isLast"
         [ngClass]="{'mine': talk.permission}">
         <div
-          class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-xs font-bold uppercase"
-          [ngClass]="{'opacity-0': !isFirst}"
+          class="w-8 h-8 ml-1 bg-white rounded-full flex items-center justify-center text-xs font-bold uppercase"
+          [ngClass]="{'opacity-0': !isFirst, 'bg-red-500': talk.seller}"
           *ngIf="!talk.permission">{{ talk.profileId.slice(0, 2) }}</div>
-        <p class="talk mx-1 mb-1 shadow max-w-sm break-all whitespace-pre-wrap" style="max-width: 75%;" (click)="onClickDelete(talk)">{{ talk.body }}</p>
+        <div
+          class="flex flex-col mx-1"
+          [ngClass]="{'items-end': talk.permission}"
+          style="max-width: 75%;">
+          <ng-container *ngIf="talk.profileId | fsDocument:'profiles' | async as profile">
+            <span class="text-xs" *ngIf="isFirst">{{ profile.displayName }}</span>
+          </ng-container>
+          <p class="talk mb-1 shadow max-w-sm break-all whitespace-pre-wrap" (click)="onClickDelete(talk)">{{ talk.body }}</p>
+        </div>
         <div class="flex flex-shrink-0 items-end mb-1">
-          <span class="text-xs flex-shrink-0 text-gray-400" *ngIf="isLast">{{ talk.created | fsTimestamp | date:'hh:mm' }}</span>
+          <span class="text-xs flex-shrink-0 text-gray-500" *ngIf="isLast">{{ talk.created | fsTimestamp | date:'hh:mm' }}</span>
         </div>
       </div>
     </li>
