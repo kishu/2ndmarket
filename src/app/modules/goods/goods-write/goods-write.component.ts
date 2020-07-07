@@ -1,12 +1,13 @@
 import * as faker from 'faker';
 faker.locale = 'ko';
-import { forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap } from 'rxjs/operators';
+import { concat, forkJoin, merge, Observable, of, zip } from 'rxjs';
+import { filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { AuthService, CloudinaryService, GoodsService, ProfilesService } from '@app/core/http';
+import { AuthService, CloudinaryService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
 import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
+import { HttpEventType } from "@angular/common/http";
 
 @Component({
   selector: 'app-goods-write',
@@ -23,7 +24,8 @@ export class GoodsWriteComponent implements OnInit {
     private authService: AuthService,
     private goodsService: GoodsService,
     private profilesService: ProfilesService,
-    private cloudinaryService: CloudinaryService
+    private cloudinaryService: CloudinaryService,
+    private cloudinaryUploadService: CloudinaryUploadService
   ) {
     this.goods$ = forkJoin([
       this.authService.user$.pipe(first(), filter(u => !!u)),
@@ -58,19 +60,26 @@ export class GoodsWriteComponent implements OnInit {
   }
 
   onSubmit({ goods, draftImages }) {
+    console.log('onSubmit');
     if (this.submitting) {
       return;
     }
-    this.submitting = true;
-    this.goodsService.add(goods).then((addedGoods) => {
-      this.router.navigate(['../../', addedGoods.id], {
-        replaceUrl: true,
-        relativeTo: this.activatedRoute,
-        state: {
-          files: draftImages.map(img => img.file)
-        }
-      });
-    });
+
+    const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
+
+    uploadProgress$.subscribe(p => console.log(p));
+    uploadComplete$.subscribe(p => console.log(p));
+
+    // this.submitting = true;
+    // this.goodsService.add(goods).then((addedGoods) => {
+    //   this.router.navigate(['../../', addedGoods.id], {
+    //     replaceUrl: true,
+    //     relativeTo: this.activatedRoute,
+    //     state: {
+    //       files: draftImages.map(img => img.file)
+    //     }
+    //   });
+    // });
     // this.goodsService.add(goods).then(addedGoods => {
     //   draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
     //   const upload$ = this.cloudinaryService.upload(draftImages);
