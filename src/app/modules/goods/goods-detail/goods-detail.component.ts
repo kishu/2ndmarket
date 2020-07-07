@@ -62,11 +62,9 @@ export class GoodsDetailComponent implements OnInit {
     private goodsFavoritesService: GoodsFavoritesService
   ) {
     this.files = this.router.getCurrentNavigation().extras.state?.files;
-    console.log('222', this.router.getCurrentNavigation());
   }
 
   ngOnInit(): void {
-    console.log('33333', this.router.getCurrentNavigation());
   }
 
   onClickSoldOut() {

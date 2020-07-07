@@ -1,13 +1,12 @@
 import * as faker from 'faker';
 faker.locale = 'ko';
-import { concat, forkJoin, merge, Observable, of, zip } from 'rxjs';
-import { filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AuthService, CloudinaryService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
 import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
-import { HttpEventType } from "@angular/common/http";
 
 @Component({
   selector: 'app-goods-write',
@@ -49,8 +48,7 @@ export class GoodsWriteComponent implements OnInit {
         commentsCnt: 0,
         activated: true,
         created: GoodsService.serverTimestamp(),
-        updated: GoodsService.serverTimestamp(),
-        processing: true
+        updated: GoodsService.serverTimestamp()
       })),
       switchMap((g: NewGoods) => of(g))
     );
@@ -60,38 +58,21 @@ export class GoodsWriteComponent implements OnInit {
   }
 
   onSubmit({ goods, draftImages }) {
-    console.log('onSubmit');
     if (this.submitting) {
       return;
     }
-
+    this.submitting = true;
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
-
+    // {type: 1, loaded: 163840, total: 165310}
     uploadProgress$.subscribe(p => console.log(p));
-    uploadComplete$.subscribe(p => console.log(p));
-
-    // this.submitting = true;
-    // this.goodsService.add(goods).then((addedGoods) => {
-    //   this.router.navigate(['../../', addedGoods.id], {
-    //     replaceUrl: true,
-    //     relativeTo: this.activatedRoute,
-    //     state: {
-    //       files: draftImages.map(img => img.file)
-    //     }
-    //   });
-    // });
-    // this.goodsService.add(goods).then(addedGoods => {
-    //   draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
-    //   const upload$ = this.cloudinaryService.upload(draftImages);
-    //   upload$.subscribe(uploadedImages => {
-    //     this.goodsService.updateImages(addedGoods.id, uploadedImages);
-    //   }, err => {
-    //     alert(err);
-    //   }, () => {
-    //     this.goodsService.updateProcessed(addedGoods.id);
-    //   });
-    //   this.router.navigate(['../../', addedGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute });
-    // });
+    uploadComplete$.subscribe(images => {
+      goods = {...goods, images};
+      console.log(goods);
+      this.goodsService.add(goods).then(
+        (newGoods) => this.router.navigate(['../../', newGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute }),
+        err => alert(err)
+      )
+    });
   }
 
 }

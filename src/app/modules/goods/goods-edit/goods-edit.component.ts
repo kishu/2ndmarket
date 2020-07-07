@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CloudinaryService, GoodsService } from '@app/core/http';
+import { CloudinaryService, CloudinaryUploadService, GoodsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
 
 @Component({
@@ -16,7 +16,8 @@ export class GoodsEditComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private goodsService: GoodsService,
-    private cloudinaryService: CloudinaryService
+    private cloudinaryService: CloudinaryService,
+    private cloudinaryUploadService: CloudinaryUploadService
   ) {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
     this.goods$ = this.goodsService.get(goodsId);
@@ -30,22 +31,14 @@ export class GoodsEditComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    const updateGoods: Goods = {
-      ...goods,
-      images: draftImages.filter(img => !img.isFile).map(img => img.src),
-      processing: true
-    };
-    this.goodsService.update(goods.id, updateGoods).then(() => {
-      draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${goods.id}`}));
-      const upload$ = this.cloudinaryService.upload(draftImages);
-      upload$.subscribe(uploadedImages => {
-        this.goodsService.updateImages(goods.id, uploadedImages);
-      }, err => {
-        alert(err);
-      }, () => {
-        this.goodsService.updateProcessed(goods.id);
-      });
-      this.router.navigate(['../../', goods.id], { replaceUrl: true, relativeTo: this.activatedRoute });
+    const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
+    uploadProgress$.subscribe(p => console.log(p));
+    uploadComplete$.subscribe(images => {
+      goods = {...goods, images};
+      this.goodsService.update(goods.id, goods).then(
+        () => this.router.navigate(['../../', goods.id], { replaceUrl: true, relativeTo: this.activatedRoute }),
+        err => alert(err)
+      )
     });
   }
 

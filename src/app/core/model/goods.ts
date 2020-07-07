@@ -56,7 +56,6 @@ export interface Goods {
   soldOut: boolean | firestore.Timestamp;
   created: firestore.Timestamp;
   updated: firestore.Timestamp;
-  processing: boolean;
 }
 
 export type NewGoods = Omit<Goods, 'id' | 'created' | 'updated'> & {
