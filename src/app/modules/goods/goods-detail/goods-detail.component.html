@@ -11,7 +11,7 @@
               <span>{{ favoriteCount$ | async }}</span>
               <button type="button" [disabled]="permission$ | async" class="btn-sm" (click)="onClickFavorite()">좋<span *ngIf="favorited$ | async">(했)</span></button>
               <ng-container *ngIf="permission$ | async">
-                <a [routerLink]="['edit']" class="btn btn-sm" skipLocationChange>수정</a> |
+                <a [routerLink]="['edit']" class="btn btn-sm">수정</a> |
                 <button type="button" class="btn-sm" (click)="onClickDelete()">삭제</button> |
                 <button type="button" class="btn-sm" (click)="onClickSoldOut()">{{ goods.soldOut ? '판매됨' : '판매완료하기' }}</button>
                 <span *ngIf="goods.soldOut">{{ goods.soldOut | fsTimestamp | formatDistanceToNow }}</span>
@@ -27,9 +27,6 @@
           <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
         </div>
         <ng-container *ngIf="goods.images.length > 1">
-          <div *ngIf="goods.processing" class="text-lg">
-            이미지를 처리하고 있습니다.
-          </div>
           <ul class="goods-images">
             <ng-container *ngFor="let src of goods.images; first as isFirst">
               <li class="relative border border-white" *ngIf="!isFirst">

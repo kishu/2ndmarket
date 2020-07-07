@@ -11,7 +11,18 @@ import { Goods, NewGoodsFavorite } from '@app/core/model';
   styleUrls: ['./goods-detail.component.scss']
 })
 export class GoodsDetailComponent implements OnInit {
-  goods$: Observable<Goods> = this.goodsService.valueChanges(this.goodsId).pipe(shareReplay(1));
+  files: File[];
+  goods$: Observable<Goods> = this.goodsService.valueChanges(this.goodsId)
+    .pipe(
+      map(goods => {
+        if (goods.images.length === 0 && this.files) {
+          goods.images = this.files as any;
+        }
+        return goods;
+      }),
+      shareReplay(1)
+    );
+
   empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
   permission$: Observable<boolean> = combineLatest([
     this.goods$,
@@ -31,6 +42,7 @@ export class GoodsDetailComponent implements OnInit {
     map(f => f.length > 0),
     shareReplay(1)
   );
+  files$: Observable<File[] | undefined> = of(this.router.getCurrentNavigation().extras.state?.files);
 
   private get groupId() {
     return this.activatedRoute.snapshot.paramMap.get('groupId');
@@ -49,6 +61,7 @@ export class GoodsDetailComponent implements OnInit {
     private goodsService: GoodsService,
     private goodsFavoritesService: GoodsFavoritesService
   ) {
+    this.files = this.router.getCurrentNavigation().extras.state?.files;
   }
 
   ngOnInit(): void {

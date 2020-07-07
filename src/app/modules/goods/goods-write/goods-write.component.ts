@@ -5,7 +5,7 @@ import { filter, first, map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { AuthService, CloudinaryService, GoodsService, ProfilesService } from '@app/core/http';
+import { AuthService, CloudinaryService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
 import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
 
 @Component({
@@ -23,7 +23,8 @@ export class GoodsWriteComponent implements OnInit {
     private authService: AuthService,
     private goodsService: GoodsService,
     private profilesService: ProfilesService,
-    private cloudinaryService: CloudinaryService
+    private cloudinaryService: CloudinaryService,
+    private cloudinaryUploadService: CloudinaryUploadService
   ) {
     this.goods$ = forkJoin([
       this.authService.user$.pipe(first(), filter(u => !!u)),
@@ -47,8 +48,7 @@ export class GoodsWriteComponent implements OnInit {
         commentsCnt: 0,
         activated: true,
         created: GoodsService.serverTimestamp(),
-        updated: GoodsService.serverTimestamp(),
-        processing: true
+        updated: GoodsService.serverTimestamp()
       })),
       switchMap((g: NewGoods) => of(g))
     );
@@ -62,17 +62,16 @@ export class GoodsWriteComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    this.goodsService.add(goods).then(addedGoods => {
-      draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${addedGoods.id}`}));
-      const upload$ = this.cloudinaryService.upload(draftImages);
-      upload$.subscribe(uploadedImages => {
-        this.goodsService.updateImages(addedGoods.id, uploadedImages);
-      }, err => {
-        alert(err);
-      }, () => {
-        this.goodsService.updateProcessed(addedGoods.id);
-      });
-      this.router.navigate(['../../', addedGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute });
+    const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
+    // {type: 1, loaded: 163840, total: 165310}
+    uploadProgress$.subscribe(p => console.log(p));
+    uploadComplete$.subscribe(images => {
+      goods = {...goods, images};
+      console.log(goods);
+      this.goodsService.add(goods).then(
+        (newGoods) => this.router.navigate(['../../', newGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute }),
+        err => alert(err)
+      )
     });
   }
 
