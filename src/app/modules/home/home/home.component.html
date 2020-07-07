@@ -30,7 +30,7 @@
     </ul> -->
 
     <div class="bg-white shadow">
-      <h2 class="p-2 text-blue-700">프로필 전환</h2>
+      <h2 class="p-2 text-gray-800">프로필 전환</h2>
       <ul *ngIf="userProfileList$ | async as userProfileList">
         <li class="border-t border-gray-300" *ngFor="let userProfile of userProfileList">
           <ng-container *ngIf="userProfile.profileId | fsDocument:'profiles' | async as profile">
@@ -39,10 +39,10 @@
                 type="button"
                 [disabled]="(selectedProfileId$ | async) === profile.id"
                 (click)="onClickSelectProfile(profile)"
-                class="flex justify-between items-center w-full p-2 border-0 bg-transparent text-blue-700">
+                class="flex justify-between items-center w-full p-2 border-0 bg-transparent text-gray-800">
                 <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2" alt="">
                 <span class="flex-grow text-left text-sm ellipsis">{{ profile.displayName }}</span>
-                <span class="inline-block px-2 py-1 bg-blue-500 text-white text-xs leading-tight uppercase">
+                <span class="inline-block px-2 py-1 bg-green-600 text-white text-xs leading-tight uppercase">
                   {{ group.name }}
                   {{ (selectedProfileId$ | async) === profile.id ? '선택됨' : '' }}
                 </span>
@@ -51,7 +51,7 @@
           </ng-container>
         </li>
       </ul>
-      <a [routerLink]="['preference/groups']" class="block p-2 bg-blue-500 text-white text-center text-sm">그룹추가</a>
+      <a [routerLink]="['preference/groups']" class="block p-2 bg-green-600 text-white text-center text-sm">그룹추가</a>
     </div>
   </ng-container>
 </div>

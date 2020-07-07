@@ -20,14 +20,21 @@ body {
   // padding-bottom:env(safe-area-inset-bottom);
 }
 
+
 .wrap {
   @apply relative;
-  &:before {
-    @apply sticky top-0 block w-full bg-blue-700 z-40;
-    height: constant(safe-area-inset-top);
-    height: env(safe-area-inset-top);
-    content: '';
-  }
+  padding-top: calc(constant(safe-area-inset-top) + 49px);
+  padding-top: calc(env(safe-area-inset-top) + 49px);
+}
+
+.safe-top-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: constant(safe-area-inset-top);
+  height: env(safe-area-inset-top);
+  @apply bg-white z-40;
 }
 
 .sign-wrap {
@@ -39,7 +46,7 @@ body {
 button,
 .btn {
   @apply py-2 px-4;
-  @apply border border-blue-500 bg-blue-500;
+  @apply border border-green-600 bg-green-600;
   @apply text-white;
   &:disabled {
     @apply opacity-50;
@@ -217,7 +224,7 @@ textarea {
 
 .header,
 app-header {
-  @apply bg-white shadow;
+  @apply shadow;
 }
 
 .goods-name {
@@ -228,7 +235,12 @@ app-header {
   @apply relative;
 }
 
-.safe-top {
+.header-top {
   top: constant(safe-area-inset-top);
   top: env(safe-area-inset-top);
+}
+
+.safe-top {
+  top: calc(constant(safe-area-inset-top) + 49px);
+  top: calc(env(safe-area-inset-top) + 49px);
 }

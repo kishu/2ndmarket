@@ -24,7 +24,7 @@
   <ng-container [ngSwitch]="goodsListType$ | async">
     <ng-container *ngSwitchCase="'write'">
       <div class="bg-white shadow">
-        <h3 class="p-2 text-blue-700">등록한 상품</h3>
+        <h3 class="p-2 text-gray-800">등록한 상품</h3>
         <ul class="border-t border-gray-300 grid grid-cols-3 md:grid-cols-4 gap-px p-2" *ngIf="writeGoodsList$ | async as goodsList">
           <li *ngFor="let goods of goodsList">
             <ng-container *ngTemplateOutlet="goodsTemplate; context: {goods: goods}"></ng-container>
@@ -34,7 +34,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="'favorite'">
       <div class="bg-white shadow">
-        <h3 class="p-2 text-blue-700">관심 상품</h3>
+        <h3 class="p-2 text-gray-800">관심 상품</h3>
         <ul class="border-t border-gray-300 grid grid-cols-3 md:grid-cols-4 gap-px p-2" *ngIf="goodsFavoriteList$ | async as goodsFavoriteList">
           <li *ngFor="let goodsFavorite of goodsFavoriteList">
             <ng-container *ngIf="goodsFavorite.goodsId | fsDocument:'goods' | async as goods">
