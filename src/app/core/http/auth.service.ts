@@ -55,9 +55,9 @@ export class AuthService {
         return this.userProfilesService.getQueryByUserId(user.uid).pipe(
           switchMap(userProfiles => {
             if (userProfiles.length > 0) {
-              const profileId = userProfiles[0].profileId;
-              this.selectProfileService.select(profileId, false);
-              return this.profilesService.get(profileId);
+              const selectedProfileId = userProfiles[0].profileId;
+              this.selectProfileService.select(selectedProfileId, false);
+              return this.profilesService.get(selectedProfileId);
             } else {
               return of(null);
             }

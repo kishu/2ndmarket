@@ -23,7 +23,7 @@ export class GoodsListComponent implements OnInit {
         images: goods.images.length > 2 ?
           [ goods.images[0], goods.images[random(1, goods.images.length - 1)] ] :
           goods.images
-      }
+      };
     }))
   );
 
