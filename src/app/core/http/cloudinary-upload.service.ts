@@ -74,8 +74,11 @@ export class CloudinaryUploadService {
       draftImages.map(draft => {
         if (draft.isFile) {
           return this.request(draft).pipe(
-            filter(e => e.type === HttpEventType.UploadProgress),
-            tap(e => uploadProgress$.next(e as HttpProgressEvent))
+            tap(e => {
+              if (e.type === HttpEventType.UploadProgress) {
+                uploadProgress$.next(e as HttpProgressEvent);
+              }
+            })
           );
         } else {
           return this.update(draft);

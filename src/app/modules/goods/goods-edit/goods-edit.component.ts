@@ -31,7 +31,7 @@ export class GoodsEditComponent implements OnInit {
     }
     this.submitting = true;
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
-    uploadProgress$.subscribe(p => console.log(p));
+    // uploadProgress$.subscribe(p => console.log(p));
     uploadComplete$.subscribe(images => {
       goods = {...goods, images};
       this.goodsService.update(goods.id, goods).then(

@@ -4,15 +4,16 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
-    "build": "ng lint --fix && ng build",
-    "build:prod": "ng lint --fix && ng build --prod",
+    "build": "ng lint && ng build",
+    "build:prod": "ng lint && ng build --prod",
+    "deploy:hosting": "firebase deploy --only hosting",
     "test": "ng test",
     "lint": "ng lint --fix",
     "e2e": "ng e2e"
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint"
+      "pre-push": "ng lint --fix"
     }
   },
   "private": true,
