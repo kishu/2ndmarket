@@ -17,7 +17,7 @@
     <a class="block btn btn-sm" (click)="onClickSignOut($event)">sign-out</a>
   </div>
   <ul>
-    <li><button type="button" (click)="onClickGoodsListType('write')">등록한 상품</button></li>
-    <li><button type="button" (click)="onClickGoodsListType('favorite')">좋아요 상품</button></li>
+    <li><a [routerLink]="['/preference', 'write-goods']">등록한 상품</a></li>
+    <li><a [routerLink]="['/preference', 'favorite-goods']">좋아요 상품</a></li>
   </ul>
 </div>
