@@ -45,7 +45,6 @@ export class GoodsWriteComponent implements OnInit {
         soldOut: false,
         favoritesCnt: 0,
         commentsCnt: 0,
-        activated: true,
         created: GoodsService.serverTimestamp(),
         updated: GoodsService.serverTimestamp()
       })),
@@ -61,12 +60,14 @@ export class GoodsWriteComponent implements OnInit {
       return;
     }
     this.submitting = true;
+    const createdId = this.goodsService.createId();
+    draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${createdId}`}));
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
     // uploadProgress$.subscribe(p => console.log(p)); // {type: 1, loaded: 163840, total: 165310}
     uploadComplete$.subscribe(images => {
       goods = {...goods, images};
-      this.goodsService.add(goods).then(
-        (newGoods) => this.router.navigate(['../../', newGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute }),
+      this.goodsService.create(createdId, goods).then(
+        () => this.router.navigate(['../../', createdId], { replaceUrl: true, relativeTo: this.activatedRoute }),
         err => alert(err)
       );
     });

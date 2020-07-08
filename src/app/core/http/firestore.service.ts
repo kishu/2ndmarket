@@ -30,6 +30,10 @@ export abstract class FirestoreService<T> {
     return firestore.FieldValue.serverTimestamp();
   }
 
+  public createId() {
+    return this.afs.createId();
+  }
+
   protected create(id: string, doc: unknown) {
     return this.collection.doc(id).set(doc);
   }
@@ -46,11 +50,17 @@ export abstract class FirestoreService<T> {
       );
   }
 
-  public valueChanges(docId: string): Observable<T> {
+  public valueChanges(docId: string): Observable<T | undefined> {
     return this.afs.doc<T>(`${this.path}/${docId}`)
       .valueChanges()
       .pipe(
-        map(change => ({ id: docId, ...change }))
+        map(change => {
+          if (change) {
+            return ({ id: docId, ...change });
+          } else {
+            return change;
+          }
+        })
       );
   }
 

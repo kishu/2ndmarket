@@ -52,7 +52,6 @@ export interface Goods {
   memo: string;
   favoritesCnt: number;
   commentsCnt: number;
-  activated: boolean;
   soldOut: boolean | firestore.Timestamp;
   created: firestore.Timestamp;
   updated: firestore.Timestamp;

@@ -39,7 +39,6 @@ export class AppComponent implements OnInit {
     // var urlObj = new DefaultUrlSerializer('https://dev.2ndmarket.co/groups/0GdquHWyuHiuEeQEm9eF/goods/9ttxfqJLcGMUqYbrcuZ1');
 
     this.afMessaging.onMessage(payload => {
-      console.log('onMessage', payload);
       const { body, title, click_action} = payload.notification;
       if (!this.location.isCurrentPathEqualTo('/preference/profile')) {
         if (confirm(`${title}\n${body}`)) {

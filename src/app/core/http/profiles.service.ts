@@ -14,7 +14,6 @@ export class ProfilesService extends FirestoreService<Profile> {
   }
 
   add(newProfile: NewProfile) {
-    console.log('add', newProfile);
     return super.add(newProfile);
   }
 

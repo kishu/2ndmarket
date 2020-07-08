@@ -69,7 +69,6 @@ export class CloudinaryUploadService {
   upload(draftImages: DraftImage[]): [Subject<HttpProgressEvent>, Subject<string[]>] {
     const uploadProgress$ = new ReplaySubject<HttpProgressEvent>();
     const uploadComplete$ = new ReplaySubject<string[]>();
-    draftImages.forEach(draft => console.log(draft.file?.name || draft.src ));
     forkJoin(
       draftImages.map(draft => {
         if (draft.isFile) {

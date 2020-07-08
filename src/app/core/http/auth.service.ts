@@ -40,7 +40,6 @@ export class AuthService {
     this.selectProfileService.profileId$
   ]).pipe(
     switchMap(([user, profileId]) => {
-      console.log('profile$', user, profileId);
       if (user && profileId) {
         return this.userProfilesService.getQueryByUserIdAndProfileId(user.uid, profileId).pipe(
           switchMap(userProfiles => {

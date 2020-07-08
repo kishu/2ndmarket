@@ -2,7 +2,6 @@ export * from './auth.service';
 export * from './cloudinary-upload.service';
 export * from './fcm-tokens.service';
 export * from './goods.service';
-export * from './goods-cache.service';
 export * from './goods-comments.service';
 export * from './goods-favorites.service';
 export * from './groups.service';

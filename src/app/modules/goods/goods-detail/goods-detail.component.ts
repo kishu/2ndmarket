@@ -11,18 +11,7 @@ import { Goods, NewGoodsFavorite } from '@app/core/model';
   styleUrls: ['./goods-detail.component.scss']
 })
 export class GoodsDetailComponent implements OnInit {
-  files: File[];
-  goods$: Observable<Goods> = this.goodsService.valueChanges(this.goodsId)
-    .pipe(
-      map(goods => {
-        if (goods.images.length === 0 && this.files) {
-          goods.images = this.files as any;
-        }
-        return goods;
-      }),
-      shareReplay(1)
-    );
-
+  goods$: Observable<Goods> = this.goodsService.valueChanges(this.goodsId).pipe(shareReplay(1));
   empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
   permission$: Observable<boolean> = combineLatest([
     this.goods$,
@@ -42,7 +31,6 @@ export class GoodsDetailComponent implements OnInit {
     map(f => f.length > 0),
     shareReplay(1)
   );
-  files$: Observable<File[] | undefined> = of(this.router.getCurrentNavigation().extras.state?.files);
 
   private get groupId() {
     return this.activatedRoute.snapshot.paramMap.get('groupId');
@@ -61,7 +49,6 @@ export class GoodsDetailComponent implements OnInit {
     private goodsService: GoodsService,
     private goodsFavoritesService: GoodsFavoritesService
   ) {
-    this.files = this.router.getCurrentNavigation().extras.state?.files;
   }
 
   ngOnInit(): void {
@@ -120,11 +107,13 @@ export class GoodsDetailComponent implements OnInit {
     );
   }
 
-  onClickDelete() {
+  onClickDelete(goods: Goods) {
     if (confirm('삭제 할까요?')) {
-      const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-      this.goodsService.update(goodsId, {activated: false}).then(
-        () => this.router.navigate(['goods']),
+      this.router.navigate(['../'], { replaceUrl: true, relativeTo: this.activatedRoute }).then(() => {
+        return this.goodsService.moveToTrash(goods);
+      })
+      .then(
+        () => {},
         (err) => alert(err)
       );
     }
