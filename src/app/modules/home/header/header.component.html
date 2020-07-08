@@ -8,7 +8,7 @@
       <ng-container *ngIf="(group$ | async) as group">
         <a [routerLink]="['/groups', group.id, 'goods']">
           <span>세컨드마켓@</span>
-          <span class="uppercase">{{ group.name }}</span>
+          <span class="uppercase">{{ group.id }}</span>
         </a>
       </ng-container>
     </h1>

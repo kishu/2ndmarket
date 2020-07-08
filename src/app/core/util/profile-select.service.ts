@@ -17,6 +17,7 @@ export class ProfileSelectService implements OnDestroy {
   }
 
   select(id: string, next: boolean = true) {
+    console.log('select', id);
     localStorage.setItem('profileId', id);
     if (next) {
       this.profileId$.next(id);
