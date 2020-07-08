@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CloudinaryService, CloudinaryUploadService, GoodsService } from '@app/core/http';
+import { CloudinaryUploadService, GoodsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
 
 @Component({
@@ -16,7 +16,6 @@ export class GoodsEditComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private goodsService: GoodsService,
-    private cloudinaryService: CloudinaryService,
     private cloudinaryUploadService: CloudinaryUploadService
   ) {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');

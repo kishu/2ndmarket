@@ -5,7 +5,7 @@ import { filter, first, map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { AuthService, CloudinaryService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
+import { AuthService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
 import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
 
 @Component({
@@ -23,7 +23,6 @@ export class GoodsWriteComponent implements OnInit {
     private authService: AuthService,
     private goodsService: GoodsService,
     private profilesService: ProfilesService,
-    private cloudinaryService: CloudinaryService,
     private cloudinaryUploadService: CloudinaryUploadService
   ) {
     this.goods$ = forkJoin([
@@ -71,7 +70,7 @@ export class GoodsWriteComponent implements OnInit {
       this.goodsService.add(goods).then(
         (newGoods) => this.router.navigate(['../../', newGoods.id], { replaceUrl: true, relativeTo: this.activatedRoute }),
         err => alert(err)
-      )
+      );
     });
   }
 
