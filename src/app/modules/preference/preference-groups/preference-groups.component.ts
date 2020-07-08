@@ -54,7 +54,7 @@ export class PreferenceGroupsComponent implements OnInit {
           break;
         case GroupAddStep.verify:
           this.verifyForm = this.fb.group({
-            email: [this.email],
+            email: [{ value: this.email, disabled: true }],
             code: []
           });
           break;
@@ -69,21 +69,17 @@ export class PreferenceGroupsComponent implements OnInit {
     this.submitting = true;
     const to = this.email;
     const code = random(1000, 9999);
-    this.code = code;
-    console.log('code', code);
-    this.submitting = false;
-    this.step$.next(GroupAddStep.verify);
-    // const callable = this.fns.httpsCallable('sendVerificationEmail');
-    // callable({to, code}).pipe(first()).subscribe(() => {
-    //   // i don't know why this subscribe function run outside of ngzone.
-    //   // this is just tricky code.
-    //   this.ngZone.run(() => {
-    //     this.code = code;
-    //     console.log('code', code);
-    //     this.submitting = false;
-    //     this.step$.next(GroupAddStep.verify);
-    //   });
-    // });
+    const callable = this.fns.httpsCallable('sendVerificationEmail');
+    callable({to, code}).pipe(first()).subscribe(() => {
+      // i don't know why this subscribe function run outside of ngzone.
+      // this is just tricky code.
+      this.ngZone.run(() => {
+        this.code = code;
+        console.log('code', code);
+        this.submitting = false;
+        this.step$.next(GroupAddStep.verify);
+      });
+    });
   }
 
   onTimeoverLimitTimer() {

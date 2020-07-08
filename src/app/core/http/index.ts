@@ -1,5 +1,4 @@
 export * from './auth.service';
-export * from './cloudinary.service';
 export * from './cloudinary-upload.service';
 export * from './fcm-tokens.service';
 export * from './goods.service';

@@ -1,11 +1,11 @@
 import * as sha1 from 'sha1';
 import { parse } from 'url-parser';
 import { forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpProgressEvent, HttpRequest, HttpResponse } from '@angular/common/http';
 import { DraftImage } from '@app/core/model';
-import { tap } from "rxjs/operators";
 
 // https://cloudinary.com/documentation/upload_images#uploading_with_a_direct_call_to_the_rest_api
 // https://cloudinary.com/documentation/image_upload_api_reference
@@ -74,24 +74,18 @@ export class CloudinaryUploadService {
       draftImages.map(draft => {
         if (draft.isFile) {
           return this.request(draft).pipe(
-            tap(e => {
-              switch (e.type) {
-                case HttpEventType.UploadProgress:
-                  uploadProgress$.next(e);
-                  break;
-              }
-            })
+            filter(e => e.type === HttpEventType.UploadProgress),
+            tap(e => uploadProgress$.next(e as HttpProgressEvent))
           );
         } else {
           return this.update(draft);
         }
       })
     ).subscribe( (responses: (HttpResponse<any> | string)[]) => {
-      console.log('sub');
       uploadComplete$.next(
         responses.map(res => {
           if (res instanceof HttpResponse) {
-            return res.body.eager[0].secure_url
+            return res.body.eager[0].secure_url;
           } else if (typeof res === 'string') {
             return res;
           } else {
