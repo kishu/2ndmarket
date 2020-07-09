@@ -2,22 +2,30 @@
   <div class="relative w-full max-w-xl mx-auto py-3 px-2">
     <a [routerLink]="['/']" class="absolute inset-y-0 left-0 p-3 flex items-center">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2f855a" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-      <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-orange-600"></span>
+      <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
     </a>
-    <h1 class="font-bold text-center text-green-700">
-      <ng-container *ngIf="(group$ | async) as group">
+    <h1 class="h-6 px-12 font-bold text-center text-green-700 ellipsis">
+      <ng-container *ngIf="group$ | async as group; else loading">
         <a [routerLink]="['/groups', group.id, 'goods']">
-          <span>세컨드마켓@</span>
+          <span>2ndMark@</span>
           <span class="uppercase">{{ group.id }}</span>
         </a>
       </ng-container>
     </h1>
-    <ng-container *ngIf="(profile$ | async) as profile">
+    <ng-container *ngIf="noticeList$ | async as noticeList">
       <a [routerLink]="['/preference', 'messages']" class="absolute inset-y-0 right-0 mx-auto flex justify-center items-center h-12 p-3">
         <!-- <ng-container *ngIf="(noticeCount$ | async) as noticeCount"><span *ngIf=" noticeCount > 0">{{ noticeCount }}</span></ng-container> -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2f855a" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
-        <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-orange-600"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#a0aec0" width="24px" height="24px" [ngClass]="{'active': noticeList.length > 0, 'vibe': noticeList.length > 0}">
+          <path d="M0 0h24v24H0V0z" fill="none"/>
+          <path d="M12 6.5c-2.49 0-4 2.02-4 4.5v6h8v-6c0-2.48-1.51-4.5-4-4.5z" opacity=".3"/>
+          <path d="M18 16v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6zm-4 5c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"/>
+        </svg>
+        <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600" *ngIf="noticeList.length > 0"></span>
       </a>
     </ng-container>
   </div>
 </div>
+
+<ng-template #loading>
+  세컨드마켓
+</ng-template>

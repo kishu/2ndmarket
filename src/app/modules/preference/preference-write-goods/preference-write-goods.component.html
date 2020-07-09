@@ -1,7 +1,7 @@
 <div class="w-full max-w-xl py-2 mx-auto" *ngIf="writeGoodsList$ | async as goodsList">
-  <div class="bg-white shadow">
-    <h3 class="p-2 text-green-800">등록한 상품({{goodsList.length}})</h3>
-    <ul class="border-t border-gray-300 grid grid-cols-3 md:grid-cols-4 gap-px p-2">
+  <div class="sticky-wrap bg-white shadow">
+    <h3 class="sticky safe-top z-20 border-b border-gray-300 p-2 text-green-800 bg-white">등록한 상품({{goodsList.length}})</h3>
+    <ul class="grid grid-cols-3 md:grid-cols-4 gap-px p-2">
       <li *ngFor="let goods of goodsList">
         <div class="relative square">
           <a

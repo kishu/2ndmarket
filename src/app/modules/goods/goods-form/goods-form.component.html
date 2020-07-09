@@ -21,7 +21,7 @@
           required>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="nameCtl.invalid && (nameCtl.dirty || nameCtl.touched)" class="text-green-600">상품명을 입력해주세요.</p>
+        <p *ngIf="nameCtl.invalid && (nameCtl.dirty || nameCtl.touched)" class="text-red-600">상품명을 입력해주세요.</p>
         <div class="text-gray-500 font-bold flex-grow text-right">0/50</div>
       </div>
     </div>
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="purchasedCtl.invalid && (purchasedCtl.dirty || purchasedCtl.touched)" class="text-green-600 text-xs">구매시기를 선택해주세요.</p>
+        <p *ngIf="purchasedCtl.invalid && (purchasedCtl.dirty || purchasedCtl.touched)" class="text-red-600 text-xs">구매시기를 선택해주세요.</p>
       </div>
     </div>
     <div class="form-col w-1/2">
@@ -79,7 +79,7 @@
         </div>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)" class="text-green-600 text-xs">상품의 상태를 선택해주세요.</p>
+        <p *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)" class="text-red-600 text-xs">상품의 상태를 선택해주세요.</p>
       </div>
     </div>
   </div>
@@ -106,7 +106,7 @@
         </div>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="priceCtl.invalid && (priceCtl.dirty || priceCtl.touched)" class="text-green-600 text-xs">판매할 금액을 적어주세요.</p>
+        <p *ngIf="priceCtl.invalid && (priceCtl.dirty || priceCtl.touched)" class="text-red-600 text-xs">판매할 금액을 적어주세요.</p>
       </div>
     </div>
   </div>
@@ -134,7 +134,7 @@
           </div>
         </div>
       </div>
-      <p *ngIf="shippingCtl.invalid && (shippingCtl.dirty || shippingCtl.touched)" class="text-green-600 text-xs">거래방법을 선택해주세요.</p>
+      <p *ngIf="shippingCtl.invalid && (shippingCtl.dirty || shippingCtl.touched)" class="text-red-600 text-xs">거래방법을 선택해주세요.</p>
     </div>
   </div>
   <div class="form-row">
@@ -164,7 +164,7 @@
           maxlength="200"
           required>
       </div>
-      <p *ngIf="contactCtl.invalid && (contactCtl.dirty || contactCtl.touched)" class="text-green-600 text-xs">연락처를 적어주세요.</p>
+      <p *ngIf="contactCtl.invalid && (contactCtl.dirty || contactCtl.touched)" class="text-red-600 text-xs">연락처를 적어주세요.</p>
     </div>
   </div>
   <div class="form-row">
@@ -184,18 +184,22 @@
           maxlength="2000"
           required></textarea>
       </div>
-      <p *ngIf="memoCtl.invalid && (memoCtl.dirty || memoCtl.touched)" class="text-green-600 text-xs">내용을 적어주세요.</p>
+      <p *ngIf="memoCtl.invalid && (memoCtl.dirty || memoCtl.touched)" class="text-red-600 text-xs">내용을 적어주세요.</p>
     </div>
   </div>
-  <div class="flex items-center justify-between">
-    <button
-      type="button">
-      취소
-    </button>
-    <button
-      type="submit"
-      [disabled]="goodsForm.invalid || submitting">
-      저장
-    </button>
+  <div class="goods-form-footer">
+    <div class="max-w-xl p-2 mx-auto flex items-center justify-between">
+      <button
+        type="button"
+        class="btn-sm">
+        취소
+      </button>
+      <button
+        type="submit"
+        class="btn-sm"
+        [disabled]="goodsForm.invalid || submitting">
+        저장
+      </button>
+    </div>
   </div>
 </form>

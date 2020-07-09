@@ -11,9 +11,6 @@ import { Notice } from '@app/core/model';
 })
 export class PreferenceFavoriteGoodsComponent implements OnInit {
   profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), shareReplay());
-  noticeList$ = this.profile$.pipe(
-    switchMap(p => this.noticesService.valueChangesQueryByProfileId(p.id))
-  );
   favoriteGoodsList$ = this.profile$.pipe(
     switchMap(p => this.goodsFavoriteService.getQueryByProfileId(p.id))
   );

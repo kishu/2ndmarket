@@ -1,8 +1,9 @@
-<div class="w-full max-w-sm mx-auto p-4">
-  <h2 class="p-2 text-gray-800">Step-1. 메일주소 입력</h2>
-  <ng-container *ngIf="(step$ | async) === 'email'">
+<div class="w-full max-w-xl mx-auto p-4">
+  <h2 class="p-2 text-green-800">Step-1. 메일주소 입력</h2>
+  <ng-container *ngIf="(step$ | async) === 'email' || (step$ | async) === 'verify'">
     <form
       [formGroup]="emailForm"
+      [ngClass]="{'hidden': (step$ | async) === 'verify'}"
       (ngSubmit)="onEmailSubmit()">
       <div class="form-row">
         <div class="form-col w-full">
@@ -39,8 +40,8 @@
               </div>
             </div>
           </div>
-          <p class="py-1 px-3 text-green-600 text-xs" *ngIf="accountCtl.invalid && (accountCtl.dirty || accountCtl.touched)">이메일 계정을 입력해주세요.</p>
-          <p class="py-1 px-3 text-green-600 text-xs" *ngIf="accountCtl.valid && domainCtl.invalid && (domainCtl.dirty || domainCtl.touched)">이메일 도메인을 선택해주세요.</p>
+          <p class="py-1 px-3 text-red-600 text-xs" *ngIf="accountCtl.invalid && (accountCtl.dirty || accountCtl.touched)">이메일 계정을 입력해주세요.</p>
+          <p class="py-1 px-3 text-red-600 text-xs" *ngIf="accountCtl.valid && domainCtl.invalid && (domainCtl.dirty || domainCtl.touched)">이메일 도메인을 선택해주세요.</p>
         </div>
       </div>
       <div>
@@ -51,8 +52,8 @@
           {{ submitting ? '보내는 중...' : '이메일 보내기' }}
         </button>
       </div>
-      <p class="p-2 text-gray-500 text-xs">
-        회사 메일 인증 후 서비스를 이용할 수 있습니다.
+      <p class="p-2 text-green-800 text-xs opacity-50">
+        회사/학교 메일 인증 후 서비스를 이용할 수 있습니다.
       </p>
     </form>
   </ng-container>
@@ -79,7 +80,7 @@
               </button>
             </div>
           </div>
-          <p class="p-2 text-gray-500 text-xs">
+          <p class="p-2 text-green-800 text-xs opacity-50">
             위 메일 주소로 인증 메일을 보냈습니다.<br>
             메일에 포함된 인증번호를 아래 입력창에 입력하시면 서비스를 이용할 수 있습니다.<br>
             인증 메일을 받지 못하셨다면 재전송 버튼을 다시 한 번 눌러주세요.
@@ -89,7 +90,7 @@
 
       <div class="w-1/2 mx-auto h-px my-8 bg-gray-400"></div>
 
-      <h2 class="p-2 text-gray-800">Step-2. 인증번호 입력</h2>
+      <h2 class="p-2 text-green-800">Step-2. 인증번호 입력</h2>
       <div class="form-row">
         <div class="form-col w-full">
           <div class="bg-white">
@@ -102,19 +103,20 @@
                 type="tel"
                 formControlName="code"
                 class="text-sm"
+                [disabled]="verifyForm.errors?.timeover"
                 required>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 text-xs font-mono">
                 <app-limit-timer [time]="1000 * 60 * 3" (timeover)="onTimeoverLimitTimer()"></app-limit-timer>
               </div>
             </div>
           </div>
-          <p class="py-1 px-3 text-green-600 text-xs" *ngIf="codeCtl.invalid && (codeCtl.dirty || codeCtl.touched)">
+          <p class="py-1 px-3 text-red-600 text-xs" *ngIf="codeCtl.invalid && (codeCtl.dirty || codeCtl.touched)">
             인증번호를 입력하세요.
           </p>
-          <p class="py-1 px-3 text-green-600 text-xs" *ngIf="verifyForm.errors?.incorrect">
+          <p class="py-1 px-3 text-red-600 text-xs" *ngIf="verifyForm.errors?.incorrect">
             인증번호가 일치하지 않습니다.
           </p>
-          <p class="py-1 px-3 text-green-600 text-xs" *ngIf="verifyForm.errors?.timeover">
+          <p class="py-1 px-3 text-red-600 text-xs" *ngIf="verifyForm.errors?.timeover">
             입력시간이 지났습니다.
           </p>
         </div>
@@ -122,7 +124,8 @@
       <div class="flex justify-between">
         <button
           type="button"
-          class="btn-sm bg-transparent text-green-600">
+          class="btn-sm bg-transparent text-green-600"
+          (click)="onEmailSubmit()">
           인증번호 재전송
         </button>
         <button

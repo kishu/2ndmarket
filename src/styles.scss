@@ -81,7 +81,7 @@ textarea {
 }
 
 .form-label {
-  @apply block px-3 pt-2 mb-0 uppercase tracking-wide text-gray-700 text-xs font-bold;
+  @apply block px-3 pt-2 mb-0 uppercase tracking-wide text-gray-500 text-xs;
 }
 
 .goodsItem {
@@ -100,6 +100,7 @@ textarea {
 .goodsDetail {
   .goodsName {
     @apply leading-tight;
+    word-wrap: break-word;
   }
 }
 
@@ -215,8 +216,15 @@ textarea {
 
 .goods-form {
   @apply w-full max-w-xl mx-auto p-2;
-  padding-bottom: calc(constant(safe-area-inset-bottom) + 0.5rem);
-  padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 3rem);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 3rem);
+}
+
+.goods-form-footer {
+  @apply fixed left-0 right-0 bottom-0;
+  @apply border-t border-gray-500 border-opacity-50 bg-white;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .header,
@@ -299,4 +307,46 @@ app-header {
 
 .rounded-br-xlg.rounded-br-xlg {
   @apply rounded-br-xlg;
+}
+
+.active {
+  fill: #e53e3e;
+}
+
+.vibe {
+  animation: shake-top 2s cubic-bezier(0.455, 0.030, 0.515, 0.955) infinite both;
+}
+
+@keyframes shake-top {
+  0%,
+  50% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    -webkit-transform-origin: 50% 0;
+            transform-origin: 50% 0;
+  }
+  5% {
+    -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
+  }
+  10%,
+  20%,
+  30% {
+    -webkit-transform: rotate(-6deg);
+            transform: rotate(-6deg);
+  }
+  15%,
+  25%,
+  35% {
+    -webkit-transform: rotate(6deg);
+            transform: rotate(6deg);
+  }
+  40% {
+    -webkit-transform: rotate(-3deg);
+            transform: rotate(-3deg);
+  }
+  45% {
+    -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
+  }
 }
