@@ -1,9 +1,9 @@
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, GoodsService, GoodsFavoritesService, GroupsService, ProfilesService } from '@app/core/http';
-import { Goods, NewGoodsFavorite } from '@app/core/model';
+import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
+import { Goods, NewFavoriteGoods } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-detail',
@@ -47,7 +47,7 @@ export class GoodsDetailComponent implements OnInit {
     private groupService: GroupsService,
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
-    private goodsFavoritesService: GoodsFavoritesService
+    private goodsFavoritesService: FavoriteGoodsService
   ) {
   }
 
@@ -78,8 +78,8 @@ export class GoodsDetailComponent implements OnInit {
           userId: u.id,
           profileId: p.id,
           goodsId,
-          created: GoodsFavoritesService.serverTimestamp()
-        } as NewGoodsFavorite);
+          created: FavoriteGoodsService.serverTimestamp()
+        } as NewFavoriteGoods);
       })
     );
     const deleteGoodsFavorite$ = forkJoin([
@@ -109,13 +109,15 @@ export class GoodsDetailComponent implements OnInit {
 
   onClickDelete(goods: Goods) {
     if (confirm('삭제 할까요?')) {
-      this.router.navigate(['../'], { replaceUrl: true, relativeTo: this.activatedRoute }).then(() => {
-        return this.goodsService.moveToTrash(goods);
-      })
-      .then(
-        () => {},
-        (err) => alert(err)
-      );
+      this.router
+        .navigate(['../'], { replaceUrl: true, relativeTo: this.activatedRoute })
+        .then(() => {
+          return this.goodsService.moveToTrash(goods);
+        })
+        .then(
+          () => {},
+          (err) => alert(err)
+        );
     }
   }
 

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
-import { Notice } from '@app/core/model';
+import { Message } from '@app/core/model';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class NoticesService extends FirestoreService<Notice> {
+export class MessagesService extends FirestoreService<Message> {
 
   constructor(protected afs: AngularFirestore) {
-    super(afs, 'notices');
+    super(afs, 'messages');
   }
 
   valueChangesQueryByProfileId(profileId: string) {

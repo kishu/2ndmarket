@@ -35,30 +35,20 @@ export class AuthService {
     shareReplay(1)
   );
 
-  profile$: Observable<Profile> = combineLatest([
-    this.afAuth.user,
+  profile$: Observable<Profile | null> = combineLatest([
+    this.user$,
     this.selectProfileService.profileId$
   ]).pipe(
-    switchMap(([user, profileId]) => {
-      if (user && profileId) {
-        return this.userProfilesService.getQueryByUserIdAndProfileId(user.uid, profileId).pipe(
-          switchMap(userProfiles => {
-            if (userProfiles.length > 0) {
-              return this.profilesService.get(userProfiles[0].profileId);
+    switchMap(([user, selectedProfileId]) => {
+      if (user) {
+        return this.profilesService.getQueryByUserId(user.id).pipe(
+          map(profiles => {
+            if (selectedProfileId) {
+              return profiles.find(profile => profile.id === selectedProfileId) || null;
+            } else if (profiles.length > 0) {
+              return profiles[0];
             } else {
-              return of(null);
-            }
-          })
-        );
-      } else if (user && !profileId) {
-        return this.userProfilesService.getQueryByUserId(user.uid).pipe(
-          switchMap(userProfiles => {
-            if (userProfiles.length > 0) {
-              const selectedProfileId = userProfiles[0].profileId;
-              this.selectProfileService.select(selectedProfileId, false);
-              return this.profilesService.get(selectedProfileId);
-            } else {
-              return of(null);
+              return null;
             }
           })
         );
@@ -70,18 +60,11 @@ export class AuthService {
     shareReplay(1)
   );
 
-  group$: Observable<Group> = this.profile$.pipe(
-    filter(profile => !!profile),
-    switchMap(profile => this.groupsService.get(profile.groupId).pipe(first())),
-    shareReplay(1)
-  );
-
   constructor(
     private afAuth: AngularFireAuth,
     private userProfilesService: UserProfilesService,
     private profilesService: ProfilesService,
     private selectProfileService: ProfileSelectService,
-    private groupsService: GroupsService
   ) {
   }
 

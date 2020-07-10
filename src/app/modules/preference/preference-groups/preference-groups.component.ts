@@ -95,23 +95,18 @@ export class PreferenceGroupsComponent implements OnInit {
       return this.verifyForm.setErrors({ incorrect: true });
     }
     const domain = this.domainCtl.value;
-    const addNewProfile = (group, email) => {
+    const addNewProfile = (groupId, email, userId) => {
       return this.profilesService.add({
-        groupId: group.id,
+        groupId,
         displayName: email.split('@')[0],
         email,
         photoURL: '',
+        userIds: [userId],
         created: ProfilesService.serverTimestamp()
       } as NewProfile);
     };
-    const addNewUserProfile = (user, profileId) => {
-      return this.userProfilesService.add({
-        userId: user.id,
-        userEmail: user.email,
-        profileId,
-        activated: true,
-        created: UserProfilesService.serverTimestamp()
-      } as NewUserProfile);
+    const updateAddUserIdToProfile = (profileId, userId) => {
+      return this.profilesService.updateAddUserId(profileId, userId);
     };
     forkJoin([
       this.groups$.pipe(first(), map(groups => groups.find(g => g.domains.some(d => d === domain)))),
@@ -119,12 +114,10 @@ export class PreferenceGroupsComponent implements OnInit {
     ]).pipe(
       switchMap(([group, user]) => {
         return this.profilesService.getQueryByEmailAndGroupId(this.email, group.id).pipe(
-          switchMap(profiles => profiles.length === 0 ? addNewProfile(group, this.email).then(profile => profile.id) : of(profiles[0].id)),
-          switchMap(profileId => {
-            return this.userProfilesService.getQueryByUserIdAndProfileId(user.id, profileId).pipe(
-              switchMap(userProfiles => userProfiles.length === 0 ? addNewUserProfile(user, profileId) : of(null)),
-              tap(() => this.profileSelectService.select(profileId))
-            );
+          switchMap(profiles => {
+            return profiles.length === 0 ?
+              addNewProfile(group.id, this.email, user.id) :
+              updateAddUserIdToProfile(profiles[0].id, user.id);
           }),
           switchMap(() => this.router.navigate(['/groups', group.id, 'goods']))
         );

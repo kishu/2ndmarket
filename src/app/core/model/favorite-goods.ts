@@ -1,6 +1,6 @@
 import { firestore } from 'firebase';
 
-export interface GoodsFavorite {
+export interface FavoriteGoods {
   id: string;
   userId: string;
   profileId: string;
@@ -8,6 +8,6 @@ export interface GoodsFavorite {
   created: firestore.Timestamp;
 }
 
-export type NewGoodsFavorite = Omit<GoodsFavorite, 'id' | 'created'> & {
+export type NewFavoriteGoods = Omit<FavoriteGoods, 'id' | 'created'> & {
   created: firestore.FieldValue;
 };

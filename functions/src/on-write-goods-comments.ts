@@ -22,7 +22,7 @@ export const onWriteGoodsComments = functions
           commentsCnt: admin.firestore.FieldValue.increment(1),
           updated: admin.firestore.FieldValue.serverTimestamp()
         };
-        const newNotice = {
+        const newMessage = {
           profileId: goodsData?.profileId,
           goodsId: goodsDoc.id,
           goodsCommentId: goodsCommentDoc.id,
@@ -31,7 +31,7 @@ export const onWriteGoodsComments = functions
         }
         return Promise.all([
           goodsDoc.ref.update(partialGoods),
-          db.collection('notices').add(newNotice)
+          db.collection('messages').add(newMessage)
         ]);
       } else if (!created) {
         const partialGoods = {

@@ -1,4 +1,5 @@
 import { firestore } from 'firebase/app';
+import { Group } from '@app/core/model/group';
 
 export interface Profile {
   id: string;
@@ -7,6 +8,10 @@ export interface Profile {
   email: string;
   photoURL: string;
   created: firestore.Timestamp;
+}
+
+export interface ProfileExt extends Profile {
+  group: Group;
 }
 
 export type NewProfile = Omit<Profile, 'id' | 'created'> & {

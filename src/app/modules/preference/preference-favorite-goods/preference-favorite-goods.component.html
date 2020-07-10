@@ -1,23 +1,21 @@
-<div class="w-full max-w-xl py-2 mx-auto" *ngIf="favoriteGoodsList$ | async as favoriteGoodsList">
+<div class="w-full max-w-xl py-2 mx-auto" *ngIf="goodsList$ | async as goodsList">
   <div class="sticky-wrap bg-white shadow">
-    <h3 class="sticky safe-top z-20 border-b border-gray-300 p-2 text-green-800 bg-white">관심 상품({{favoriteGoodsList.length}})</h3>
+    <h3 class="sticky safe-top z-20 border-b border-gray-300 p-2 text-green-800 bg-white">관심 상품({{goodsList.length}})</h3>
     <ul class="grid grid-cols-3 md:grid-cols-4 gap-px p-2">
-      <li *ngFor="let favoriteGoods of favoriteGoodsList">
-        <ng-container *ngIf="favoriteGoods.goodsId | fsDocument:'goods' | async as goods">
-          <div class="relative square">
-            <a
-              class="absolute left-0 top-0 w-full h-full"
-              [routerLink]="['/groups', goods.groupId, 'goods', goods.id]">
-              <img
-                *ngIf="!!goods.images[0]"
-                [src]="goods.images[0]"
-                class="block w-full h-full object-cover"
-                [ngClass]="{'opacity-50': goods.soldOut}"
-                alt="{{ goods.name }}">
-              <span class="absolute left-0 right-0 top-0 bottom-0 h-8 bg-black bg-opacity-75 text-white text-sm m-auto flex justify-center items-center" *ngIf="goods.soldOut">판매완료</span>
-            </a>
-          </div>
-        </ng-container>
+      <li *ngFor="let goods of goodsList">
+        <div class="relative square">
+          <a
+            class="absolute left-0 top-0 w-full h-full"
+            [routerLink]="['/groups', goods.groupId, 'goods', goods.id]">
+            <img
+              *ngIf="!!goods.images[0]"
+              [src]="goods.images[0]"
+              class="block w-full h-full object-cover"
+              [ngClass]="{'opacity-50': goods.soldOut}"
+              alt="{{ goods.name }}">
+            <span class="absolute left-0 right-0 top-0 bottom-0 h-8 bg-black bg-opacity-75 text-white text-sm m-auto flex justify-center items-center" *ngIf="goods.soldOut">판매완료</span>
+          </a>
+        </div>
       </li>
     </ul>
   </div>

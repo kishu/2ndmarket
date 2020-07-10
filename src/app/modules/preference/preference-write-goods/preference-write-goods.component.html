@@ -1,4 +1,4 @@
-<div class="w-full max-w-xl py-2 mx-auto" *ngIf="writeGoodsList$ | async as goodsList">
+<div class="w-full max-w-xl py-2 mx-auto" *ngIf="goodsList$ | async as goodsList">
   <div class="sticky-wrap bg-white shadow">
     <h3 class="sticky safe-top z-20 border-b border-gray-300 p-2 text-green-800 bg-white">등록한 상품({{goodsList.length}})</h3>
     <ul class="grid grid-cols-3 md:grid-cols-4 gap-px p-2">

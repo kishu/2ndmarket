@@ -1,8 +1,6 @@
-import { BehaviorSubject, of } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GoodsFavoritesService, GoodsService, NoticesService } from '@app/core/http';
-import { Notice } from '@app/core/model';
+import { AuthService } from '@app/core/http';
+import { PersistenceService } from '@app/core/persistence';
 
 @Component({
   selector: 'app-preference-favorite-goods, [app-preference-favorite-goods]',
@@ -10,23 +8,15 @@ import { Notice } from '@app/core/model';
   styleUrls: ['./preference-favorite-goods.component.scss']
 })
 export class PreferenceFavoriteGoodsComponent implements OnInit {
-  profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), shareReplay());
-  favoriteGoodsList$ = this.profile$.pipe(
-    switchMap(p => this.goodsFavoriteService.getQueryByProfileId(p.id))
-  );
+  goodsList$ = this.persistenceService.favoriteGoods$;
 
   constructor(
     private authService: AuthService,
-    private goodsService: GoodsService,
-    private goodsFavoriteService: GoodsFavoritesService,
-    private noticesService: NoticesService,
+    private persistenceService: PersistenceService
   ) {
   }
 
   ngOnInit(): void {
   }
 
-  trackById(index, item) {
-    return item.id;
-  }
 }

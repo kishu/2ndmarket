@@ -1,8 +1,7 @@
-import { BehaviorSubject, of } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, NoticesService } from '@app/core/http';
-import { Notice } from '@app/core/model';
+import { AuthService, MessagesService } from '@app/core/http';
+import { PersistenceService } from '@app/core/persistence';
+import { MessageExt } from '@app/core/model';
 
 @Component({
   selector: 'app-preference-messages, [app-preference-messages]',
@@ -10,14 +9,12 @@ import { Notice } from '@app/core/model';
   styleUrls: ['./preference-messages.component.scss']
 })
 export class PreferenceMessagesComponent implements OnInit {
-  profile$ = this.authService.profile$.pipe(first(), filter(p => !!p), shareReplay());
-  noticeList$ = this.profile$.pipe(
-    switchMap(p => this.noticesService.valueChangesQueryByProfileId(p.id))
-  );
+  messageExts$ = this.persistenceService.messageExts$;
 
   constructor(
     private authService: AuthService,
-    private noticesService: NoticesService,
+    private messagesService: MessagesService,
+    private persistenceService: PersistenceService
   ) {
   }
 
@@ -28,15 +25,16 @@ export class PreferenceMessagesComponent implements OnInit {
     return item.id;
   }
 
-  onClickNotice(e: Event, notice: Notice) {
+  onClickMessage(e: Event, target: MessageExt) {
     e.preventDefault();
-    this.noticesService.updateRead(notice.id);
+    this.messagesService.updateRead(target.id);
   }
 
-  onClickDeleteNotice(target: Notice) {
-    this.noticesService.delete(target.id);
-    this.noticeList$.pipe(
-      map(nl => nl.filter(n => n.id !== target.id))
-    ).subscribe(nl => this.noticeList$ = of(nl));
+  onClickDeleteNotice(target: MessageExt) {
+    this.messagesService.delete(target.id);
+    alert('dom 직접 삭제?');
+    // this.noticeList$.pipe(
+    //   map(nl => nl.filter(n => n.id !== target.id))
+    // ).subscribe(nl => this.noticeList$ = of(nl));
   }
 }
