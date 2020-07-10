@@ -38,6 +38,16 @@ export class GoodsService extends FirestoreService<Goods> {
     });
   }
 
+  valueChangesByGroupId(groupId: string): Observable<Goods[]> {
+    return super.valueChangesQuery({
+      where: [
+        ['groupId', '==', groupId],
+        ['activated', '==', true]
+      ],
+      orderBy: [['updated', 'desc']]
+    });
+  }
+
   getQueryByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
     return super.getQuery({
       where: [['profileId', '==', profileId]],
