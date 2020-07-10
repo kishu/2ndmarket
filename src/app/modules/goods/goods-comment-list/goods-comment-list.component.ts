@@ -72,4 +72,8 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
     }
   }
 
+  trackById(index, item) {
+    return item.id;
+  }
+
 }

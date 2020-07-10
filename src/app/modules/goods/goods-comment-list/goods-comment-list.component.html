@@ -3,10 +3,10 @@
   <ul>
     <li
       class="py-1"
-      *ngFor="let comment of commentList">
+      *ngFor="let comment of commentList trackBy:trackById">
       <div
         class="flex -mx-1"
-        *ngFor="let talk of comment; first as isFirst; last as isLast"
+        *ngFor="let talk of comment trackBy:trackById; first as isFirst; last as isLast"
         [ngClass]="{'mine': talk.permission}">
         <ng-container *ngIf="talk.profileId | fsDocument:'profiles' | async as profile">
           <div
