@@ -1,58 +1,58 @@
 <div class="p-3">
-  <ul class="goods-images">
+  <ol class="goods-images">
     <li
       class="relative border border-white"
       *ngFor="let image of draftImages; let i = index; first as isFirst; last as isLast">
       <div
         class="attachImage"
-        [ngClass]="{'selected': image.selected}"
+        [ngClass]="{'selected': image.selected, 'unselected': hasSelectedItem && !image.selected}"
         [style.transform]="'rotate(' + image.rotate + 'deg)'">
         <img
           [src]="image.isFile ? (image.file | objectUrl | sanitizer: 'url') : image.src"
           class="image"
           alt=""
-          (click)="onSelectImage(image);">
+          (click)="onToggleSelectImage(image);">
       </div>
       <div
         *ngIf="image.selected"
-        class="fixed left-0 right-0 bottom-0 border-t border-white z-10">
-        <div class="flex border border-gray-700 bg-gray-700">
+        class="fixed left-0 right-0 bottom-0 p-safe-bottom  bg-white z-30">
+        <div class="flex max-w-xl mx-auto items-center" style="height: 47px;">
           <button
             type="button"
-            class="m-px border border-gray-600 flex-grow bg-gray-600 flex justify-center items-center"
+            class="border-white flex-grow flex justify-center items-center"
             [disabled]="isFirst"
             (click)="onClickMoveImage(i, i - 1)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2f855a" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
           </button>
           <button
             type="button"
-            class="m-px border border-gray-600 flex-grow bg-gray-600 flex justify-center items-center"
+            class="border-white flex-grow flex justify-center items-center"
             [disabled]="isLast"
             (click)="onClickMoveImage(i, i + 1)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2f855a" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
           </button>
           <button
             type="button"
-            class="m-px border border-gray-600 flex-grow bg-gray-600 flex justify-center items-center"
+            class="border-white flex-grow flex justify-center items-center"
             (click)="onClickRotateImage(image, 90)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V10l4.55-4.45zM19.93 11c-.17-1.39-.72-2.73-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47h2.02zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03zm3.89-2.42l1.42 1.41c.9-1.16 1.45-2.5 1.62-3.89h-2.02c-.14.87-.48 1.72-1.02 2.48z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2f855a" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V10l4.55-4.45zM19.93 11c-.17-1.39-.72-2.73-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47h2.02zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03zm3.89-2.42l1.42 1.41c.9-1.16 1.45-2.5 1.62-3.89h-2.02c-.14.87-.48 1.72-1.02 2.48z"/></svg>
           </button>
           <button
             type="button"
-            class="m-px border border-gray-600 flex-grow bg-gray-600 flex justify-center items-center"
+            class="border-white flex-grow flex justify-center items-center"
             (click)="onClickDeleteImage(image)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2f855a" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/></svg>
           </button>
           <button
             type="button"
-            class="m-px border border-gray-600 flex-grow bg-gray-600 flex justify-center items-center"
+            class="border-white flex-grow flex justify-center items-center"
             (click)="onBlurImage(image)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#2f855a" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
           </button>
         </div>
       </div>
     </li>
-  </ul>
+  </ol>
   <div class="relative border border-white bg-green-700">
     <div class="flex justify-center items-center p-1">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>

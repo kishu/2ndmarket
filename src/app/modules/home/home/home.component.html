@@ -38,7 +38,7 @@
                 <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2" alt="">
                 <span class="flex-grow text-left text-sm ellipsis">{{ profile.displayName }}</span>
                 <span class="inline-block px-2 py-1 bg-green-600 text-white text-xs leading-tight uppercase">
-                  {{ group.name }}
+                  {{ group.id }}
                   {{ (selectedProfileId$ | async) === profile.id ? '선택됨' : '' }}
                 </span>
               </button>
@@ -46,7 +46,7 @@
           </ng-container>
         </li>
       </ul>
-      <a [routerLink]="['preference/groups']" class="block p-2 bg-green-600 text-white text-center text-sm">그룹추가</a>
     </div>
+    <a [routerLink]="['preference/groups']" class="block m-2 p-2 bg-green-600 text-white text-center text-sm">그룹추가</a>
   </ng-container>
 </div>

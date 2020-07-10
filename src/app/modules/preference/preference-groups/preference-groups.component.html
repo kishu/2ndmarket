@@ -47,7 +47,7 @@
       <div>
         <button
           type="submit"
-          class="btn-sm block w-full"
+          class="btn-sm block w-full border-green-600 bg-green-600"
           [disabled]="!emailForm.valid">
           {{ submitting ? '보내는 중...' : '이메일 보내기' }}
         </button>
@@ -124,13 +124,13 @@
       <div class="flex justify-between">
         <button
           type="button"
-          class="btn-sm bg-transparent text-green-600"
+          class="btn-sm border-green-600 bg-white text-green-600"
           (click)="onEmailSubmit()">
           인증번호 재전송
         </button>
         <button
           type="submit"
-          class="btn-sm"
+          class="btn-sm border-green-600 bg-green-600"
           [disabled]="!verifyForm.valid">
           인증
         </button>

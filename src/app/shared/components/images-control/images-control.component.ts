@@ -32,6 +32,8 @@ export class ImagesControlComponent implements OnInit {
   //   });
   // }
 
+  hasSelectedItem: boolean;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -45,13 +47,19 @@ export class ImagesControlComponent implements OnInit {
     target.value = '';
   }
 
-  onSelectImage(target: DraftImage) {
-    this.draftImages.filter(image => image.selected).map(image => delete image.selected);
-    target.selected = true;
+  onToggleSelectImage(target: DraftImage) {
+    if (target.selected) {
+      this.onBlurImage(target);
+    } else {
+      this.draftImages.filter(image => image.selected).map(image => delete image.selected);
+      target.selected = true;
+      this.hasSelectedItem = true;
+    }
   }
 
   onBlurImage(target: DraftImage) {
     delete target.selected;
+    delete this.hasSelectedItem;
   }
 
   onClickMoveImage(from: number, to: number) {
@@ -70,6 +78,8 @@ export class ImagesControlComponent implements OnInit {
 
   onClickDeleteImage(target: DraftImage) {
     this.draftImages = this.draftImages.filter(image =>  image !== target );
+    delete target.selected;
+    delete this.hasSelectedItem;
   }
 
 }

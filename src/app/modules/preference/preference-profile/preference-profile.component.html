@@ -1,23 +1,42 @@
-<div class="w-full max-w-xl py-2 mx-auto">
-  <div
-    class="mt-5"
-    *ngIf="profile$ | async as profile">
-    <div class="w-32 h-32 mx-auto overflow-hidden rounded-full">
-      <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-full h-full" alt="">
+<div class="w-full max-w-xl pt-8 pb-24 mx-auto">
+  <ng-container *ngIf="profile$ | async as profile">
+    <form
+      *ngIf="profile"
+      class="profile-form"
+      [formGroup]="profileForm"
+      (ngSubmit)="onSubmit()">
+      <div class="w-2/3 max-w-xs mx-auto">
+        <div class="relative w-32 h-32 mx-auto overflow-hidden rounded-full">
+          <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-full h-full" alt="">
+          <input
+            type="file"
+            accept="image/gif, image/jpeg, image/png"
+            class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
+        </div>
+        <div class="mt-4 bg-white">
+          <label class="form-label" for="name">
+            닉네임
+          </label>
+          <input
+            class=""
+            id="displayName"
+            name="displayName"
+            type="text"
+            formControlName="displayName"
+            placeholder="닉네임을 입력해주세요."
+            minlength="2"
+            maxlength="20"
+            required>
+        </div>
+        <div class="mt-1">
+          <button type="submit" class="block w-full btn-sm border-green-600 bg-green-600">변경</button>
+        </div>
+      </div>
+    </form>
+    <div class="fixed left-0 right-0 bottom-0 bg-white">
+      <div class="max-w-xl mx-auto p-2">
+        <a class="block btn btn-sm border-green-600 bg-green-600 text-center" (click)="onClickSignOut($event)">{{ profile.email }} <span class="inline-block">연결 해제</span></a>
+      </div>
     </div>
-    <div>
-      <div>{{ profile.displayName }}</div>
-      <div>{{ profile.email }}</div>
-    </div>
-    <div>
-      <a routerLink="/preference/groups">그룹설정</a>
-    </div>
-  </div>
-  <div>
-    <a class="block btn btn-sm" (click)="onClickSignOut($event)">sign-out</a>
-  </div>
-  <ul>
-    <li><a [routerLink]="['/preference', 'write-goods']">등록한 상품</a></li>
-    <li><a [routerLink]="['/preference', 'favorite-goods']">좋아요 상품</a></li>
-  </ul>
+  </ng-container>
 </div>
