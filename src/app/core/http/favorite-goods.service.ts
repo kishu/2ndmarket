@@ -11,7 +11,7 @@ import { FavoriteGoods, NewFavoriteGoods } from '@app/core/model';
 export class FavoriteGoodsService extends FirestoreService<FavoriteGoods> {
 
   constructor(protected afs: AngularFirestore) {
-    super(afs, 'goodsFavorites');
+    super(afs, 'favoriteGoods');
   }
 
   add(newGoodsFavorite: NewFavoriteGoods) {
