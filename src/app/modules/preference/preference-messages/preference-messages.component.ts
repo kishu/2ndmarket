@@ -27,7 +27,9 @@ export class PreferenceMessagesComponent implements OnInit {
 
   onClickMessage(e: Event, target: MessageExt) {
     e.preventDefault();
-    this.messagesService.updateRead(target.id);
+    if (!target.read) {
+      this.messagesService.updateRead(target.id);
+    }
   }
 
   onClickDeleteNotice(target: MessageExt) {
