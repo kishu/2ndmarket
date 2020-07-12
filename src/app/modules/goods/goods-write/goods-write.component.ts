@@ -1,5 +1,3 @@
-import * as faker from 'faker';
-faker.locale = 'ko';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
@@ -35,22 +33,22 @@ export class GoodsWriteComponent implements OnInit {
         userId: u.id,
         groupId: p.groupId,
         profileId: p.id,
-        name: faker.commerce.productName(),
+        name: '',
         shared: false,
-        purchased: GoodsPurchased.week,
-        condition: GoodsCondition.almostNew,
-        price: faker.commerce.price(),
-        shipping: GoodsShipping.delivery,
+        purchased: '',
+        condition: '',
+        price: undefined,
+        shipping: '',
         images: [],
-        contact: faker.phone.phoneNumber(),
-        memo: faker.lorem.paragraphs(),
+        contact: '',
+        memo: '',
         soldOut: false,
         favoritesCnt: 0,
         commentsCnt: 0,
         created: GoodsService.serverTimestamp(),
         updated: GoodsService.serverTimestamp()
-      })),
-      switchMap((g: NewGoods) => of(g))
+      } as unknown as NewGoods)),
+      switchMap(g => of(g))
     );
   }
 
