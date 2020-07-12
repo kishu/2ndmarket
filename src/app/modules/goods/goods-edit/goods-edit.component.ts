@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
+import { HttpProgressEvent } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CloudinaryUploadService, GoodsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
@@ -12,6 +13,7 @@ import { Goods } from '@app/core/model';
 export class GoodsEditComponent implements OnInit {
   submitting = false;
   goods$: Observable<Goods>;
+  uploadProgress: HttpProgressEvent;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -32,7 +34,7 @@ export class GoodsEditComponent implements OnInit {
     this.submitting = true;
     draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${goods.id}`}));
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
-    // uploadProgress$.subscribe(p => console.log(p));
+    uploadProgress$.subscribe(e => this.uploadProgress = e); // {type: 1, loaded: 163840, total: 165310}
     uploadComplete$.subscribe(images => {
       goods = {...goods, images};
       this.goodsService.update(goods.id, goods).then(

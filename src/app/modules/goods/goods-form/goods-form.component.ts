@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Goods, NewGoods, DraftImage } from '@app/core/model';
 import { ImagesControlComponent } from '@app/shared/components/images-control/images-control.component';
 
@@ -9,6 +9,12 @@ import { ImagesControlComponent } from '@app/shared/components/images-control/im
   styleUrls: ['./goods-form.component.scss']
 })
 export class GoodsFormComponent implements OnInit {
+  maxImages = 10;
+  @Input() goods: NewGoods | Goods;
+  @Input() submitting = false;
+  @Output() formSubmit = new EventEmitter<{ goods: NewGoods | Partial<Goods>, draftImages: DraftImage[] }>();
+  @ViewChild(ImagesControlComponent) imagesCtl: ImagesControlComponent;
+
   goodsForm = this.fb.group({
     name: [],
     shared: [],
@@ -20,11 +26,6 @@ export class GoodsFormComponent implements OnInit {
     memo: [],
     soldOut: [],
   });
-
-  @Input() goods: NewGoods | Goods;
-  @Input() submitting = false;
-  @Output() formSubmit = new EventEmitter<{ goods: NewGoods | Partial<Goods>, draftImages: DraftImage[] }>();
-  @ViewChild(ImagesControlComponent) imagesCtl: ImagesControlComponent;
 
   get nameCtl() { return this.goodsForm.get('name'); }
   // get sharedCtl() { return this.goodsForm.get('shared'); }
@@ -48,6 +49,11 @@ export class GoodsFormComponent implements OnInit {
 
   onSubmit() {
     this.submitting = true;
+    if (this.imagesCtl.draftImages.length === 0) {
+      alert(`이미지를 선택해 주세요(최대 ${this.maxImages}장)`);
+      this.submitting = false;
+      return;
+    }
     this.goods = { ...this.goods, ...this.goodsForm.value };
     this.formSubmit.emit({ goods: this.goods, draftImages: this.imagesCtl?.draftImages });
   }

@@ -2,8 +2,9 @@ import * as faker from 'faker';
 faker.locale = 'ko';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { HttpProgressEvent } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
 import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
@@ -16,6 +17,7 @@ import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/co
 export class GoodsWriteComponent implements OnInit {
   submitting = false;
   goods$: Observable<NewGoods>;
+  uploadProgress: HttpProgressEvent;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -63,7 +65,7 @@ export class GoodsWriteComponent implements OnInit {
     const createdId = this.goodsService.createId();
     draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${createdId}`}));
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
-    // uploadProgress$.subscribe(p => console.log(p)); // {type: 1, loaded: 163840, total: 165310}
+    uploadProgress$.subscribe(e => this.uploadProgress = e); // {type: 1, loaded: 163840, total: 165310}
     uploadComplete$.subscribe(images => {
       goods = {...goods, images};
       this.goodsService.create(createdId, goods).then(

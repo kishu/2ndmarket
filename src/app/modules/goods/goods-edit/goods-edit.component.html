@@ -1,3 +1,8 @@
 <ng-container *ngIf="(goods$ | async) as goods">
   <app-goods-form [goods]="goods" [submitting]="submitting" (formSubmit)="onSubmit($event)"></app-goods-form>
+  <div *ngIf="submitting" style="position:absolute; top:0;left:0;right:0;bottom:0;background:#fff;opacity:.9">
+    <div style="position:absolute; top:50%;left:50%;transform:translate(-50%, -50%)">
+      업로드... <span *ngIf="uploadProgress">{{ uploadProgress.loaded + '/' + uploadProgress.total }}</span>
+    </div>
+  </div>
 </ng-container>
