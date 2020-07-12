@@ -28,7 +28,7 @@ export class CloudinaryUploadService {
     };
     const cloudinary = environment.cloudinary;
     const folder = cloudinary.folder;
-    const eager = `f_auto,q_auto,w_375,a_${rotate},dpr_2.0,c_limit`;
+    const eager = `f_auto,q_70,w_375,a_${rotate},dpr_2.0,c_limit`;
     const eagerAsync = true;
     const timestamp = Date.now();
     // Sort all the parameters in alphabetical order.

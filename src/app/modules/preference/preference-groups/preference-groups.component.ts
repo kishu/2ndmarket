@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { AuthService, GroupsService, ProfilesService, UserProfilesService } from '@app/core/http';
-import { NewProfile, NewUserProfile } from '@app/core/model';
+import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
+import { NewProfile } from '@app/core/model';
 import { ProfileSelectService } from '@app/core/util';
 
 enum GroupAddStep {
@@ -41,7 +41,6 @@ export class PreferenceGroupsComponent implements OnInit {
     private authService: AuthService,
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
-    private userProfilesService: UserProfilesService,
     private profileSelectService: ProfileSelectService
   ) {
     this.step$.subscribe(step => {
@@ -69,6 +68,7 @@ export class PreferenceGroupsComponent implements OnInit {
     this.submitting = true;
     const to = this.email;
     const code = random(1000, 9999);
+    console.log(code);
     const callable = this.fns.httpsCallable('sendVerificationEmail');
     callable({to, code}).pipe(first()).subscribe(() => {
       // i don't know why this subscribe function run outside of ngzone.
@@ -116,8 +116,8 @@ export class PreferenceGroupsComponent implements OnInit {
         return this.profilesService.getQueryByEmailAndGroupId(this.email, group.id).pipe(
           switchMap(profiles => {
             return profiles.length === 0 ?
-              addNewProfile(group.id, this.email, user.id) :
-              updateAddUserIdToProfile(profiles[0].id, user.id);
+              addNewProfile(group.id, this.email, user.id).then(profile => this.profileSelectService.select(profile.id)) :
+              updateAddUserIdToProfile(profiles[0].id, user.id).then(() => this.profileSelectService.select(profiles[0].id));
           }),
           switchMap(() => this.router.navigate(['/groups', group.id, 'goods']))
         );

@@ -7,6 +7,7 @@ export interface Profile {
   displayName: string;
   email: string;
   photoURL: string;
+  userIds: string[];
   created: firestore.Timestamp;
 }
 

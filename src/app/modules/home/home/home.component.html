@@ -1,10 +1,12 @@
 <div class="w-full max-w-xl py-2 mx-auto">
   <h2 class="flex justify-between">
     <a [routerLink]="['preference/profile']" class="flex">
-      <img [src]="'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
-      <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
-        <span class="block text-sm ellipsis">{{ (profile$ | async)?.displayName }} 프로필 설정</span>
-      </span>
+      <ng-container *ngIf="profile$ | async as profile">
+        <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
+        <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+          <span class="block text-sm ellipsis">{{ profile.displayName }} 프로필 설정</span>
+        </span>
+      </ng-container>
     </a>
   </h2>
 

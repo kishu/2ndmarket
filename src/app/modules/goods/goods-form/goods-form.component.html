@@ -15,13 +15,13 @@
           name="name"
           type="text"
           formControlName="name"
-          placeholder="상품명을 입력해주세요."
+          placeholder="상품명을 입력해 주세요."
           minlength="2"
           maxlength="200"
           required>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="nameCtl.invalid && (nameCtl.dirty || nameCtl.touched)" class="text-red-600">상품명을 입력해주세요.</p>
+        <p *ngIf="nameCtl.invalid && (nameCtl.dirty || nameCtl.touched)" class="text-red-600">상품명을 입력해 주세요.</p>
         <div class="text-gray-500 font-bold flex-grow text-right">0/50</div>
       </div>
     </div>
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="purchasedCtl.invalid && (purchasedCtl.dirty || purchasedCtl.touched)" class="text-red-600 text-xs">구매시기를 선택해주세요.</p>
+        <p *ngIf="purchasedCtl.invalid && (purchasedCtl.dirty || purchasedCtl.touched)" class="text-red-600 text-xs">구매시기를 선택해 주세요.</p>
       </div>
     </div>
     <div class="form-col w-1/2">
@@ -79,7 +79,7 @@
         </div>
       </div>
       <div class="flex justify-between py-1 px-3 text-xs">
-        <p *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)" class="text-red-600 text-xs">상품의 상태를 선택해주세요.</p>
+        <p *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)" class="text-red-600 text-xs">상품의 상태를 선택해 주세요.</p>
       </div>
     </div>
   </div>
@@ -96,7 +96,7 @@
             name="price"
             type="tel"
             formControlName="price"
-            placeholder="판매금액을 입력해주세요."
+            placeholder="판매금액을 입력해 주세요."
             minlength="1"
             maxlength="10"
             required>
@@ -134,7 +134,7 @@
           </div>
         </div>
       </div>
-      <p *ngIf="shippingCtl.invalid && (shippingCtl.dirty || shippingCtl.touched)" class="text-red-600 text-xs">거래방법을 선택해주세요.</p>
+      <p *ngIf="shippingCtl.invalid && (shippingCtl.dirty || shippingCtl.touched)" class="text-red-600 text-xs">거래방법을 선택해 주세요.</p>
     </div>
   </div>
   <div class="form-row">

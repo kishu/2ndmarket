@@ -49,4 +49,14 @@ export class ProfilesService extends FirestoreService<Profile> {
     });
   }
 
+  updateRemoveUserId(profileId: string, userId: string) {
+    return super.update(profileId, {
+      userIds: firestore.FieldValue.arrayRemove(userId)
+    });
+  }
+
+  update(profileId: string, profile: Partial<Profile>) {
+    return super.update(profileId, profile);
+  }
+
 }
