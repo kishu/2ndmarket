@@ -14,24 +14,6 @@ export class ImagesControlComponent implements OnInit {
   }
 
   draftImages: DraftImage[] = [];
-
-  // get draftImages() {
-  //   return this._draftImages.map(img => {
-  //     if (!img.isFile && img.rotate > 0) {
-  //       const origin = parse(img.src);
-  //       const pathnames = origin.pathname.split('/');
-  //       const options = pathnames[4]?.split(',');
-  //       if (options[3]?.startsWith('a_')) {
-  //         const rotate = parseInt(options[3].replace('a_', ''), 10);
-  //         options[3] = `a_${(img.rotate + rotate) % 360}`;
-  //         pathnames[4] = options.join(',');
-  //       }
-  //       img.src = `${origin.protocol}//${origin.host}${pathnames.join('/')}`;
-  //     }
-  //     return img;
-  //   });
-  // }
-
   hasSelectedItem: boolean;
 
   constructor() { }
@@ -39,12 +21,30 @@ export class ImagesControlComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onClickFile(e: Event) {
+    const target = e.target as HTMLInputElement;
+    if (this.draftImages.length >= this.maxlength) {
+      alert(`이미지는 ${this.maxlength}개까지 첨부할 수 있습니다.`);
+      target.value = '';
+      e.preventDefault();
+    }
+  }
+
   onChangeFile(e: Event) {
     const target = e.target as HTMLInputElement;
+    let end = target.files.length;
+    if (target.files.length + this.draftImages.length > this.maxlength) {
+      if (confirm(`이미지를 ${this.maxlength}개까지 만 첨부합니다.`)) {
+        end = this.maxlength - this.draftImages.length;
+      } else {
+        e.preventDefault();
+        target.value = '';
+        return;
+      }
+    }
     this.draftImages = this.draftImages.concat(
-      Array.from(target.files).map(file => ({ isFile: true, file, rotate: 0 } as DraftImage))
+      Array.from(target.files).slice(0, end).map(file => ({ isFile: true, file, rotate: 0 } as DraftImage))
     );
-    target.value = '';
   }
 
   onToggleSelectImage(target: DraftImage) {
