@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AuthService, MessagesService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
 import { MessageExt } from '@app/core/model';
@@ -12,6 +12,7 @@ export class PreferenceMessagesComponent implements OnInit {
   messageExts$ = this.persistenceService.messageExts$;
 
   constructor(
+    private renderer: Renderer2,
     private authService: AuthService,
     private messagesService: MessagesService,
     private persistenceService: PersistenceService
@@ -32,11 +33,8 @@ export class PreferenceMessagesComponent implements OnInit {
     }
   }
 
-  onClickDeleteNotice(target: MessageExt) {
+  onClickDeleteNotice(target: MessageExt, targetEl: HTMLElement) {
+    this.renderer.setStyle(targetEl, 'display', 'none');
     this.messagesService.delete(target.id);
-    alert('dom 직접 삭제?');
-    // this.noticeList$.pipe(
-    //   map(nl => nl.filter(n => n.id !== target.id))
-    // ).subscribe(nl => this.noticeList$ = of(nl));
   }
 }
