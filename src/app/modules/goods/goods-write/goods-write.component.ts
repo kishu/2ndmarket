@@ -37,7 +37,7 @@ export class GoodsWriteComponent implements OnInit {
         shared: false,
         purchased: '',
         condition: '',
-        price: undefined,
+        price: null,
         shipping: '',
         images: [],
         contact: '',
