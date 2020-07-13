@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="relative md:w-7/12 px-4 py-3 md:pb-16">
-          <h3 class="goodsName">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>
+          <h3 class="goodsName tracking-tight">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>
           <div class="font-bold">{{ goods.price | number:'2.' }}원</div>
           <span class="absolute right-0 bottom-0 px-4 py-3 text-sm leading-relaxed text-gray-500 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#a0aec0" width="18px" height="18px" class="mr-px">
@@ -39,4 +39,12 @@
   </ul>
 </ng-container>
 
-<a [routerLink]="['new', 'edit']" class="fixed left-0 bottom-0 bg-green-700 text-white p-2 m-2">상품등록</a>
+<div class="fixed left-0 bottom-0 p-safe-bottom">
+  <a [routerLink]="['new', 'edit']" class="block rounded-full bg-green-700 text-white p-2 m-2">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px">
+      <path d="M0 0h24v24H0V0z" fill="none"/>
+      <path d="M5 18.08V19h.92l9.06-9.06-.92-.92z" opacity=".3"/>
+      <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29s-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM5.92 19H5v-.92l9.06-9.06.92.92L5.92 19z"/>
+    </svg>
+  </a>
+</div>

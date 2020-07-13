@@ -86,7 +86,7 @@ export class PreferenceProfileComponent implements OnInit {
   }
 
   onRemoveProfile() {
-    if (!confirm('프로필을 삭제하면 되돌릴 수 없습니다. 그래도 삭제할까요?')) {
+    if (!confirm('프로필 연결을 해제하시겠습니까?\n등록하신 상품과 댓글을 지워지지 않습니다.\n(메일 재인증을 통해 언제든 프로필을 다시 연결할 수 있습니다.)')) {
       return;
     }
     forkJoin([

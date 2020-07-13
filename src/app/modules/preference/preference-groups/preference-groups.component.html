@@ -7,7 +7,7 @@
       (ngSubmit)="onEmailSubmit()">
       <div class="form-row">
         <div class="form-col w-full">
-          <div class="bg-white">
+          <div class="bg-white shadow">
             <div class="flex">
               <div class="w-4/12">
                 <label class="form-label" for="account">이메일</label>
@@ -44,7 +44,7 @@
           <p class="py-1 px-3 text-red-600 text-xs" *ngIf="accountCtl.valid && domainCtl.invalid && (domainCtl.dirty || domainCtl.touched)">이메일 도메인을 선택해 주세요.</p>
         </div>
       </div>
-      <div>
+      <div class="mt-1">
         <button
           type="submit"
           class="btn-sm block w-full border-green-600 bg-green-600"
@@ -64,7 +64,7 @@
       (ngSubmit)="onVerifySubmit()">
       <div class="form-row">
         <div class="form-col w-full">
-          <div class="bg-white">
+          <div class="bg-white shadow">
             <label class="form-label" for="account">이메일</label>
             <div class="relative">
               <input
@@ -93,7 +93,7 @@
       <h2 class="p-2 text-green-800">Step-2. 인증번호 입력</h2>
       <div class="form-row">
         <div class="form-col w-full">
-          <div class="bg-white">
+          <div class="bg-white shadow">
             <label class="form-label" for="code">인증번호</label>
             <div class="relative">
               <input
@@ -121,7 +121,7 @@
           </p>
         </div>
       </div>
-      <div class="flex justify-between">
+      <div class="flex justify-between mt-1">
         <button
           type="button"
           class="btn-sm border-green-600 bg-white text-green-600"

@@ -7,7 +7,7 @@
       (ngSubmit)="onSubmit()">
       <div class="w-2/3 max-w-xs mx-auto">
         <div class="relative w-32 h-32 mx-auto overflow-hidden rounded-full">
-          <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full" alt="">
+          <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt="">
           <input
             type="file"
             accept="image/gif, image/jpeg, image/png"
@@ -17,7 +17,7 @@
         <div *ngIf="photoFile">
           <button type="button" (click)="onCancelChangeFile($event)">취소</button>
         </div>
-        <div class="mt-4 bg-white">
+        <div class="mt-4 bg-white shadow">
           <label class="form-label" for="displayName">
             닉네임
           </label>
@@ -31,7 +31,9 @@
             minlength="2"
             maxlength="20"
             required>
-          <p *ngIf="displayNameCtl.invalid && (displayNameCtl.dirty || displayNameCtl.touched)" class="text-red-600 text-xs">닉네임을 입력해 주세요.</p>
+        </div>
+        <div class="flex justify-between py-1 px-3 text-xs" *ngIf="displayNameCtl.invalid && (displayNameCtl.dirty || displayNameCtl.touched)">
+          <p class="text-red-600 text-xs">닉네임을 입력해 주세요.</p>
         </div>
         <div class="mt-1">
           <button
@@ -45,7 +47,7 @@
     </form>
     <div class="fixed left-0 right-0 bottom-0 bg-white">
       <div class="max-w-xl mx-auto p-2">
-        <button type="button" class="block btn btn-sm border-green-600 bg-green-600 text-center" (click)="onRemoveProfile()">{{ profile.email }} <span class="inline-block">연결 해제</span></button>
+        <button type="button" class="block btn btn-sm w-full border-green-600 bg-green-600 text-center" (click)="onRemoveProfile()">{{ profile.email }} <span class="inline-block">연결 해제</span></button>
       </div>
     </div>
   </ng-container>

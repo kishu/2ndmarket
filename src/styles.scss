@@ -9,7 +9,8 @@ html {
 
 body {
   min-width: 320px;
-  @apply bg-gray-200;
+  -webkit-tap-highlight-color: transparent;
+  @apply bg-gray-300;
   // padding-left:constant(safe-area-inset-left);
   // padding-left:env(safe-area-inset-left);
   // padding-right:constant(safe-area-inset-right);
@@ -61,8 +62,8 @@ input,
 select,
 textarea {
   @apply block w-full py-2 px-3;
-  @apply border-0 border-b-2 rounded-none border-gray-500 bg-white text-gray-700;
-  @apply appearance-none;
+  @apply border-0 rounded-none border-gray-500 bg-white text-gray-700;
+  @apply appearance-none outline-none;
   &:focus {
     @apply bg-white border-gray-500;
   }
@@ -73,7 +74,7 @@ textarea {
 }
 
 .form-row {
-  @apply flex flex-wrap -mx-1 mb-2;
+  @apply flex flex-wrap -mx-1;
 
   .form-col {
     @apply px-1;

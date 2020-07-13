@@ -1,48 +1,65 @@
 <div class="w-full max-w-xl py-2 mx-auto">
-  <h2 class="flex justify-between">
-    <a [routerLink]="['preference/profile']" class="flex">
-      <ng-container *ngIf="profile$ | async as profile">
-        <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 mr-2 flex items-center" alt="">
-        <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
-          <span class="block text-sm ellipsis">{{ profile.displayName }} 프로필 설정</span>
-        </span>
-      </ng-container>
-    </a>
-  </h2>
+  <div class="bg-white shadow mb-2">
+    <h2 class="flex justify-between">
+      <div class="p-2">
+        <a [routerLink]="['preference/profile']" class="flex items-center">
+          <ng-container *ngIf="profile$ | async as profile">
+            <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
+            <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+              <span class="block text-sm ellipsis">{{ profile.displayName }}</span>
+            </span>
+            <span class="flex-shrink-0 mx-2 px-1 text-xs bg-green-600 text-white">프로필 설정</span>
+          </ng-container>
+        </a>
+      </div>
+    </h2>
 
-  <div class="bg-white shadow">
-    <ul class="mb-4">
-      <li>
+    <ul>
+      <li class="border-t border-gray-300">
         <a
-          class="block p-2 text-gray-700"
-          [routerLink]="['preference', 'write-goods']">등록한 상품({{ writeGoodsCount$ | async }})</a>
+          class="flex justify-between items-center"
+          [routerLink]="['preference', 'write-goods']">
+          <span class="p-2 text-gray-700">등록한 상품</span>
+          <span class="px-3 text-sm text-green-700">{{ writeGoodsCount$ | async }}</span>
+        </a>
       </li>
       <li class="border-t border-gray-300">
         <a
-          class="block p-2 text-gray-700"
-          [routerLink]="['preference', 'favorite-goods']">관심 상품({{ favoriteGoodsCount$ | async}})</a>
+          class="flex justify-between items-center"
+          [routerLink]="['preference', 'favorite-goods']">
+          <span class="p-2 text-gray-700">관심 상품</span>
+          <span class="px-3 text-sm text-green-700">{{ favoriteGoodsCount$ | async }}</span>
+        </a>
       </li>
     </ul>
   </div>
 
   <div class="bg-white shadow">
-    <h2 class="p-2 text-gray-800">프로필 전환</h2>
+    <h2 class="p-2 text-green-800">프로필 전환</h2>
     <ul *ngIf="profileExts$ | async as profileExts">
-      <li class="border-t border-gray-300" *ngFor="let profileExt of profileExts">
+      <li class="relative border-t border-gray-300" *ngFor="let profileExt of profileExts">
         <button
           type="button"
-          [disabled]="(selectedProfileId$ | async) === profileExt.id"
           (click)="onClickSelectProfile(profileExt)"
-          class="flex justify-between items-center w-full p-2 border-0 bg-transparent text-gray-800">
-          <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2" alt="">
+          class="flex justify-between items-center w-full p-0 border-0 bg-transparent text-gray-800">
+          <span class="flex-shrink-0 w-12 h-12 relative p-2">
+            <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
+            <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600"></span>
+          </span>
           <span class="flex-grow text-left text-sm ellipsis">{{ profileExt.displayName }}</span>
-          <span class="inline-block px-2 py-1 bg-green-600 text-white text-xs leading-tight uppercase">
-            {{ profileExt.group.id }}
-            {{ (selectedProfileId$ | async) === profileExt.id ? '선택됨' : '' }}
+          <span
+            class="flex-shrink-0 flex-grow-0 px-2 py-1 mr-2 text-xs leading-tight uppercase"
+            [ngClass]="{
+              'text-green-700': (selectedProfileId$ | async) === profileExt.id,
+              'bg-green-600 text-white': (selectedProfileId$ | async) !== profileExt.id
+            }"
+          >
+            {{ (selectedProfileId$ | async) !== profileExt.id ? profileExt.group.id : '' }}
+            {{ (selectedProfileId$ | async) === profileExt.id ? '사용중' : '' }}
           </span>
         </button>
       </li>
     </ul>
-    <a [routerLink]="['preference/groups']" class="block p-2 bg-green-600 text-white text-center text-sm">그룹추가</a>
   </div>
+  <a [routerLink]="['preference/groups']" class="block p-2 bg-green-600 text-white text-center text-sm mt-1">그룹추가</a>
 </div>
