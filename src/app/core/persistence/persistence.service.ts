@@ -24,7 +24,7 @@ export class PersistenceService {
 
   goods$: Observable<Goods[]> = this.authService.profile$.pipe(
     switchMap(profile => profile ?
-      this.goodsService.valueChangesByGroupId(profile.groupId) :
+      this.goodsService.valueChangesQueryByGroupId(profile.groupId, { limit: 5 }) :
       of([])
     ),
     shareReplay(1)
@@ -32,7 +32,7 @@ export class PersistenceService {
 
   writeGoods$: Observable<Goods[]> = this.authService.profile$.pipe(
     switchMap(profile => profile ?
-      this.goodsService.valueChangesByProfileId(profile.id) :
+      this.goodsService.valueChangesQueryByProfileId(profile.id) :
       of([])
     ),
     shareReplay(1)

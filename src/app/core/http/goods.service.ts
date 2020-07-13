@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FirestoreService } from '@app/core/http/firestore.service';
+import { FirestoreService, QueryOptions } from '@app/core/http/firestore.service';
 import { Goods, NewGoods, UpdateGoods } from '@app/core/model';
 
 @Injectable({
@@ -29,33 +29,31 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.update(goodsId, updateGoods);
   }
 
-  getQueryByGroupId(groupId: string): Observable<Goods[]> {
-    return super.getQuery({
+  getQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
+    options = {
+      limit: 100,
+      ...options,
       where: [
         ['groupId', '==', groupId]
       ],
-      orderBy: [['updated', 'desc']]
-    });
+      orderBy: [['updated', 'desc']],
+    };
+    return super.getQuery(options);
   }
 
-  valueChangesByGroupId(groupId: string): Observable<Goods[]> {
-    return super.valueChangesQuery({
+  valueChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
+    options = {
+      limit: 100,
+      ...options,
       where: [
         ['groupId', '==', groupId]
       ],
-      orderBy: [['updated', 'desc']]
-    });
+      orderBy: [['updated', 'desc']],
+    };
+    return super.valueChangesQuery(options);
   }
 
-  getQueryByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
-    return super.getQuery({
-      where: [['profileId', '==', profileId]],
-      orderBy: [['created', 'desc']],
-      limit
-    });
-  }
-
-  valueChangesByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
+  valueChangesQueryByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
     return super.valueChangesQuery({
       where: [['profileId', '==', profileId]],
       orderBy: [['created', 'desc']],

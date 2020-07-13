@@ -8,10 +8,10 @@ export interface QueryOptions {
   where?: [string, firestore.WhereFilterOp, any][];
   orderBy?: [string, firestore.OrderByDirection?][];
   limit?: number;
-  startAt?: firestore.DocumentSnapshot;
-  startAfter?: firestore.DocumentSnapshot;
-  endAt?: firestore.DocumentSnapshot;
-  endBefore?: firestore.DocumentSnapshot;
+  startAt?: string | firestore.DocumentSnapshot;
+  startAfter?: string | firestore.DocumentSnapshot;
+  endAt?: string | firestore.DocumentSnapshot;
+  endBefore?: string | firestore.DocumentSnapshot;
 }
 
 @Injectable({
@@ -32,6 +32,10 @@ export abstract class FirestoreService<T> {
 
   public createId() {
     return this.afs.createId();
+  }
+
+  protected getDocRef(id: string) {
+    return this.collection.doc(id).ref;
   }
 
   protected create(id: string, doc: unknown) {
@@ -104,16 +108,32 @@ export abstract class FirestoreService<T> {
         query = query.limit(options.limit);
       }
       if (options.startAt) {
-        query = query.startAt(options.startAt);
+        query = query.startAt(
+          typeof options.startAt === 'string' ?
+            this.getDocRef(options.startAt) :
+            options.startAt
+        );
       }
       if (options.startAfter) {
-        query = query.startAfter(options.startAfter);
+        query = query.startAfter(
+          typeof options.startAfter === 'string' ?
+            this.getDocRef(options.startAfter) :
+            options.startAfter
+        );
       }
       if (options.endAt) {
-        query = query.endAt(options.endAt);
+        query = query.endAt(
+          typeof options.endAt === 'string' ?
+            this.getDocRef(options.endAt) :
+            options.endAt
+        );
       }
       if (options.endBefore) {
-        query = query.endBefore(options.endBefore);
+        query = query.endBefore(
+          typeof options.endBefore === 'string' ?
+            this.getDocRef(options.endBefore) :
+            options.endBefore
+        );
       }
       return query;
     });
