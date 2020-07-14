@@ -3,7 +3,7 @@ import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
-import { GoodsCacheService } from "@app/core/persistence";
+import { GoodsCacheService } from '@app/core/persistence';
 import { Goods, NewFavoriteGoods } from '@app/core/model';
 
 @Component({

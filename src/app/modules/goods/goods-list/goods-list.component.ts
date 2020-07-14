@@ -1,11 +1,11 @@
 import { last } from 'lodash-es';
-import { BehaviorSubject, combineLatest, forkJoin } from "rxjs";
+import { BehaviorSubject, combineLatest, forkJoin } from 'rxjs';
 import { filter, first, map, scan, shareReplay, switchMap } from 'rxjs/operators';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
-import { Goods } from "@app/core/model";
+import { Goods } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-list',
@@ -59,7 +59,7 @@ export class GoodsListComponent implements OnInit {
     ]).pipe(
       switchMap(([profile, goodsList]) => {
         const startAfter = last(goodsList).updated;
-        return this.goodsService.getQueryByGroupId(profile.groupId, { startAfter, limit: 5 })
+        return this.goodsService.getQueryByGroupId(profile.groupId, { startAfter, limit: 5 });
       })
     ).subscribe(goodsList => {
       if (goodsList.length > 0) {

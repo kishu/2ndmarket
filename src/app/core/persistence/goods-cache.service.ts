@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Goods } from "@app/core/model";
-import { merge, Observable, of } from "rxjs";
-import { GoodsService } from "@app/core/http";
+import { Goods } from '@app/core/model';
+import { merge, Observable, of } from 'rxjs';
+import { GoodsService } from '@app/core/http';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class GoodsCacheService {
       return merge(
         of(this.cachedGoods),
         this.goodsService.valueChanges(this.cachedGoods.id)
-      )
+      );
     } else {
       return this.goodsService.valueChanges(goodsId);
     }

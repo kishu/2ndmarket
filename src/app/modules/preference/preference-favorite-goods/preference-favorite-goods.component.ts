@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
-import { Goods } from "@app/core/model";
+import { Goods } from '@app/core/model';
 
 @Component({
   selector: 'app-preference-favorite-goods, [app-preference-favorite-goods]',

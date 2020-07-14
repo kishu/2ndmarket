@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
-import { Goods } from "@app/core/model";
+import { Goods } from '@app/core/model';
 
 @Component({
   selector: 'app-preference-write-goods, [app-preference-write-goods]',
