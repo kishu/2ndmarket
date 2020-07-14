@@ -10,7 +10,7 @@
           <div class="image-list h-full">
             <ng-container *ngFor="let src of goods.images">
               <div class="flex relative image-item min-w-full h-full">
-                <img [src]="src" class="object-cover">
+                <img [src]="src" class="object-cover" alt="">
               </div>
             </ng-container>
           </div>
@@ -39,7 +39,7 @@
     </li>
   </ul>
   <div class="flex justify-center">
-    <button style="text-align: center" type="button" (click)="onClickMore()">더보기</button>
+    <button style="text-align: center" type="button" [disabled]="(moreGoods$ | async) === null" (click)="onClickMore()">더보기</button>
   </div>
 </ng-container>
 
