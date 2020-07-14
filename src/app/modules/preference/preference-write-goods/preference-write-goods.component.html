@@ -11,6 +11,7 @@
         <div class="relative square">
           <a
             class="absolute left-0 top-0 w-full h-full"
+            (click)="onClickGoods($event, goods)"
             [routerLink]="['/groups', goods.groupId, 'goods', goods.id]">
             <img
               *ngIf="!!goods.images[0]"

@@ -1,10 +1,10 @@
 <ng-container *ngIf="(goodsList$ | async) as goodsList">
-  <ul class="w-full max-w-xl py-2 mx-auto">
+  <ul *ngIf="!activatedRouterOutlet" class="w-full max-w-xl py-2 mx-auto">
     <li
       class="goodsItem relative"
       [ngClass]="{'soldout': goods.soldOut}"
       *ngFor="let goods of goodsList; index as i">
-      <a [routerLink]="[goods.id]" class="flex flex-col md:flex-row w-full md:h-40">
+      <a [routerLink]="[goods.id]" (click)="onClickGoods($event, goods)" class="flex flex-col md:flex-row w-full md:h-40">
         <div
           class="md:w-5/12 h-40 md:h-auto bg-gray-200">
           <div class="image-list h-full">
@@ -38,12 +38,12 @@
       </a>
     </li>
   </ul>
-  <div class="flex justify-center">
+  <div *ngIf="!activatedRouterOutlet" class="flex justify-center">
     <button style="text-align: center" type="button" [disabled]="(moreGoods$ | async) === null" (click)="onClickMore()">더보기</button>
   </div>
 </ng-container>
 
-<div class="fixed left-0 right-0 bottom-0 max-w-xl p-safe-bottom mx-auto pointer-events-none">
+<div *ngIf="!activatedRouterOutlet" class="fixed left-0 right-0 bottom-0 max-w-xl p-safe-bottom mx-auto pointer-events-none">
   <a [routerLink]="['new', 'edit']" class="inline-block border border-white rounded-full bg-green-700 text-white p-2 m-3 pointer-events-auto">
     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-color-picker" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z"/>
@@ -52,3 +52,8 @@
     </svg>
   </a>
 </div>
+
+<router-outlet
+  (activate)="onActivatedRouterOutlet()"
+  (deactivate)="onDeactivatedRouterOutlet()">
+</router-outlet>

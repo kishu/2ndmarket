@@ -1,8 +1,8 @@
-import { Observable, forkJoin, of } from 'rxjs';
-import { filter, first, map, tap, share, withLatestFrom, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GoodsComment, User, Goods } from '@app/core/model';
+import { GoodsComment, Goods } from '@app/core/model';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
 
 export interface GoodsCommentExtend extends GoodsComment {

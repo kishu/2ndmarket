@@ -3,6 +3,7 @@ import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
+import { GoodsCacheService } from "@app/core/persistence";
 import { Goods, NewFavoriteGoods } from '@app/core/model';
 
 @Component({
@@ -11,7 +12,8 @@ import { Goods, NewFavoriteGoods } from '@app/core/model';
   styleUrls: ['./goods-detail.component.scss']
 })
 export class GoodsDetailComponent implements OnInit {
-  goods$: Observable<Goods> = this.goodsService.valueChanges(this.goodsId).pipe(shareReplay(1));
+  // goods$: Observable<Goods> = this.goodsService.valueChanges(this.goodsId).pipe(shareReplay(1));
+  goods$: Observable<Goods> = this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(shareReplay(1));
   empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
   permission$: Observable<boolean> = combineLatest([
     this.goods$,
@@ -47,6 +49,7 @@ export class GoodsDetailComponent implements OnInit {
     private groupService: GroupsService,
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
+    private goodsCacheService: GoodsCacheService,
     private goodsFavoritesService: FavoriteGoodsService
   ) {
   }
