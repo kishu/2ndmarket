@@ -1,6 +1,9 @@
 <div class="w-full max-w-xl py-2 mx-auto">
-  <div class="sticky-wrap bg-white shadow" *ngIf="messageExts$ | async as messages">
-    <h2 class="sticky safe-top z-20 border-b border-gray-300 p-2 text-green-800 bg-white">알림 ({{messages.length}})</h2>
+  <div class="sticky-wrap mb-2 bg-white shadow" *ngIf="messageExts$ | async as messages">
+    <h2 class="sticky safe-top z-20 border-b border-gray-300 text-green-800 bg-white flex justify-between items-center">
+      <span class="p-2 text-gray-700">알림</span>
+      <span class="px-3 text-sm text-green-700">{{messages.length}}개</span>
+    </h2>
     <ul class="-mt-px">
       <li
         class="relative border-t px-4 py-12 text-center text-gray-500 text-sm"

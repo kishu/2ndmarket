@@ -1,19 +1,21 @@
-<form
-  class="flex p-3 pt-0"
-  [formGroup]="commentForm"
-  (ngSubmit)="onSubmit()">
-  <textarea
-    class="border-0 m-0"
-    formControlName="body"
-    minlength="2"
-    maxlength="200"
-    rows="5"
-    required></textarea>
-  <div
-    class="flex-shrink-0">
-    <button
-      class="w-full h-full border-green-600 bg-green-600"
-      type="submit"
-      [disabled]="commentForm.invalid || submitting">등록</button>
-  </div>
-</form>
+<div class="bg-white">
+  <form
+    class="flex p-px"
+    [formGroup]="commentForm"
+    (ngSubmit)="onSubmit()">
+    <textarea
+      class="border-0 m-0 bg-gray-100"
+      formControlName="body"
+      minlength="2"
+      maxlength="200"
+      rows="5"
+      required></textarea>
+    <div
+      class="flex-shrink-0">
+      <button
+        class="w-full h-full border-green-600 bg-green-600"
+        type="submit"
+        [disabled]="commentForm.invalid || submitting">등록</button>
+    </div>
+  </form>
+</div>

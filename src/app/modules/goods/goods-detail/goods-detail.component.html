@@ -8,35 +8,38 @@
           <div class="flex mt-2 justify-between">
             <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
             <div class="flex-shrink-0 flex items-center">
-              <button type="button" *ngIf="(permission$ | async) === false" class="px-1 py-0 border-none bg-transparent flex items-center" (click)="onClickFavorite()">
+              <button type="button" *ngIf="(permission$ | async) === false" class="px-1 py-0 border-none bg-transparent text-gray-500 flex items-center" (click)="onClickFavorite()">
                 <!-- <span class="mr-px text-sm text-gray-600" [ngClass]="{'text-red-600': favorited$ | async}">{{ favoriteCount$ | async }}</span> -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#718096" width="24px" height="24px" [ngClass]="{'active': favorited$ | async}">
-                  <path d="M0 0h24v24H0V0z" fill="none"/>
-                  <path d="M16.5 5c-1.54 0-3.04.99-3.56 2.36h-1.87C10.54 5.99 9.04 5 7.5 5 5.5 5 4 6.5 4 8.5c0 2.89 3.14 5.74 7.9 10.05l.1.1.1-.1C16.86 14.24 20 11.39 20 8.5c0-2-1.5-3.5-3.5-3.5z" opacity=".3"/>
-                  <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star mr-px" [ngClass]="{'active': favorited$ | async}" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z"/>
+                  <path d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
                 </svg>
               </button>
               <ng-container *ngIf="permission$ | async">
                 <a [routerLink]="['edit']" class="inline-block px-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#38a169" width="24px" height="24px">
-                    <path d="M0 0h24v24H0V0z" fill="none"/>
-                    <path d="M5 18.08V19h.92l9.06-9.06-.92-.92z" opacity=".3"/>
-                    <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29s-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM5.92 19H5v-.92l9.06-9.06.92.92L5.92 19z"/>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z"/>
+                    <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
+                    <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
+                    <line x1="16" y1="5" x2="19" y2="8" />
                   </svg>
                 </a>
                 <button type="button" class="px-1 py-0 border-none bg-transparent" (click)="onClickDelete(goods)">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#38a169" width="24px" height="24px">
-                    <path d="M0 0h24v24H0V0z" fill="none"/>
-                    <path d="M8 9h8v10H8z" opacity=".3"/>
-                    <path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"/>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z"/>
+                    <line x1="4" y1="7" x2="20" y2="7" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                   </svg>
                 </button>
                 <button type="button" class="px-1 py-0 border-none bg-transparent" (click)="onClickSoldOut()">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#38a169" width="24px" height="24px">
-                    <path d="M0 0h24v24H0V0z" fill="none"/>
-                    <path d="M1.41 1.13L0 2.54l4.39 4.39 2.21 4.66-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h7.46l1.38 1.38c-.5.36-.83.95-.83 1.62 0 1.1.89 2 1.99 2 .67 0 1.26-.33 1.62-.84L21.46 24l1.41-1.41L1.41 1.13zM7 15l1.1-2h2.36l2 2H7z"/>
-                    <path d="M18.31 6H9.12l4.99 5h1.44z" opacity=".3"/>
-                    <path d="M20 4H7.12l2 2h9.19l-2.76 5h-1.44l1.94 1.94c.54-.14.99-.49 1.25-.97l3.58-6.49C21.25 4.82 20.76 4 20 4zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2z"/>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z"/>
+                    <rect x="5" y="11" width="14" height="10" rx="2" />
+                    <circle cx="12" cy="16" r="1" />
+                    <path d="M8 11v-4a4 4 0 0 1 8 0v4" />
                   </svg>
                 </button>
                 <span *ngIf="goods.soldOut">{{ goods.soldOut | fsTimestamp | formatDistanceToNow }}</span>
@@ -60,7 +63,14 @@
             </ng-container>
           </ul>
         </ng-container>
-        <div>{{ goods.contact }}</div>
+      </div>
+      <div class="flex px-4 py-3 border-t border-gray-300" *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
+        <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
+        <div>
+          <div class="text-sm">{{ profile.displayName }}</div>
+          <div class="text-xs text-gray-500">{{ goods.contact }}</div>
+        </div>
+
       </div>
       <div class="comment-wrap relative">
         <div app-goods-comment-list [goods]="goods"></div>
