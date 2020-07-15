@@ -1,8 +1,9 @@
 <div class="w-full max-w-xl py-2 mx-auto" *ngIf="goodsList$ | async as goodsList">
   <div class="sticky-wrap bg-white shadow">
-    <h3 class="sticky safe-top z-20 border-b border-gray-300 p-2 text-green-800 bg-white">
-      관심 상품 ({{goodsList.length}})
-    </h3>
+    <h2 class="sticky safe-top z-20 border-b border-gray-300 bg-white flex items-center">
+      <span class="p-2 text-gray-700">관심 상품</span>
+      <span class="text-sm text-green-700">{{goodsList.length}}개</span>
+    </h2>
     <div *ngIf="goodsList.length === 0">
       관심 상품이 없습니다.
     </div>
