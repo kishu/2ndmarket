@@ -18,7 +18,7 @@ export class GoodsCacheService {
   }
 
   getCachedGoods$(goodsId: string): Observable<Goods> {
-    if (goodsId === this.cachedGoods.id) {
+    if (goodsId === this.cachedGoods?.id) {
       return merge(
         of(this.cachedGoods),
         this.goodsService.valueChanges(this.cachedGoods.id)

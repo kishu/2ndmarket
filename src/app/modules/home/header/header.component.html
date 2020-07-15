@@ -15,12 +15,20 @@
       <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
     </a>
     <h1 class="h-6 px-12 font-bold text-center text-green-700 ellipsis">
-      <ng-container *ngIf="group$ | async as group; else loading">
+      <ng-container *ngIf="group$ | async as group; else defaultTemplate">
         <a [routerLink]="['/groups', group.id, 'goods']">
-          <span>세컨드마켓@</span>
-          <span class="uppercase">{{ group.id }}</span>
+          <ng-container *ngIf="title$ | async as title; else groupTemplate">
+            <span>{{ title }}</span>
+          </ng-container>
+          <ng-template #groupTemplate>
+            <span>세컨드마켓@</span>
+            <span class="uppercase">{{ group.id }}</span>
+          </ng-template>
         </a>
       </ng-container>
+      <ng-template #defaultTemplate>
+        세컨드마켓
+      </ng-template>
     </h1>
     <ng-container *ngIf="newMessages$ | async as newMessages">
       <a [routerLink]="['/preference', 'messages']" class="absolute inset-y-0 right-0 mx-auto flex justify-center items-center h-12 p-3">
@@ -35,7 +43,3 @@
     </ng-container>
   </div>
 </div>
-
-<ng-template #loading>
-  세컨드마켓
-</ng-template>

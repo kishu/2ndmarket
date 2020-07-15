@@ -2,8 +2,8 @@
   <div class="goodsDetail w-full shadow">
     <div *ngIf="goods.images.length > 0" class="max-w-xl mx-auto"><img [src]="goods.images[0]" alt=""></div>
     <div class="sticky-wrap z-20 max-w-xl mx-auto bg-white">
-      <div class="sticky safe-top z-20">
-        <div class="goods-name">
+      <div #goodsNameRef class="safe-top z-20">
+        <div class="goods-name overflow-hidden">
           <h2 class="goodsName tracking-tight">{{ goods.name }}</h2>
           <div class="flex mt-2 justify-between relative">
             <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>

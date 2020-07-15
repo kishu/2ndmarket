@@ -1,18 +1,23 @@
+import { once } from 'lodash-es';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
 import { Goods, NewFavoriteGoods } from '@app/core/model';
+import { HeaderService } from "@app/shared/services";
 
 @Component({
   selector: 'app-goods-detail',
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss']
 })
-export class GoodsDetailComponent implements OnInit {
-  // goods$: Observable<Goods> = this.goodsService.valueChanges(this.goodsId).pipe(shareReplay(1));
+export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
+  private intersectionObserver: IntersectionObserver;
+  private initIntersectionObserverOnce = once(this.initIntersectionObserver);
+
   goods$: Observable<Goods> = this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(shareReplay(1));
   empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
   permission$: Observable<boolean> = combineLatest([
@@ -35,10 +40,6 @@ export class GoodsDetailComponent implements OnInit {
   );
   showPermission = false;
 
-  private get groupId() {
-    return this.activatedRoute.snapshot.paramMap.get('groupId');
-  }
-
   private get goodsId() {
     return this.activatedRoute.snapshot.paramMap.get('goodsId');
   }
@@ -52,6 +53,7 @@ export class GoodsDetailComponent implements OnInit {
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
     private goodsFavoritesService: FavoriteGoodsService,
+    private headerService: HeaderService
   ) {
   }
 
@@ -60,6 +62,35 @@ export class GoodsDetailComponent implements OnInit {
 
   onClickPermission() {
     this.showPermission = !this.showPermission;
+  }
+
+  ngOnDestroy() {
+    this.headerService.title$.next(null);
+    this.intersectionObserver.unobserve(this.goodsNameRef.nativeElement);
+  }
+
+  ngAfterViewChecked() {
+    if (this.goodsNameRef) {
+      this.initIntersectionObserverOnce();
+    }
+  }
+
+  private initIntersectionObserver() {
+    const config = {
+      rootMargin: '0px',
+      threshold: [0]
+    };
+    this.intersectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting && entry.boundingClientRect.top <= 0) {
+          this.goods$.pipe(first()).subscribe((g) => this.headerService.title$.next(g.name));
+        } else if (entry.isIntersecting && entry.boundingClientRect.top <= 0) {
+          this.headerService.title$.next(null);
+        }
+      });
+    }, config);
+
+    this.intersectionObserver.observe(this.goodsNameRef.nativeElement);
   }
 
   onClickSoldOut() {
