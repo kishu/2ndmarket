@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Goods, NewGoods, DraftImage } from '@app/core/model';
@@ -38,7 +39,8 @@ export class GoodsFormComponent implements OnInit {
   // get soldOutCtl() { return this.goodsForm.get('soldOut'); }
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private _location: Location
   ) {
   }
 
@@ -58,4 +60,7 @@ export class GoodsFormComponent implements OnInit {
     this.formSubmit.emit({ goods: this.goods, draftImages: this.imagesCtl?.draftImages });
   }
 
+  onClickHistoryBack() {
+    this._location.back();
+  }
 }

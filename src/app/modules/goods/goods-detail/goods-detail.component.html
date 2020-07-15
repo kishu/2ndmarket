@@ -3,12 +3,12 @@
     <div *ngIf="goods.images.length > 0" class="max-w-xl mx-auto"><img [src]="goods.images[0]" alt=""></div>
     <div class="sticky-wrap z-20 max-w-xl mx-auto bg-white">
       <div class="sticky safe-top z-20">
-        <div class="goods-name overflow-hidden">
+        <div class="goods-name">
           <h2 class="goodsName tracking-tight">{{ goods.name }}</h2>
-          <div class="flex mt-2 justify-between">
+          <div class="flex mt-2 justify-between relative">
             <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
             <div class="flex-shrink-0 flex items-center">
-              <button type="button" *ngIf="(permission$ | async) === false" class="px-1 py-0 border-none bg-transparent text-gray-500 flex items-center" (click)="onClickFavorite()">
+              <button type="button" *ngIf="(permission$ | async) === false" class="p-1 border-none bg-transparent text-gray-500 flex items-center" (click)="onClickFavorite()">
                 <!-- <span class="mr-px text-sm text-gray-600" [ngClass]="{'text-red-600': favorited$ | async}">{{ favoriteCount$ | async }}</span> -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star mr-px" [ngClass]="{'active': favorited$ | async}" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -16,33 +16,49 @@
                 </svg>
               </button>
               <ng-container *ngIf="permission$ | async">
-                <a [routerLink]="['edit']" class="inline-block px-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <button
+                  type="button"
+                  class="p-1 border-none bg-transparent"
+                  (click)="onClickPermission()">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z"/>
-                    <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
-                    <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
-                    <line x1="16" y1="5" x2="19" y2="8" />
-                  </svg>
-                </a>
-                <button type="button" class="px-1 py-0 border-none bg-transparent" (click)="onClickDelete(goods)">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z"/>
-                    <line x1="4" y1="7" x2="20" y2="7" />
-                    <line x1="10" y1="11" x2="10" y2="17" />
-                    <line x1="14" y1="11" x2="14" y2="17" />
-                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                    <circle cx="5" cy="12" r="1" />
+                    <circle cx="12" cy="12" r="1" />
+                    <circle cx="19" cy="12" r="1" />
                   </svg>
                 </button>
-                <button type="button" class="px-1 py-0 border-none bg-transparent" (click)="onClickSoldOut()">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z"/>
-                    <rect x="5" y="11" width="14" height="10" rx="2" />
-                    <circle cx="12" cy="16" r="1" />
-                    <path d="M8 11v-4a4 4 0 0 1 8 0v4" />
-                  </svg>
-                </button>
-                <span *ngIf="goods.soldOut">{{ goods.soldOut | fsTimestamp | formatDistanceToNow }}</span>
+                <div class="absolute right-0 p-2 border bg-white" style="top: 100%" *ngIf="showPermission">
+                  <a [routerLink]="['edit']" class="flex items-center w-full p-1 pr-2 text-sm text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit mr-1" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z"/>
+                      <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
+                      <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
+                      <line x1="16" y1="5" x2="19" y2="8" />
+                    </svg>
+                    수정하기
+                  </a>
+                  <button type="button" class="flex items-center w-full p-1 pr-2 border-none bg-transparent text-sm text-gray-700" (click)="onClickDelete(goods)">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash mr-1" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z"/>
+                      <line x1="4" y1="7" x2="20" y2="7" />
+                      <line x1="10" y1="11" x2="10" y2="17" />
+                      <line x1="14" y1="11" x2="14" y2="17" />
+                      <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                      <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                    </svg>
+                    삭제하기
+                  </button>
+                  <button type="button" class="flex items-center w-full p-1 pr-2 border-none bg-transparent text-sm text-gray-700" (click)="onClickSoldOut()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock mr-1" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z"/>
+                      <rect x="5" y="11" width="14" height="10" rx="2" />
+                      <circle cx="12" cy="16" r="1" />
+                      <path d="M8 11v-4a4 4 0 0 1 8 0v4" />
+                    </svg>
+                    {{ goods.soldOut ? '판매완료로' : '판매중으로' }} 변경
+                  </button>
+                  <!-- <span *ngIf="goods.soldOut">{{ goods.soldOut | fsTimestamp | formatDistanceToNow }}</span> -->
+                </div>
               </ng-container>
             </div>
           </div>

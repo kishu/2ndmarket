@@ -33,6 +33,7 @@ export class GoodsDetailComponent implements OnInit {
     map(f => f.length > 0),
     shareReplay(1)
   );
+  showPermission = false;
 
   private get groupId() {
     return this.activatedRoute.snapshot.paramMap.get('groupId');
@@ -50,11 +51,15 @@ export class GoodsDetailComponent implements OnInit {
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
-    private goodsFavoritesService: FavoriteGoodsService
+    private goodsFavoritesService: FavoriteGoodsService,
   ) {
   }
 
   ngOnInit(): void {
+  }
+
+  onClickPermission() {
+    this.showPermission = !this.showPermission;
   }
 
   onClickSoldOut() {
@@ -68,6 +73,7 @@ export class GoodsDetailComponent implements OnInit {
       () => {},
       err => alert(err)
     );
+    this.showPermission = false;
   }
 
   onClickFavorite() {

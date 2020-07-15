@@ -102,10 +102,6 @@ textarea {
   }
 }
 
-.soldout {
-  @apply bg-transparent shadow-none opacity-25;
-}
-
 .talk {
   @apply py-2 px-3 bg-gray-200;
   @apply leading-tight;
