@@ -3,7 +3,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { AuthService, GroupsService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
-import { HeaderService } from "@app/shared/services";
+import { HeaderService } from '@app/shared/services';
 
 @Component({
   selector: 'app-header, [app-header]',

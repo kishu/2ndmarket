@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
 import { Goods, NewFavoriteGoods } from '@app/core/model';
-import { HeaderService } from "@app/shared/services";
+import { HeaderService } from '@app/shared/services';
 
 @Component({
   selector: 'app-goods-detail',
