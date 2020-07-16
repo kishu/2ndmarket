@@ -21,10 +21,10 @@ export class GoodsCacheService {
     if (goodsId === this.cachedGoods?.id) {
       return merge(
         of(this.cachedGoods),
-        this.goodsService.valueChanges(this.cachedGoods.id)
+        this.goodsService.snapshotChanges(this.cachedGoods.id)
       );
     } else {
-      return this.goodsService.valueChanges(goodsId);
+      return this.goodsService.snapshotChanges(goodsId);
     }
   }
 

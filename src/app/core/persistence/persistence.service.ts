@@ -1,5 +1,5 @@
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AuthService, GoodsCommentsService, FavoriteGoodsService, GoodsService, GroupsService, MessagesService, ProfilesService } from '@app/core/http';
 import { Goods, MessageExt, ProfileExt } from '@app/core/model';
@@ -22,11 +22,13 @@ export class PersistenceService {
     shareReplay(1)
   );
 
-  goods$: Observable<Goods[]> = this.authService.profile$.pipe(
-    switchMap(profile => profile ?
-      this.goodsService.valueChangesQueryByGroupId(profile.groupId, { limit: 5 }) :
-      of([])
-    ),
+  moreGoods$ = new BehaviorSubject<{ limit: number }>({ limit: 5 });
+
+  goods$: Observable<Goods[]> = combineLatest([
+    this.authService.profile$.pipe(first(), filter(p => !!p)),
+    this.moreGoods$
+  ]).pipe(
+    switchMap(([profile, more]) => this.goodsService.valueChangesQueryByGroupId(profile.groupId, more)),
     shareReplay(1)
   );
 

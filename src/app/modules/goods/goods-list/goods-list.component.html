@@ -4,7 +4,7 @@
     <ul class="w-full max-w-md py-2 mx-auto">
       <li
         class="goodsItem relative"
-        *ngFor="let goods of goodsList; index as i">
+        *ngFor="let goods of goodsList; index as i; trackBy: trackBy">
         <a
           [routerLink]="[goods.id]"
           class="flex flex-col sm:flex-row w-full sm:h-40"
@@ -64,9 +64,7 @@
         </svg>
       </a>
     </div>
-    <div #moreRef *ngIf="(moreGoods$ | async) !== null" class="flex justify-center">
-      <button style="text-align: center" type="button" (click)="onClickMore()">더보기</button>
-    </div>
+    <app-goods-more (more)="onGoodsMore()"></app-goods-more>
   </ng-container>
 </ng-container>
 

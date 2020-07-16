@@ -12,6 +12,7 @@ import { GoodsWriteComponent } from './goods-write/goods-write.component';
 import { GoodsEditComponent } from './goods-edit/goods-edit.component';
 import { GoodsCommentListComponent } from './goods-comment-list/goods-comment-list.component';
 import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-form.component';
+import { GoodsMoreComponent } from './goods-more/goods-more.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-fo
     GoodsWriteComponent,
     GoodsEditComponent,
     GoodsCommentListComponent,
-    GoodsCommentFormComponent
+    GoodsCommentFormComponent,
+    GoodsMoreComponent
   ],
   imports: [
     CommonModule,

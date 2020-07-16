@@ -12,23 +12,8 @@ export const onWriteFavoriteGoods = functions
     const favoriteGoodsDoc = change.after.exists ? change.after : change.before;
     const favoriteGoodsData = favoriteGoodsDoc.data();
     const goodsDoc = await db.doc(`goods/${favoriteGoodsData.goodsId}`).get();
-    const goodsData = goodsDoc.data();
-    if (created && favoriteGoodsData.profileId === goodsData?.profileId) {
-      const partialGoods= {
-        favoritesCnt: admin.firestore.FieldValue.increment(1),
-      };
-      return goodsDoc.ref.update(partialGoods);
-    } else if(created && favoriteGoodsData.profileId !== goodsData?.profileId) {
-      const partialGoods= {
-        favoritesCnt: admin.firestore.FieldValue.increment(1),
-        updated: admin.firestore.FieldValue.serverTimestamp()
-      }
-      return goodsDoc.ref.update(partialGoods);
-    } else if(!created) {
-      const partialGoods= {
-        favoritesCnt: admin.firestore.FieldValue.increment(-1),
-      };
-      return goodsDoc.ref.update(partialGoods);
-    }
-    return;
+    const partialGoods= {
+      favoritesCnt: admin.firestore.FieldValue.increment(created ? 1 : -1),
+    };
+    return goodsDoc.ref.update(partialGoods);
   });

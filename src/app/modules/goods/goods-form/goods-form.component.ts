@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Goods, NewGoods, DraftImage } from '@app/core/model';
 import { ImagesControlComponent } from '@app/shared/components/images-control/images-control.component';
 

@@ -7,21 +7,17 @@ export const onWriteGoodsComments = functions
     .firestore
     .document('goodsComments/{goodsCommentId}')
     .onWrite(async (change: any, context: any) => {
+      const promises: Promise<any>[] = [] ;
       const created = change.after.exists;
       const goodsCommentDoc = change.after.exists ? change.after : change.before;
       const goodsCommentData = goodsCommentDoc.data();
       const goodsDoc = await db.doc(`goods/${goodsCommentData.goodsId}`).get();
       const goodsData = goodsDoc.data();
-      if (created && goodsCommentData.profileId === goodsData?.profileId) {
-        const partialGoods= {
-          commentsCnt: admin.firestore.FieldValue.increment(1),
-        };
-        return goodsDoc.ref.update(partialGoods);
-      } else if (created && goodsCommentData.profileId !== goodsData?.profileId) {
-        const partialGoods= {
-          commentsCnt: admin.firestore.FieldValue.increment(1),
-          updated: admin.firestore.FieldValue.serverTimestamp()
-        };
+
+      const partialGoods= { commentsCnt: admin.firestore.FieldValue.increment(1) };
+      promises.push(goodsDoc.ref.update(partialGoods));
+
+      if (created && goodsCommentData.profileId !== goodsData?.profileId) {
         const newMessage = {
           profileId: goodsData?.profileId,
           goodsId: goodsDoc.id,
@@ -29,22 +25,20 @@ export const onWriteGoodsComments = functions
           read: false,
           created: admin.firestore.FieldValue.serverTimestamp()
         }
-        return Promise.all([
-          goodsDoc.ref.update(partialGoods),
-          db.collection('messages').add(newMessage)
-        ]);
-      } else if (!created) {
-        const partialGoods = {
-          commentsCnt: admin.firestore.FieldValue.increment(-1)
-        };
-        const deleteNotices = db.collection('notice')
+        promises.push(db.collection('messages').add(newMessage));
+      }
+
+      if (!created) {
+        const deleteMessages = db.collection('messages')
           .where('goodsCommentId', '==', goodsCommentDoc.id)
           .get()
-          .then(querySnapshot => Promise.all(querySnapshot.docs.map(doc => doc.ref.delete())));
-        return Promise.all([
-          goodsDoc.ref.update(partialGoods),
-          deleteNotices
-        ]);
+          .then(querySnapshot => {
+            const batch = db.batch();
+            querySnapshot.docs.forEach(doc => batch.delete(doc.ref));
+            return batch.commit();
+          });
+        promises.push(deleteMessages);
       }
-      return;
+
+      return Promise.all(promises);
     });

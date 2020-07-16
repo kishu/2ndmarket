@@ -45,6 +45,7 @@ export class GoodsWriteComponent implements OnInit {
         soldOut: false,
         favoritesCnt: 0,
         commentsCnt: 0,
+        updatedCnt: 0,
         created: GoodsService.serverTimestamp(),
         updated: GoodsService.serverTimestamp()
       } as unknown as NewGoods)),

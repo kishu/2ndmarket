@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { firestore } from 'firebase/app';
 import { Inject, Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -54,6 +54,20 @@ export abstract class FirestoreService<T> {
       );
   }
 
+  public snapshotChanges(docId: string): Observable<T | undefined> {
+    return this.afs.doc<T>(`${this.path}/${docId}`)
+      .snapshotChanges()
+      .pipe(
+        map(action => {
+          if (action.payload.exists) {
+            return ({ id: action.payload.id, ...action.payload.data() });
+          } else {
+            return undefined;
+          }
+        })
+      );
+  }
+
   public valueChanges(docId: string): Observable<T | undefined> {
     return this.afs.doc<T>(`${this.path}/${docId}`)
       .valueChanges()
@@ -74,6 +88,19 @@ export abstract class FirestoreService<T> {
 
   public delete(docId: string) {
     return this.collection.doc(docId).delete();
+  }
+
+  protected snapshotChangesQuery(options: QueryOptions): Observable<T[]> {
+    // @ts-ignore
+    return this.query(options).snapshotChanges().pipe(
+      // map(actions => actions.filter(a => !a.payload.doc.metadata.fromCache)),
+      // filter(actions => actions.length > 0),
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as T;
+        const id = a.payload.doc.id;
+        return { id, ...data }
+      }))
+    )
   }
 
   protected valueChangesQuery(options: QueryOptions): Observable<T[]> {

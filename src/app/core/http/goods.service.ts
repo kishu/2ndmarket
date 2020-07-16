@@ -41,6 +41,18 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.getQuery(options);
   }
 
+  snapshotChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
+    options = {
+      limit: 100,
+      ...options,
+      where: [
+        ['groupId', '==', groupId]
+      ],
+      orderBy: [['updated', 'desc']],
+    };
+    return super.snapshotChangesQuery(options);
+  }
+
   valueChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
     options = {
       limit: 100,
