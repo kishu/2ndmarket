@@ -279,6 +279,11 @@ app-header {
   height: calc(env(safe-area-inset-top) + 49px);
 }
 
+.h-safe-bottom {
+  height: constant(safe-area-inset-bottom);
+  height: env(safe-area-inset-bottom);
+}
+
 .-m-safe-top {
   margin-top: calc(0px - (constant(safe-area-inset-top) + 49px));
   margin-top: calc(0px - (env(safe-area-inset-top) + 49px));
