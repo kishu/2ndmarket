@@ -1,10 +1,11 @@
 import { last } from 'lodash-es';
-import { first, scan, shareReplay, tap } from 'rxjs/operators';
+import { first, map, scan, shareReplay,  } from 'rxjs/operators';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
+import { BehaviorSubject, combineLatest, forkJoin } from "rxjs";
 
 @Component({
   selector: 'app-goods-list',
@@ -14,17 +15,16 @@ import { Goods } from '@app/core/model';
 export class GoodsListComponent implements OnInit {
   private fetchingMoreGoods = false;
   activatedRouterOutlet = false;
-  activatedGoodsMore = true;
-  goodsList$ = this.persistenceService.goods$.pipe(
-    tap(g => console.log('asdfasdf', g)),
-    tap(() => this.fetchingMoreGoods = false),
-    tap((goodsList) => {
-      this.persistenceService.moreGoods$.pipe(first()).subscribe(({ limit }) => {
-        this.activatedGoodsMore = limit === goodsList.length;
-      });
-    }),
+  activatedMoreGoods = true;
+
+  moreGoodsList$ = new BehaviorSubject<Goods[]>([]);
+  goodsList$ = combineLatest([
+    this.persistenceService.goods$.pipe(first(), shareReplay(1)),
+    this.moreGoodsList$.pipe(scan((a, c) => a.concat(c), []))
+  ]).pipe(
+    map(([goodsList, moreGoodsList]) => goodsList.concat(moreGoodsList)),
     shareReplay(1)
-  );
+  )
 
   constructor(
     private router: Router,
@@ -59,15 +59,26 @@ export class GoodsListComponent implements OnInit {
     this.goodsCacheService.cache(goods);
   }
 
-  onGoodsMore() {
-    console.log('onGoodsMore');
-    if (this.fetchingMoreGoods || !this.activatedGoodsMore) {
+  onMoreGoods() {
+    if (this.fetchingMoreGoods || !this.activatedMoreGoods) {
       return;
     }
 
     this.fetchingMoreGoods = true;
-    this.goodsList$.pipe(first()).subscribe(goodsList => {
-      this.persistenceService.moreGoods$.next({ limit: goodsList.length + 5 });
+    const groupId = this.activatedRoute.snapshot.paramMap.get('groupId');
+
+    this.goodsList$.pipe(first()).subscribe((goodsList) => {
+      this.goodsService.getQueryByGroupId(groupId, {
+        startAfter: last(goodsList).updated,
+        limit: 5
+      }).subscribe(goodsList => {
+        if (goodsList.length > 0) {
+          this.moreGoodsList$.next(goodsList);
+        } else {
+          this.activatedMoreGoods = false;
+        }
+        this.fetchingMoreGoods = false;
+      });
     });
   }
 

@@ -64,7 +64,7 @@
         </svg>
       </a>
     </div>
-    <app-goods-more (more)="onGoodsMore()"></app-goods-more>
+    <app-goods-more *ngIf="activatedMoreGoods" (more)="onMoreGoods()"></app-goods-more>
   </ng-container>
 </ng-container>
 
