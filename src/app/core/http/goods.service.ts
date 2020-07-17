@@ -21,10 +21,11 @@ export class GoodsService extends FirestoreService<Goods> {
   }
 
   update(goodsId: string, goods: Partial<Goods>) {
-    const updateGoods: UpdateGoods = {
-      ...goods,
-      updated: FirestoreService.serverTimestamp()
-    };
+    // const updateGoods: UpdateGoods = {
+    //   ...goods,
+    //   updated: FirestoreService.serverTimestamp()
+    // };
+    const updateGoods = { ...goods };
     delete updateGoods.id;
     return super.update(goodsId, updateGoods);
   }
