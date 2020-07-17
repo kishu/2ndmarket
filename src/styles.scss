@@ -24,8 +24,8 @@ body {
 
 .wrap {
   @apply relative;
-  padding-top: calc(constant(safe-area-inset-top) + 49px);
-  padding-top: calc(env(safe-area-inset-top) + 49px);
+  // padding-top: calc(constant(safe-area-inset-top) + 49px);
+  // padding-top: calc(env(safe-area-inset-top) + 49px);
 }
 
 .safe-top-area {
@@ -96,10 +96,6 @@ textarea {
 }
 
 .goodsDetail {
-  .goodsName {
-    @apply leading-tight;
-    word-wrap: break-word;
-  }
 }
 
 .talk {
@@ -149,7 +145,7 @@ textarea {
 }
 
 .comment-wrap {
-  @apply w-full max-w-xl mx-auto bg-gray-400;
+  @apply w-full max-w-md mx-auto;
 }
 
 .goods-images-ordering {
@@ -242,7 +238,7 @@ textarea {
 }
 
 .goods-form {
-  @apply w-full max-w-xl mx-auto p-2;
+  @apply w-full max-w-md mx-auto my-2;
   padding-bottom: calc(constant(safe-area-inset-bottom) + 3rem);
   padding-bottom: calc(env(safe-area-inset-bottom) + 3rem);
 }
@@ -259,10 +255,6 @@ app-header {
   @apply shadow;
 }
 
-.goods-name {
-  @apply w-full px-4 py-3 bg-white text-lg;
-}
-
 .sticky-wrap {
   @apply relative;
 }
@@ -275,6 +267,21 @@ app-header {
 .safe-top {
   top: calc(constant(safe-area-inset-top) + 49px);
   top: calc(env(safe-area-inset-top) + 49px);
+}
+
+.p-safe-top {
+  padding-top: calc(constant(safe-area-inset-top) + 49px);
+  padding-top: calc(env(safe-area-inset-top) + 49px);
+}
+
+.h-safe-top {
+  height: calc(constant(safe-area-inset-top) + 49px);
+  height: calc(env(safe-area-inset-top) + 49px);
+}
+
+.-m-safe-top {
+  margin-top: calc(0px - (constant(safe-area-inset-top) + 49px));
+  margin-top: calc(0px - (env(safe-area-inset-top) + 49px));
 }
 
 .p-safe-bottom {

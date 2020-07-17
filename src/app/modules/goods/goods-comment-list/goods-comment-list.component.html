@@ -7,31 +7,35 @@
       <div
         class="flex -mx-1"
         *ngFor="let talk of comment trackBy:trackById; first as isFirst; last as isLast"
-        [ngClass]="{'mine': talk.permission}">
+        [ngClass]="{'flex-row-reverse': talk.permission}">
         <ng-container *ngIf="talk.profileId | fsDocument:'profiles' | async as profile">
           <div
             class="w-8 h-8 m-1 bg-white rounded-full flex items-center justify-center text-sm font-bold uppercase"
             [ngClass]="{'opacity-0': !isFirst, 'bg-yellow-400': talk.seller}"
             *ngIf="!talk.permission">{{ profile.displayName.slice(0, 1) }}</div>
           <div
-            class="flex flex-col mx-1"
+            class="flex flex-col"
             [ngClass]="{'items-end': talk.permission}"
             style="max-width: 75%;">
-            <span class="text-xs text-white" *ngIf="isFirst">{{ profile.displayName }}</span>
-            <p
-              class="talk mb-1 shadow max-w-sm break-all whitespace-pre-wrap rounded-xxlg"
-              [ngClass]="{
-                'rounded-tl-none': !talk.permission,
-                'rounded-bl-none': !talk.permission && !isLast,
-                'rounded-bl-xlg': !talk.permission && isLast,
-                'rounded-tr-none': talk.permission,
-                'rounded-br-none': talk.permission && !isLast,
-                'rounded-br-xlg': talk.permission && isLast
-              }"
-              (click)="onClickDelete(talk)">{{ talk.body }}</p>
-          </div>
-          <div class="flex flex-shrink-0 items-end mb-1">
-            <span class="text-xs flex-shrink-0 text-gray-500" *ngIf="isLast">{{ talk.created | fsTimestamp | date:'hh:mm' }}</span>
+            <span class="mx-1 text-xs text-white" *ngIf="isFirst">{{ profile.displayName }}</span>
+            <div
+              class="flex mb-1"
+              [ngClass]="{'flex-row-reverse': talk.permission}">
+              <p
+                class="talk mx-1 shadow max-w-sm break-all whitespace-pre-wrap rounded-xxlg"
+                [ngClass]="{
+                  'rounded-tl-none': !talk.permission,
+                  'rounded-bl-none': !talk.permission && !isLast,
+                  'rounded-bl-xlg': !talk.permission && isLast,
+                  'rounded-tr-none': talk.permission,
+                  'rounded-br-none': talk.permission && !isLast,
+                  'rounded-br-xlg': talk.permission && isLast
+                }"
+                (click)="onClickDelete(talk)">{{ talk.body }}</p>
+              <div class="flex flex-shrink-0 items-end">
+                <span class="text-xs flex-shrink-0 text-gray-500" *ngIf="isLast">{{ talk.created | fsTimestamp | date:'hh:mm' }}</span>
+              </div>
+            </div>
           </div>
         </ng-container>
       </div>

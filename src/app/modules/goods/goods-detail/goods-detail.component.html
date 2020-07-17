@@ -1,10 +1,12 @@
 <ng-container *ngIf="goods$ | async as goods">
-  <div class="goodsDetail w-full shadow">
-    <div *ngIf="goods.images.length > 0" class="max-w-xl mx-auto"><img [src]="goods.images[0]" alt=""></div>
-    <div class="sticky-wrap z-20 max-w-xl mx-auto bg-white">
-      <div #goodsNameRef class="relative z-20">
-        <div class="goods-name">
-          <h2 class="goodsName tracking-tight">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h2>
+  <div class="w-full max-w-md min-h-screen mx-auto shadow flex flex-col">
+    <div *ngIf="goods.images.length > 0">
+      <img [src]="goods.images[0]" class="w-full" alt="">
+    </div>
+    <div class="relative bg-white">
+      <div #goodsNameRef>
+        <div class="p-4 bg-white text-lg">
+          <h2 class="leading-tight break-words">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h2>
           <div class="flex mt-2 justify-between relative">
             <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'2.' }}</strong>원</div>
             <div class="flex-shrink-0 flex items-center">
@@ -64,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div class="px-4 py-3">
+      <div class="px-4 py-3 bg-white">
         <p class="leading-tight text-gray-700">{{ goods.memo }}</p>
         <div class="my-3 text-sm">
           <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>
@@ -80,18 +82,19 @@
           </ul>
         </ng-container>
       </div>
-      <div class="flex px-4 py-3 border-t border-gray-300" *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
+      <div
+        class="flex items-center px-4 py-3 border-t border-gray-300 bg-white"
+        *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
         <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
         <div>
           <div class="text-sm">{{ profile.displayName }}</div>
           <div class="text-xs text-gray-500">{{ goods.contact }}</div>
         </div>
-
       </div>
-      <div class="comment-wrap relative">
-        <div app-goods-comment-list [goods]="goods"></div>
-        <div app-goods-comment-form [goodsId]="goods.id"></div>
-      </div>
+    </div>
+    <div class="comment-wrap relative bg-gray-400 flex-grow flex flex-col">
+      <div app-goods-comment-list [goods]="goods" class="flex-grow"></div>
+      <div app-goods-comment-form [goodsId]="goods.id" class="border-t border-gray-400 bg-white"></div>
     </div>
   </div>
 </ng-container>

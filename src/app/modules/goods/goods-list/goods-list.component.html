@@ -1,22 +1,23 @@
+<div class="h-safe-top"></div>
 <ng-container *ngIf="(goodsList$ | async) as goodsList">
   <ng-container *ngIf="!activatedRouterOutlet">
-    <ul class="w-full max-w-xl py-2 mx-auto">
+    <ul class="w-full max-w-md py-2 mx-auto">
       <li
         class="goodsItem relative"
         *ngFor="let goods of goodsList; index as i">
         <a
           [routerLink]="[goods.id]"
-          class="flex flex-col md:flex-row w-full md:h-40"
+          class="flex flex-col sm:flex-row w-full sm:h-40"
           [ngClass]="{'text-gray-500': goods.soldOut}"
           (click)="onClickGoods($event, goods)">
           <div
-            class="relative md:w-5/12 h-40 md:h-auto bg-gray-200">
+            class="relative sm:w-5/12 h-40 sm:h-auto bg-gray-200">
             <div
               class="image-list h-full"
               [ngClass]="{'opacity-75': goods.soldOut}">
               <ng-container *ngFor="let src of goods.images">
                 <div class="flex relative image-item min-w-full h-full">
-                  <img [src]="src" class="object-cover" alt="">
+                  <img [src]="src" class="w-full object-cover" alt="">
                 </div>
               </ng-container>
             </div>
@@ -31,7 +32,7 @@
               </div>
             </div>
           </div>
-          <div class="relative md:w-7/12 px-4 py-3 md:pb-16">
+          <div class="relative sm:w-7/12 px-4 py-3 sm:pb-16">
             <h3 class="goodsName tracking-tight">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>
             <div class="font-bold">{{ goods.price | number:'2.' }}원</div>
             <span class="absolute right-0 bottom-0 px-4 py-3 text-sm leading-relaxed text-gray-500 flex items-center">
@@ -54,7 +55,7 @@
         </a>
       </li>
     </ul>
-    <div class="fixed left-0 right-0 bottom-0 max-w-xl p-safe-bottom mx-auto pointer-events-none">
+    <div class="fixed left-0 right-0 bottom-0 max-w-md p-safe-bottom mx-auto pointer-events-none">
       <a [routerLink]="['new', 'edit']" class="inline-block border border-white rounded-full bg-green-700 text-white p-2 m-3 pointer-events-auto">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-color-picker" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z"/>

@@ -1,19 +1,20 @@
-<div class="bg-white">
+<div class="p-2">
   <form
-    class="flex p-px"
+    class="flex"
     [formGroup]="commentForm"
     (ngSubmit)="onSubmit()">
     <textarea
-      class="border-0 m-0 bg-gray-100"
+      class="border border-gray-300 m-0 bg-gray-200 leading-tight"
       formControlName="body"
       minlength="2"
       maxlength="200"
-      rows="5"
+      rows="1"
+      placeholder="메시지를 입력하세요"
       required></textarea>
     <div
       class="flex-shrink-0">
       <button
-        class="w-full h-full border-green-600 bg-green-600"
+        class="w-full h-full border-green-600 bg-green-600 leading-tight"
         type="submit"
         [disabled]="commentForm.invalid || submitting">등록</button>
     </div>
