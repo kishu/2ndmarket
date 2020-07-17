@@ -98,9 +98,9 @@ export abstract class FirestoreService<T> {
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as T;
         const id = a.payload.doc.id;
-        return { id, ...data }
+        return { id, ...data };
       }))
-    )
+    );
   }
 
   protected valueChangesQuery(options: QueryOptions): Observable<T[]> {

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
-import { BehaviorSubject, combineLatest, forkJoin } from "rxjs";
+import { BehaviorSubject, combineLatest, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-goods-list',
@@ -24,7 +24,7 @@ export class GoodsListComponent implements OnInit {
   ]).pipe(
     map(([goodsList, moreGoodsList]) => goodsList.concat(moreGoodsList)),
     shareReplay(1)
-  )
+  );
 
   constructor(
     private router: Router,
@@ -71,9 +71,9 @@ export class GoodsListComponent implements OnInit {
       this.goodsService.getQueryByGroupId(groupId, {
         startAfter: last(goodsList).updated,
         limit: 5
-      }).subscribe(goodsList => {
-        if (goodsList.length > 0) {
-          this.moreGoodsList$.next(goodsList);
+      }).subscribe(queriedGoodsList => {
+        if (queriedGoodsList.length > 0) {
+          this.moreGoodsList$.next(queriedGoodsList);
         } else {
           this.activatedMoreGoods = false;
         }
