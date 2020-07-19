@@ -1,6 +1,9 @@
+import { combineLatest } from 'rxjs';
+import { first } from 'rxjs/operators';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { Router, RouteReuseStrategy } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -10,7 +13,6 @@ import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { environment } from '@environments/environment';
-import { CustomRouteReuseStrategy } from './custom-route-reuse-strategy';
 
 import { HomeModule } from '@app/modules/home/home.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
@@ -20,8 +22,6 @@ import { PreferenceModule } from '@app/modules/preference/preference.module';
 import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { first } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
@@ -66,8 +66,7 @@ export function appInitializer(router: Router, authService: AuthService) {
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
-    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true },
-    { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy }
+    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true }
   ],
   bootstrap: [AppComponent]
 })

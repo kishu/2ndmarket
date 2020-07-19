@@ -1,11 +1,12 @@
 import { last } from 'lodash-es';
-import { first, map, scan, shareReplay,  } from 'rxjs/operators';
+import { filter, first, map, scan, shareReplay, switchMap, tap, } from 'rxjs/operators';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { AuthService, GoodsService, } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
 import { BehaviorSubject, combineLatest, forkJoin } from 'rxjs';
+import { DocumentChangeAction } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-goods-list',
@@ -17,14 +18,32 @@ export class GoodsListComponent implements OnInit {
   activatedRouterOutlet = false;
   activatedMoreGoods = true;
 
-  moreGoodsList$ = new BehaviorSubject<Goods[]>([]);
-  goodsList$ = combineLatest([
-    this.persistenceService.goods$.pipe(first(), shareReplay(1)),
-    this.moreGoodsList$.pipe(scan((a, c) => a.concat(c), []))
+  // private stateChangesSubscription;
+
+  moreGoods$ = new BehaviorSubject<Goods[]>([]);
+  goods$ = combineLatest([
+    this.persistenceService.goods$.pipe(first()),
+    this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
   ]).pipe(
-    map(([goodsList, moreGoodsList]) => goodsList.concat(moreGoodsList)),
+    map(([goods, moreGoods]) => goods.concat(moreGoods)),
     shareReplay(1)
   );
+
+  stateChangesActions$ = this.goods$.pipe(
+    switchMap(goods => {
+      return this.goodsService
+        .stateChangesQueryByGroupId(
+          this.groupId, {
+            startAfter: goods[0].updated,
+            limit: goods.length
+          }
+        );
+    })
+  );
+
+  get groupId() {
+    return this.activatedRoute.snapshot.paramMap.get('groupId');
+  }
 
   constructor(
     private router: Router,
@@ -54,11 +73,6 @@ export class GoodsListComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  onClickGoods(e: Event, goods: Goods) {
-    e.preventDefault();
-    this.goodsCacheService.cache(goods);
-  }
-
   onMoreGoods() {
     if (this.fetchingMoreGoods || !this.activatedMoreGoods) {
       return;
@@ -67,13 +81,13 @@ export class GoodsListComponent implements OnInit {
     this.fetchingMoreGoods = true;
     const groupId = this.activatedRoute.snapshot.paramMap.get('groupId');
 
-    this.goodsList$.pipe(first()).subscribe((goodsList) => {
+    this.goods$.pipe(first()).subscribe((goods) => {
       this.goodsService.getQueryByGroupId(groupId, {
-        startAfter: last(goodsList).updated,
+        startAfter: last(goods).updated,
         limit: 5
-      }).subscribe(queriedGoodsList => {
-        if (queriedGoodsList.length > 0) {
-          this.moreGoodsList$.next(queriedGoodsList);
+      }).subscribe(moreGoods => {
+        if (moreGoods.length > 0) {
+          this.moreGoods$.next(moreGoods);
         } else {
           this.activatedMoreGoods = false;
         }

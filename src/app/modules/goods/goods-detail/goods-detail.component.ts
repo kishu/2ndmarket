@@ -1,6 +1,6 @@
 import { once } from 'lodash-es';
-import { combineLatest, forkJoin, Observable, of } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { combineLatest, forkJoin, Observable, of, Subject } from 'rxjs';
+import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
@@ -17,17 +17,24 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
   private intersectionObserver: IntersectionObserver;
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
+  private destroy$ = new Subject<null>();
 
-  goods$: Observable<Goods> = this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(shareReplay(1));
-  empty$: Observable<boolean> = this.goods$.pipe(map(g => !g));
+  cachedGoods$ = this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(shareReplay(1));
+  goods$ = this.goodsService.valueChanges(this.goodsId).pipe(
+    takeUntil(this.destroy$),
+    shareReplay(1)
+  );
+
+  empty$: Observable<boolean> = this.goods$.pipe(first(), map(g => !g));
   permission$: Observable<boolean> = combineLatest([
     this.goods$,
-    this.authService.profile$.pipe(first(), filter(p => !!p))
+    this.authService.profile$
   ]).pipe(
-    map(([g, p]) => g.profileId === p.id),
+    map(([g, p]) => g.profileId === p?.id),
     shareReplay(1)
   );
   favoriteCount$: Observable<number> = this.goods$.pipe(
+    first(),
     map(goods => goods.favoritesCnt)
   );
   favorited$: Observable<boolean> = combineLatest([
@@ -65,8 +72,12 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   ngOnDestroy() {
-    this.headerService.title$.next(null);
-    this.intersectionObserver.unobserve(this.goodsNameRef.nativeElement);
+    this.destroy$.next();
+    this.goodsCacheService.remove();
+    if (this.goodsNameRef) {
+      this.intersectionObserver.unobserve(this.goodsNameRef.nativeElement);
+      this.headerService.title$.next(null);
+    }
   }
 
   ngAfterViewChecked() {

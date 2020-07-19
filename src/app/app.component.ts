@@ -1,4 +1,3 @@
-import { parse } from 'url-parser';
 import { filter, first, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
@@ -35,18 +34,15 @@ export class AppComponent implements OnInit {
       console.log(err);
     });
 
-    // https://dev.2ndmarket.co/groups/0GdquHWyuHiuEeQEm9eF/goods/9ttxfqJLcGMUqYbrcuZ1
-    // var urlObj = new DefaultUrlSerializer('https://dev.2ndmarket.co/groups/0GdquHWyuHiuEeQEm9eF/goods/9ttxfqJLcGMUqYbrcuZ1');
-
-    this.afMessaging.onMessage(payload => {
-      const { body, title, click_action} = payload.notification;
-      if (!this.location.isCurrentPathEqualTo('/preference/profile')) {
-        if (confirm(`${title}\n${body}`)) {
-          const pathname = parse(click_action).pathname;
-          this.router.navigateByUrl(pathname);
-        }
-      }
-    });
+    // this.afMessaging.onMessage(payload => {
+    //   const { body, title, click_action} = payload.notification;
+    //   if (!this.location.isCurrentPathEqualTo('/preference/profile')) {
+    //     if (confirm(`${title}\n${body}`)) {
+    //       const pathname = parse(click_action).pathname;
+    //       this.router.navigateByUrl(pathname);
+    //     }
+    //   }
+    // });
 
     // this.afMessaging.messages.subscribe((message) => { console.log(message); });
   }

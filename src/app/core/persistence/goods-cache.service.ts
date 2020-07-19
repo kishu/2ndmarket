@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Goods } from '@app/core/model';
 import { merge, Observable, of } from 'rxjs';
 import { GoodsService } from '@app/core/http';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,16 +18,16 @@ export class GoodsCacheService {
     this.cachedGoods = goods;
   }
 
-  getCachedGoods$(goodsId: string): Observable<Goods> {
-    if (goodsId === this.cachedGoods?.id) {
-      return merge(
-        of(this.cachedGoods),
-        this.goodsService.snapshotChanges(this.cachedGoods.id)
-      );
-    } else {
-      return this.goodsService.snapshotChanges(goodsId);
-    }
+  remove() {
+    this.cachedGoods = null;
   }
 
+  getCachedGoods$(goodsId: string): Observable<Goods | null> {
+    if (goodsId === this.cachedGoods?.id) {
+      return of(this.cachedGoods);
+    } else {
+      return of(null);
+    }
+  }
 
 }

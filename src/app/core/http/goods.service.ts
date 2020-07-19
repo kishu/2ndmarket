@@ -21,10 +21,6 @@ export class GoodsService extends FirestoreService<Goods> {
   }
 
   update(goodsId: string, goods: Partial<Goods>) {
-    // const updateGoods: UpdateGoods = {
-    //   ...goods,
-    //   updated: FirestoreService.serverTimestamp()
-    // };
     const updateGoods = { ...goods };
     delete updateGoods.id;
     return super.update(goodsId, updateGoods);
@@ -42,18 +38,6 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.getQuery(options);
   }
 
-  snapshotChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
-    options = {
-      limit: 100,
-      ...options,
-      where: [
-        ['groupId', '==', groupId]
-      ],
-      orderBy: [['updated', 'desc']],
-    };
-    return super.snapshotChangesQuery(options);
-  }
-
   valueChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
     options = {
       limit: 100,
@@ -64,6 +48,18 @@ export class GoodsService extends FirestoreService<Goods> {
       orderBy: [['updated', 'desc']],
     };
     return super.valueChangesQuery(options);
+  }
+
+  stateChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>) {
+    options = {
+      limit: 100,
+      ...options,
+      where: [
+        ['groupId', '==', groupId]
+      ],
+      orderBy: [['updated', 'desc']],
+    };
+    return super.query(options).stateChanges(['modified', 'removed']);
   }
 
   valueChangesQueryByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
