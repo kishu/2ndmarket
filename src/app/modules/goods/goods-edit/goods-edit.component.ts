@@ -38,7 +38,7 @@ export class GoodsEditComponent implements OnInit {
     uploadComplete$.subscribe(images => {
       goods = {...goods, images};
       this.goodsService.update(goods.id, goods).then(
-        () => this.router.navigate(['../../', goods.id], { replaceUrl: true, relativeTo: this.activatedRoute }),
+        () => this.router.navigate(['../../', goods.id], { relativeTo: this.activatedRoute }),
         err => alert(err)
       );
     });

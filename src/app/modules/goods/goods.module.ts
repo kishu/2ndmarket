@@ -13,6 +13,7 @@ import { GoodsEditComponent } from './goods-edit/goods-edit.component';
 import { GoodsCommentListComponent } from './goods-comment-list/goods-comment-list.component';
 import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-form.component';
 import { GoodsMoreComponent } from './goods-more/goods-more.component';
+import { GoodsListItemComponent } from './goods-list-item/goods-list-item.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { GoodsMoreComponent } from './goods-more/goods-more.component';
     GoodsEditComponent,
     GoodsCommentListComponent,
     GoodsCommentFormComponent,
-    GoodsMoreComponent
+    GoodsMoreComponent,
+    GoodsListItemComponent
   ],
   imports: [
     CommonModule,

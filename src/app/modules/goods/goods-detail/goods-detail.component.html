@@ -1,4 +1,4 @@
-<ng-container *ngIf="goods$ | async as goods">
+<ng-container *ngIf="((cachedGoods$ | async) || (goods$ | async)) as goods">
   <div class="w-full max-w-md min-h-screen mx-auto shadow flex flex-col">
     <div class="h-safe-top"></div>
     <div *ngIf="goods.images.length > 0">
@@ -31,7 +31,7 @@
                   </svg>
                 </button>
                 <div class="absolute right-0 p-2 border bg-white" style="top: 100%" *ngIf="showPermission">
-                  <a [routerLink]="['edit']" class="flex items-center w-full p-1 pr-2 text-sm text-gray-700">
+                  <a [routerLink]="['edit']" [skipLocationChange]="true" class="flex items-center w-full p-1 pr-2 text-sm text-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit mr-1" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
                       <path stroke="none" d="M0 0h24v24H0z"/>
                       <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
