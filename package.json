@@ -31,6 +31,7 @@
     "array-move": "^2.2.2",
     "date-fns": "^2.14.0",
     "firebase": "^7.15.0",
+    "linkifyjs": "^2.1.9",
     "lodash-es": "^4.17.15",
     "rxjs": "~6.5.4",
     "sha1": "^1.1.1",

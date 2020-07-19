@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LimitTimerComponent } from './components';
-import { FormatDistanceToNowPipe, FromBytesPipe, FsDocumentPipe, FsTimestampPipe, MsToMMSSPipe, ObjectUrlPipe, SanitizerPipe } from './pipes';
+import { FormatDistanceToNowPipe, FromBytesPipe, FsDocumentPipe, FsTimestampPipe, LinkkfyPipe,
+         MsToMMSSPipe, ObjectUrlPipe, SanitizerPipe } from './pipes';
 import { ImagesControlComponent } from './components/images-control/images-control.component';
 
 @NgModule({
@@ -12,6 +13,7 @@ import { ImagesControlComponent } from './components/images-control/images-contr
     FromBytesPipe,
     FsDocumentPipe,
     FsTimestampPipe,
+    LinkkfyPipe,
     MsToMMSSPipe,
     ObjectUrlPipe,
     SanitizerPipe
@@ -26,6 +28,7 @@ import { ImagesControlComponent } from './components/images-control/images-contr
     FromBytesPipe,
     FsDocumentPipe,
     FsTimestampPipe,
+    LinkkfyPipe,
     MsToMMSSPipe,
     ObjectUrlPipe,
     SanitizerPipe

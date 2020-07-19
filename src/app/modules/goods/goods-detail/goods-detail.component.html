@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="px-4 py-3 bg-white">
-        <p class="leading-tight text-gray-700">{{ goods.memo }}</p>
+        <p class="leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkkfy"></p>
         <div class="my-3 text-sm">
           <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>
           <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
