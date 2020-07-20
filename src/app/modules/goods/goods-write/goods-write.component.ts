@@ -66,7 +66,11 @@ export class GoodsWriteComponent implements OnInit {
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
     uploadProgress$.subscribe(e => this.uploadProgress = e); // {type: 1, loaded: 163840, total: 165310}
     uploadComplete$.subscribe(images => {
-      goods = {...goods, images};
+      goods = {
+        ...goods,
+        price: parseInt(goods.price.replace(/,/g, ''), 10),
+        images
+      };
       this.goodsService.create(createdId, goods).then(
         () => this.router.navigate(['../../', createdId], { replaceUrl: true, relativeTo: this.activatedRoute }),
         err => alert(err)

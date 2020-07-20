@@ -55,7 +55,7 @@ export function appInitializer(router: Router, authService: AuthService) {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
-    AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     AngularFireFunctionsModule,
     AngularFireMessagingModule,
     HomeModule,
