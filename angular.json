@@ -17,6 +17,19 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "@firebase/app",
+              "@firebase/auth",
+              "@firebase/component",
+              "@firebase/functions",
+              "@firebase/firestore",
+              "@firebase/util",
+              "firebase",
+              "linkifyjs",
+              "querystring",
+              "sha1",
+              "url-parser"
+            ],
             "customWebpackConfig": {
                "path": "./webpack.config.js",
                "replaceDuplicatePlugins": true
