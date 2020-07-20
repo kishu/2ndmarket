@@ -23,20 +23,20 @@ export class GoodsListItemComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (this.goods && changes.stateChangeActions.currentValue) {
       const actions = changes.stateChangeActions.currentValue as DocumentChangeAction<any>[];
-      actions.filter(action => {
-        return !action.payload.doc.metadata.fromCache && action.payload.doc.id === this.goods.id;
-      }).forEach(action => {
-        console.log('change', action.type, action.payload);
-        switch (action.type) {
-          case 'modified':
-            this.goods = { id: action.payload.doc.id, ... action.payload.doc.data() };
-            break;
-          case 'removed':
-            this.goods = null;
-            this.deleted = true;
-            break;
-        }
-      });
+      actions
+        .filter(action => action.payload.doc.id === this.goods.id)
+        .forEach(action => {
+          console.log('change', action.type, action.payload);
+          switch (action.type) {
+            case 'modified':
+              this.goods = { id: action.payload.doc.id, ... action.payload.doc.data() };
+              break;
+            case 'removed':
+              this.goods = null;
+              this.deleted = true;
+              break;
+          }
+        });
     }
   }
 

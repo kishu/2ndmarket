@@ -36,7 +36,11 @@ export class GoodsEditComponent implements OnInit {
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
     uploadProgress$.subscribe(e => this.uploadProgress = e); // {type: 1, loaded: 163840, total: 165310}
     uploadComplete$.subscribe(images => {
-      goods = {...goods, images};
+      goods = {
+        ...goods,
+        price: parseInt(goods.price.replace(/,/g, ''), 10),
+        images
+      };
       this.goodsService.update(goods.id, goods).then(
         () => this.router.navigate(['../../', goods.id], { relativeTo: this.activatedRoute }),
         err => alert(err)

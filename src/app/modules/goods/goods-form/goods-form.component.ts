@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { Goods, NewGoods, DraftImage } from '@app/core/model';
 import { ImagesControlComponent } from '@app/shared/components/images-control/images-control.component';
@@ -40,13 +41,25 @@ export class GoodsFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private _location: Location
+    private decimalPipe: DecimalPipe,
+    private location: Location
   ) {
   }
 
   ngOnInit(): void {
     const { name, shared, purchased, condition, price, shipping, contact, memo, soldOut } = this.goods;
-    this.goodsForm.setValue({ name, shared, purchased, condition, price, shipping, contact, memo, soldOut });
+    this.goodsForm.setValue({
+      name, shared, purchased, condition, shipping, contact, memo, soldOut,
+      price: this.decimalPipe.transform(this.goods.price, '1.0-0')
+    });
+
+    this.priceCtl.valueChanges.subscribe(value => {
+      if (value) {
+        const parseIntPrice = parseInt(value.replace(/,/g, ''), 10);
+        const decimalPrice = parseIntPrice ? this.decimalPipe.transform(parseIntPrice, '1.0-0') : '';
+        this.priceCtl.setValue(decimalPrice, { emitEvent: false });
+      }
+    });
   }
 
   onSubmit() {
@@ -61,6 +74,6 @@ export class GoodsFormComponent implements OnInit {
   }
 
   onClickHistoryBack() {
-    this._location.back();
+    this.location.back();
   }
 }

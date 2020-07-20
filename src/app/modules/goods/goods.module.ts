@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
 import { GoodsRoutingModule } from './goods-routing.module';
@@ -35,6 +36,9 @@ import { GoodsListItemComponent } from './goods-list-item/goods-list-item.compon
     SharedModule,
     HomeModule,
     GoodsRoutingModule
+  ],
+  providers: [
+    DecimalPipe
   ]
 })
 export class GoodsModule { }
