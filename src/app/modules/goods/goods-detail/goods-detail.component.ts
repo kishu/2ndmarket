@@ -1,6 +1,6 @@
 import { once } from 'lodash-es';
-import { combineLatest, forkJoin, Observable, of, Subject } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { filter, first, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
@@ -19,9 +19,10 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
   private destroy$ = new Subject<null>();
 
-  cachedGoods$ = this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(shareReplay(1));
-  goods$ = this.goodsService.valueChanges(this.goodsId).pipe(
-    takeUntil(this.destroy$),
+  goods$: Observable<Goods> = merge(
+    this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(filter(g => !!g)),
+    this.goodsService.valueChanges(this.goodsId).pipe(takeUntil(this.destroy$)),
+  ).pipe(
     shareReplay(1)
   );
 

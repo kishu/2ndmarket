@@ -1,11 +1,11 @@
 import { last } from 'lodash-es';
-import { filter, first, map, scan, shareReplay, switchMap, tap, } from 'rxjs/operators';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { first, map, scan, shareReplay, skip, switchMap, tap, } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
-import { BehaviorSubject, combineLatest, forkJoin } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { DocumentChangeAction } from '@angular/fire/firestore';
 
 @Component({
@@ -13,12 +13,10 @@ import { DocumentChangeAction } from '@angular/fire/firestore';
   templateUrl: './goods-list.component.html',
   styleUrls: ['./goods-list.component.scss']
 })
-export class GoodsListComponent implements OnInit {
+export class GoodsListComponent implements OnInit, OnDestroy {
   private fetchingMoreGoods = false;
   activatedRouterOutlet = false;
   activatedMoreGoods = true;
-
-  // private stateChangesSubscription;
 
   moreGoods$ = new BehaviorSubject<Goods[]>([]);
   goods$ = combineLatest([
@@ -29,7 +27,8 @@ export class GoodsListComponent implements OnInit {
     shareReplay(1)
   );
 
-  stateChangesActions$ = this.goods$.pipe(
+  goodsStateChanges: DocumentChangeAction<any>[];
+  goodsStateChangeSubscription = this.goods$.pipe(
     switchMap(goods => {
       return this.goodsService
         .stateChangesQueryByGroupId(
@@ -39,7 +38,9 @@ export class GoodsListComponent implements OnInit {
           }
         );
     })
-  );
+  ).subscribe(actions => {
+    this.goodsStateChanges = actions;
+  });
 
   get groupId() {
     return this.activatedRoute.snapshot.paramMap.get('groupId');
@@ -57,6 +58,10 @@ export class GoodsListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    this.goodsStateChangeSubscription.unsubscribe();
   }
 
   trackBy(index, item) {

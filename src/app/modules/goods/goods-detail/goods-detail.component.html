@@ -1,4 +1,4 @@
-<ng-container *ngIf="((cachedGoods$ | async) || (goods$ | async)) as goods">
+<ng-container *ngIf="goods$ | async as goods">
   <div class="w-full max-w-md min-h-screen mx-auto shadow flex flex-col">
     <div class="h-safe-top"></div>
     <div *ngIf="goods.images.length > 0">

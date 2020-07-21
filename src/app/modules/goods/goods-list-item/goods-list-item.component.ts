@@ -10,23 +10,23 @@ import { Goods } from '@app/core/model';
 })
 export class GoodsListItemComponent implements OnInit, OnChanges {
   @Input() goods: Goods;
-  @Input() stateChangeActions: DocumentChangeAction<any>[];
+  @Input() goodsStateChanges: DocumentChangeAction<any>[];
   deleted = false;
 
   constructor(
     private goodsCacheService: GoodsCacheService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.goods && changes.stateChangeActions.currentValue) {
-      const actions = changes.stateChangeActions.currentValue as DocumentChangeAction<any>[];
+    if (this.goods && changes.goodsStateChanges?.currentValue) {
+      const actions = changes.goodsStateChanges.currentValue as DocumentChangeAction<any>[];
       actions
         .filter(action => action.payload.doc.id === this.goods.id)
         .forEach(action => {
-          console.log('change', action.type, action.payload);
           switch (action.type) {
             case 'modified':
               this.goods = { id: action.payload.doc.id, ... action.payload.doc.data() };

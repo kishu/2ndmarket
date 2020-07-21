@@ -5,7 +5,7 @@
       <li
         class="goodsItem relative"
         *ngFor="let item of goods; index as i; trackBy: trackBy">
-        <app-goods-list-item [goods]="item" [stateChangeActions]="stateChangesActions$ | async"></app-goods-list-item>
+        <app-goods-list-item [goods]="item" [goodsStateChanges]="goodsStateChanges"></app-goods-list-item>
       </li>
     </ul>
     <div class="fixed left-0 right-0 bottom-0 max-w-md p-safe-bottom mx-auto pointer-events-none">
