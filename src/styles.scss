@@ -5,10 +5,10 @@
 @import "tailwindcss/utilities";
 
 html {
+  min-width: 320px;
 }
 
 body {
-  min-width: 320px;
   -webkit-tap-highlight-color: transparent;
   @apply bg-gray-300;
   // padding-left:constant(safe-area-inset-left);
@@ -42,6 +42,15 @@ body {
   @apply fixed left-0 top-0 w-full h-full;
   @apply flex flex-col justify-center items-center;
   @apply bg-white;
+}
+
+.min-h-content {
+  min-height: calc(100vh - constant(safe-area-inset-top) - 49px);
+  min-height: calc(100vh - env(safe-area-inset-top) - 49px);
+}
+
+.min-h-50vh {
+  min-height: 50vh;
 }
 
 button,
@@ -146,6 +155,10 @@ textarea {
 
 .comment-wrap {
   @apply w-full max-w-md mx-auto;
+}
+
+.scroll-snap-start {
+	scroll-snap-align: start;
 }
 
 .goods-images-ordering {

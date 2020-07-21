@@ -1,6 +1,5 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="w-full max-w-md min-h-screen mx-auto shadow flex flex-col">
-    <div class="h-safe-top"></div>
     <div *ngIf="goods.images.length > 0">
       <img [src]="goods.images[0]" class="w-full" alt="">
     </div>
@@ -93,7 +92,7 @@
         </div>
       </div>
     </div>
-    <div class="comment-wrap relative bg-gray-400 flex-grow flex flex-col">
+    <div class="comment-wrap relative bg-gray-400 flex-grow flex flex-col min-h-50vh">
       <div app-goods-comment-list [goods]="goods" class="flex-grow"></div>
       <div app-goods-comment-form [goodsId]="goods.id" class="border-t border-gray-400 bg-white"></div>
     </div>
