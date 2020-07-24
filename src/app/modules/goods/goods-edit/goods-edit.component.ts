@@ -6,9 +6,10 @@ import { CloudinaryUploadService, GoodsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
 
 @Component({
-  selector: 'app-goods-edit',
+  selector: '[app-goods-edit]',
   templateUrl: './goods-edit.component.html',
-  styleUrls: ['./goods-edit.component.scss']
+  styleUrls: ['./goods-edit.component.scss'],
+  host: { '[class.exclusive]': 'true' }
 })
 export class GoodsEditComponent implements OnInit {
   submitting = false;

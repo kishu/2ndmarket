@@ -1,58 +1,17 @@
-<ng-container *ngIf="!activatedRouterOutlet && (goods$ | async) as goodsList">
+<!--<ng-container *ngIf="!activatedRouterOutlet && (goods$ | async) as goods">-->
+
+<router-outlet
+  (activate)="onActivatedRouterOutlet($event)"
+  (deactivate)="onDeactivatedRouterOutlet($event)">
+</router-outlet>
+
+<div *ngIf="goods$ | async as goods">
   <div class="h-safe-top"></div>
   <ul class="w-full max-w-md py-2 mx-auto">
     <li
       class="goodsItem relative"
-      *ngFor="let goods of goodsList; index as i; trackBy: trackBy">
-      <a
-        *ngIf="goods"
-        [routerLink]="[goods.id]"
-        class="flex flex-col sm:flex-row w-full sm:h-40"
-        [ngClass]="{'text-gray-500': goods.soldOut}"
-        (click)="onClickGoods($event, goods)">
-        <div
-          class="relative sm:w-5/12 h-40 sm:h-auto bg-gray-200">
-          <div
-            class="image-list h-full"
-            [ngClass]="{'opacity-75': goods.soldOut}">
-            <ng-container *ngFor="let src of goods.images">
-              <div class="flex relative image-item min-w-full h-full">
-                <img [src]="src" class="w-full object-cover" alt="">
-              </div>
-            </ng-container>
-          </div>
-          <div class="absolute left-0 right-0 top-0 bottom-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" *ngIf="goods.soldOut">
-            <div class="w-16 h-16 p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock" width="48" height="48" viewBox="0 0 24 24" stroke-width="1" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" />
-                <path d="M8 11v-4a4 4 0 0 1 8 0v4" fill="rgba(26, 32, 44, 0.9" />
-                <rect x="5" y="11" width="14" height="10" rx="2" fill="rgba(26, 32, 44, 0.75)" />
-                <circle cx="12" cy="16" r="1" />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div class="relative sm:w-7/12 px-4 py-3 sm:pb-16">
-          <h3 class="goodsName tracking-tight">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>
-          <div class="font-bold">{{ goods.price | number:'2.' }}원</div>
-          <span class="absolute right-0 bottom-0 px-4 py-3 text-sm leading-relaxed text-gray-500 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message-circle mr-px" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z"/>
-              <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" />
-              <line x1="12" y1="12" x2="12" y2="12.01" />
-              <line x1="8" y1="12" x2="8" y2="12.01" />
-              <line x1="16" y1="12" x2="16" y2="12.01" />
-            </svg>
-            <span class="ml-px mr-2">{{ goods.commentsCnt }}</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star mr-px" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z"/>
-              <path d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-            </svg>
-            <span class="ml-px">{{ goods.favoritesCnt }}</span>
-            <!-- {{ goods.created | fsTimestamp | formatDistanceToNow }} 전 -->
-          </span>
-        </div>
-      </a>
+      *ngFor="let item of goods; index as i; trackBy: trackBy">
+      <app-goods-list-item [goods]="item" [updatedGoods]="updatedGoods$ | async"></app-goods-list-item>
     </li>
   </ul>
   <div class="fixed left-0 right-0 bottom-0 max-w-md p-safe-bottom mx-auto pointer-events-none">
@@ -65,9 +24,4 @@
     </a>
   </div>
   <app-goods-more *ngIf="!moreGoods$.closed" (more)="onMoreGoods()"></app-goods-more>
-</ng-container>
-
-<router-outlet
-  (activate)="onActivatedRouterOutlet()"
-  (deactivate)="onDeactivatedRouterOutlet()">
-</router-outlet>
+</div>

@@ -407,3 +407,5 @@ app-header {
             transform: rotate(3deg);
   }
 }
+
+.exclusive + div { display: none }

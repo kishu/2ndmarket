@@ -1,5 +1,5 @@
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AuthService, GoodsCommentsService, FavoriteGoodsService, GoodsService, GroupsService, MessagesService, ProfilesService } from '@app/core/http';
 import { Goods, MessageExt, ProfileExt } from '@app/core/model';
@@ -24,6 +24,7 @@ export class PersistenceService {
 
   goods$: Observable<Goods[]> = this.authService.profile$.pipe(
     switchMap((profile) => this.goodsService.valueChangesQueryByGroupId(profile.groupId, { limit: 5 })),
+    tap(g => console.log('per', g)),
     shareReplay(1)
   );
 

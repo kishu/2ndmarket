@@ -1,17 +1,19 @@
 import { once } from 'lodash-es';
 import { combineLatest, forkJoin, merge, Observable, of, Subject } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
+import { GoodsListItemUpdateService } from '../services/goods-list-item-update.service';
 import { Goods, NewFavoriteGoods } from '@app/core/model';
 import { HeaderService } from '@app/shared/services';
 
 @Component({
-  selector: 'app-goods-detail',
+  selector: '[app-goods-detail]',
   templateUrl: './goods-detail.component.html',
-  styleUrls: ['./goods-detail.component.scss']
+  styleUrls: ['./goods-detail.component.scss'],
+  host: { '[class.exclusive]': 'true' }
 })
 export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
@@ -21,7 +23,11 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   goods$: Observable<Goods> = merge(
     this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(filter(g => !!g)),
-    this.goodsService.valueChanges(this.goodsId).pipe(takeUntil(this.destroy$)),
+    this.goodsService.valueChanges(this.goodsId).pipe(
+      takeUntil(this.destroy$),
+      // tap(g => console.log('detail', g)),
+      // tap(g => this.goodsListItemUpdateService.updatedGoods$.next(g))
+    )
   ).pipe(
     shareReplay(1)
   );
@@ -59,6 +65,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     private groupService: GroupsService,
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
+    private goodsListItemUpdateService: GoodsListItemUpdateService,
     private goodsCacheService: GoodsCacheService,
     private goodsFavoritesService: FavoriteGoodsService,
     private headerService: HeaderService
