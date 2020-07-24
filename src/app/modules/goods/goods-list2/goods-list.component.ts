@@ -1,22 +1,20 @@
 import { last } from 'lodash-es';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
-import { filter, first, map, scan, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivationEnd, NavigationStart, Router, RouterEvent } from '@angular/router';
+import { first, map, scan, shareReplay, switchMap } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { GoodsListItemUpdateService } from '../services/goods-list-item-update.service';
 import { Goods } from '@app/core/model';
 
 @Component({
-  selector: 'app-goods-list2',
-  templateUrl: './goods-list2.component.html',
-  styleUrls: ['./goods-list2.component.scss']
+  selector: 'app-goods-list',
+  templateUrl: './goods-list.component.html',
+  styleUrls: ['./goods-list.component.scss']
 })
-export class GoodsList2Component implements OnInit, OnDestroy {
+export class GoodsListComponent implements OnInit, OnDestroy {
   private fetchingMoreGoods = false;
-  activatedRouterOutlet = false;
-  updatedGoods$ = this.goodsListItemUpdateService.updatedGoods$.pipe(tap(g => console.log('update2', g)));
   moreGoods$ = new BehaviorSubject<Goods[]>([]);
   goods$ =
     combineLatest([
@@ -26,14 +24,8 @@ export class GoodsList2Component implements OnInit, OnDestroy {
       map(([goods, moreGoods]) => goods.concat(moreGoods)),
       shareReplay(1)
     );
-  private routerEventSubscription =
-    this.router.events.pipe(
-      // filter(e => e instanceof ActivationEnd)
-    ).subscribe((e: any)  => {
-      // console.log('############## e', e);
-      // this.activatedRouterOutlet = e.snapshot.routeConfig.path !== 'goods'
-      // this.changeDetectorRef.detectChanges();
-    });
+
+  protected routerEventsSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -42,30 +34,19 @@ export class GoodsList2Component implements OnInit, OnDestroy {
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
     private goodsListItemUpdateService: GoodsListItemUpdateService,
-    private persistenceService: PersistenceService,
-    private changeDetectorRef: ChangeDetectorRef
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit(): void {
   }
 
   ngOnDestroy() {
-    this.routerEventSubscription.unsubscribe();
     this.moreGoods$.unsubscribe();
+    this.routerEventsSubscription.unsubscribe();
   }
 
   trackBy(index, item) {
     return item.id;
-  }
-
-  onActivatedRouterOutlet(e) {
-    console.log('+++onActivatedRouterOutlet', e);
-    this.activatedRouterOutlet = true;
-  }
-
-  onDeactivatedRouterOutlet(e) {
-    console.log('---onDeactivatedRouterOutlet', e);
-    this.activatedRouterOutlet = false;
   }
 
   onClickGoods(e: Event, goods: Goods) {
@@ -74,7 +55,6 @@ export class GoodsList2Component implements OnInit, OnDestroy {
   }
 
   onMoreGoods() {
-    return false;
     if (this.fetchingMoreGoods || this.moreGoods$.closed) {
       return;
     }

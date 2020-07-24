@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { FirestoreService, QueryOptions } from '@app/core/http/firestore.service';
 import { Goods, NewGoods, UpdateGoods } from '@app/core/model';
 
@@ -50,6 +50,18 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.valueChangesQuery(options);
   }
 
+  snapshotChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<DocumentChangeAction<Goods>[]> {
+    options = {
+      limit: 100,
+      ...options,
+      where: [
+        ['groupId', '==', groupId]
+      ],
+      orderBy: [['updated', 'desc']],
+    };
+    return super.snapshotChangesQuery2(options);
+  }
+
   stateChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>) {
     options = {
       limit: 100,
@@ -59,7 +71,7 @@ export class GoodsService extends FirestoreService<Goods> {
       ],
       orderBy: [['updated', 'desc']],
     };
-    return super.query(options).stateChanges(['modified', 'removed']);
+    return super.query(options).stateChanges();
   }
 
   valueChangesQueryByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {

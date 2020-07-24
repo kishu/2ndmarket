@@ -2,7 +2,13 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { firestore } from 'firebase/app';
 import { Inject, Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import {
+  Action,
+  AngularFirestore,
+  AngularFirestoreCollection,
+  DocumentChangeAction,
+  DocumentSnapshot
+} from '@angular/fire/firestore';
 
 export interface QueryOptions {
   where?: [string, firestore.WhereFilterOp, any][];
@@ -54,18 +60,8 @@ export abstract class FirestoreService<T> {
       );
   }
 
-  public snapshotChanges(docId: string): Observable<T | undefined> {
-    return this.afs.doc<T>(`${this.path}/${docId}`)
-      .snapshotChanges()
-      .pipe(
-        map(action => {
-          if (action.payload.exists) {
-            return ({ id: action.payload.id, ...action.payload.data() });
-          } else {
-            return undefined;
-          }
-        })
-      );
+  public snapshotChanges(docId: string): Observable<Action<DocumentSnapshot<T>>> {
+    return this.afs.doc<T>(`${this.path}/${docId}`).snapshotChanges();
   }
 
   public valueChanges(docId: string): Observable<T | undefined> {
@@ -101,6 +97,10 @@ export abstract class FirestoreService<T> {
         return { id, ...data };
       }))
     );
+  }
+
+  protected snapshotChangesQuery2(options: QueryOptions): Observable<DocumentChangeAction<any>[]> {
+    return this.query(options).snapshotChanges();
   }
 
   protected valueChangesQuery(options: QueryOptions): Observable<T[]> {

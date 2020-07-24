@@ -1,17 +1,17 @@
 import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { HttpProgressEvent } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CloudinaryUploadService, GoodsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
 
 @Component({
-  selector: '[app-goods-edit]',
+  selector: 'app-goods-edit, [app-goods-edit]',
   templateUrl: './goods-edit.component.html',
   styleUrls: ['./goods-edit.component.scss'],
-  host: { '[class.exclusive]': 'true' }
 })
 export class GoodsEditComponent implements OnInit {
+  @HostBinding('class.hidden-after') hiddenAfter = true;
   submitting = false;
   goods$: Observable<Goods>;
   uploadProgress: HttpProgressEvent;

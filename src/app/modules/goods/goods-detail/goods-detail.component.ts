@@ -1,7 +1,7 @@
 import { once } from 'lodash-es';
 import { combineLatest, forkJoin, merge, Observable, of, Subject } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
@@ -10,12 +10,12 @@ import { Goods, NewFavoriteGoods } from '@app/core/model';
 import { HeaderService } from '@app/shared/services';
 
 @Component({
-  selector: '[app-goods-detail]',
+  selector: 'app-goods-detail, [app-goods-detail]',
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss'],
-  host: { '[class.exclusive]': 'true' }
 })
 export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
+  @HostBinding('class.hidden-after') hiddenAfter = true;
   @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
   private intersectionObserver: IntersectionObserver;
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
@@ -24,9 +24,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   goods$: Observable<Goods> = merge(
     this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(filter(g => !!g)),
     this.goodsService.valueChanges(this.goodsId).pipe(
-      takeUntil(this.destroy$),
-      // tap(g => console.log('detail', g)),
-      // tap(g => this.goodsListItemUpdateService.updatedGoods$.next(g))
+      takeUntil(this.destroy$)
     )
   ).pipe(
     shareReplay(1)

@@ -14,8 +14,8 @@ import { GoodsCommentListComponent } from './goods-comment-list/goods-comment-li
 import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-form.component';
 import { GoodsMoreComponent } from './goods-more/goods-more.component';
 import { GoodsListItemComponent } from './goods-list-item/goods-list-item.component';
-import { GoodsList2Component } from './goods-list2/goods-list2.component';
-import { GoodsListItemUpdateService } from "./services/goods-list-item-update.service";
+import { GoodsListComponent } from './goods-list2/goods-list.component';
+import { GoodsListItemUpdateService } from './services/goods-list-item-update.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,7 @@ import { GoodsListItemUpdateService } from "./services/goods-list-item-update.se
     GoodsDetailComponent,
     GoodsEditComponent,
     GoodsFormComponent,
-    GoodsList2Component,
+    GoodsListComponent,
     GoodsListItemComponent,
     GoodsMoreComponent,
     GoodsWriteComponent

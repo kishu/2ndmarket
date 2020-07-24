@@ -1,6 +1,6 @@
-import { ReplaySubject, Subject } from "rxjs";
+import { ReplaySubject, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Goods } from "@app/core/model/goods";
+import { Goods } from '@app/core/model/goods';
 
 @Injectable({
   providedIn: 'any'

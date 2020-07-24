@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
-import { GoodsList2Component } from './goods-list2/goods-list2.component';
+import { GoodsListComponent } from './goods-list2/goods-list.component';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
 import { GoodsEditComponent } from './goods-edit/goods-edit.component';
@@ -14,7 +14,7 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['sign-in']);
       { path: 'goods/new/edit', component: GoodsWriteComponent, /* ...canActivate(redirectUnauthorizedToLogin) */ },
       {
         path: 'goods',
-        component: GoodsList2Component,
+        component: GoodsListComponent,
         children: [
           { path: ':goodsId', component: GoodsDetailComponent },
           { path: ':goodsId/edit', component: GoodsEditComponent }
