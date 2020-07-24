@@ -1,18 +1,18 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="w-full max-w-md min-h-screen mx-auto shadow flex flex-col">
+    <div class="h-safe-top"></div>
     <div *ngIf="goods.images.length > 0">
       <img [src]="goods.images[0]" class="w-full" alt="">
     </div>
     <div class="relative bg-white">
-      <div #goodsNameRef>
-        <div class="p-4 bg-white text-lg">
-          <h2 class="leading-tight break-words">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h2>
-          <div class="flex mt-2 justify-between relative">
-            <div class="flex-grow"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
+      <div #goodsNameRef class="relative z-20">
+        <div class="p-4 bg-white">
+          <div class="flex justify-between relative">
+            <h2 class="text-lg leading-tight break-words">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h2>
             <div class="flex-shrink-0 flex items-center">
               <button type="button" *ngIf="(permission$ | async) === false" class="p-1 border-none bg-transparent text-gray-500 flex items-center" (click)="onClickFavorite()">
                 <!-- <span class="mr-px text-sm text-gray-600" [ngClass]="{'text-red-600': favorited$ | async}">{{ favoriteCount$ | async }}</span> -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star mr-px" [ngClass]="{'active': favorited$ | async}" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star mr-px" [ngClass]="{'active': favorited$ | async}" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z"/>
                   <path d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
                 </svg>
@@ -30,8 +30,8 @@
                   </svg>
                 </button>
                 <div class="absolute right-0 p-2 border bg-white" style="top: 100%" *ngIf="showPermission">
-                  <a [routerLink]="['edit']" [skipLocationChange]="true" class="flex items-center w-full p-1 pr-2 text-sm text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit mr-1" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <a [routerLink]="['edit']" [skipLocationChange]="true" class="flex items-center w-full p-1 pr-2 text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit mr-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
                       <path stroke="none" d="M0 0h24v24H0z"/>
                       <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
                       <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
@@ -39,8 +39,8 @@
                     </svg>
                     수정하기
                   </a>
-                  <button type="button" class="flex items-center w-full p-1 pr-2 border-none bg-transparent text-sm text-gray-700" (click)="onClickDelete(goods)">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash mr-1" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <button type="button" class="flex items-center w-full p-1 pr-2 border-none bg-transparent text-gray-700" (click)="onClickDelete(goods)">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash mr-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
                       <path stroke="none" d="M0 0h24v24H0z"/>
                       <line x1="4" y1="7" x2="20" y2="7" />
                       <line x1="10" y1="11" x2="10" y2="17" />
@@ -50,8 +50,8 @@
                     </svg>
                     삭제하기
                   </button>
-                  <button type="button" class="flex items-center w-full p-1 pr-2 border-none bg-transparent text-sm text-gray-700" (click)="onClickSoldOut()">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock mr-1" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <button type="button" class="flex items-center w-full p-1 pr-2 border-none bg-transparent text-gray-700" (click)="onClickSoldOut()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock mr-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#38a169" fill="none" stroke-linecap="round" stroke-linejoin="round">
                       <path stroke="none" d="M0 0h24v24H0z"/>
                       <rect x="5" y="11" width="14" height="10" rx="2" />
                       <circle cx="12" cy="16" r="1" />
@@ -64,6 +64,7 @@
               </ng-container>
             </div>
           </div>
+          <div class="mt-2 text-lg"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
         </div>
       </div>
       <div class="px-4 py-3 bg-white">
@@ -74,9 +75,18 @@
         </div>
         <ng-container *ngIf="goods.images.length > 1">
           <ul class="goods-images">
-            <ng-container *ngFor="let src of goods.images; first as isFirst">
-              <li class="relative border border-white" *ngIf="!isFirst">
-                <div class="attachImage"><img [src]="src" class="image" alt=""></div>
+            <ng-container *ngFor="let src of goods.images">
+              <li class="relative border border-white">
+                <div class="attachImage"><img [src]="src" class="image" alt="" (click)="onClickPhotoViewer()"></div>
+              </li>
+            </ng-container>
+          </ul>
+        </ng-container>
+        <ng-container *ngIf="showPhotoViewer && goods.images.length > 1">
+          <ul class="fixed z-50 inset-0 overflow-x-auto flex scroll-snap-x bg-black bg-opacity-75">
+            <ng-container *ngFor="let src of goods.images">
+              <li class="scroll-snap-start min-w-full h-full p-2">
+                <img [src]="src" class="w-full h-full object-contain" alt="" (click)="onClickPhotoViewer()">
               </li>
             </ng-container>
           </ul>

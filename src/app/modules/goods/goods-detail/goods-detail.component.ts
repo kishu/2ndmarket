@@ -51,6 +51,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     shareReplay(1)
   );
   showPermission = false;
+  showPhotoViewer = false;
 
   private get goodsId() {
     return this.activatedRoute.snapshot.paramMap.get('goodsId');
@@ -176,6 +177,10 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
           (err) => alert(err)
         );
     }
+  }
+
+  onClickPhotoViewer() {
+    this.showPhotoViewer = !this.showPhotoViewer;
   }
 
 }
