@@ -5,7 +5,6 @@ import { AfterViewChecked, Component, ElementRef, HostBinding, OnDestroy, OnInit
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
-import { GoodsListItemUpdateService } from '../services/goods-list-item-update.service';
 import { Goods, NewFavoriteGoods } from '@app/core/model';
 import { HeaderService } from '@app/shared/services';
 
@@ -64,7 +63,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     private groupService: GroupsService,
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
-    private goodsListItemUpdateService: GoodsListItemUpdateService,
     private goodsCacheService: GoodsCacheService,
     private goodsFavoritesService: FavoriteGoodsService,
     private headerService: HeaderService

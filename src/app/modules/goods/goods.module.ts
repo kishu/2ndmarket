@@ -13,9 +13,8 @@ import { GoodsEditComponent } from './goods-edit/goods-edit.component';
 import { GoodsCommentListComponent } from './goods-comment-list/goods-comment-list.component';
 import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-form.component';
 import { GoodsMoreComponent } from './goods-more/goods-more.component';
+import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsListItemComponent } from './goods-list-item/goods-list-item.component';
-import { GoodsListComponent } from './goods-list2/goods-list.component';
-import { GoodsListItemUpdateService } from './services/goods-list-item-update.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +38,6 @@ import { GoodsListItemUpdateService } from './services/goods-list-item-update.se
     GoodsRoutingModule
   ],
   providers: [
-    GoodsListItemUpdateService,
     DecimalPipe
   ]
 })

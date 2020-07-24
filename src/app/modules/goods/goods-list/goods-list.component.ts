@@ -5,7 +5,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
-import { GoodsListItemUpdateService } from '../services/goods-list-item-update.service';
 import { Goods } from '@app/core/model';
 
 @Component({
@@ -25,15 +24,12 @@ export class GoodsListComponent implements OnInit, OnDestroy {
       shareReplay(1)
     );
 
-  protected routerEventsSubscription: Subscription;
-
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
-    private goodsListItemUpdateService: GoodsListItemUpdateService,
     private persistenceService: PersistenceService
   ) { }
 
@@ -42,16 +38,10 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.moreGoods$.unsubscribe();
-    this.routerEventsSubscription.unsubscribe();
   }
 
   trackBy(index, item) {
     return item.id;
-  }
-
-  onClickGoods(e: Event, goods: Goods) {
-    e.preventDefault();
-    this.goodsCacheService.cache(goods);
   }
 
   onMoreGoods() {

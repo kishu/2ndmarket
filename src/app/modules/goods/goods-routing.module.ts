@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
-import { GoodsListComponent } from './goods-list2/goods-list.component';
+import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
 import { GoodsEditComponent } from './goods-edit/goods-edit.component';
