@@ -8,14 +8,20 @@
       (ngSubmit)="onSubmit()">
       <div class="w-2/3 max-w-xs mx-auto">
         <div class="relative w-32 h-32 mx-auto overflow-hidden rounded-full">
-          <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt="">
+<!--          <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt="">-->
+          <img
+            *ngIf="draftImage"
+            [src]="(draftImage.isFile ? draftImage.file : (draftImage.src || 'https://via.placeholder.com/150')) | objectUrl | sanitizer: 'url'"
+            [style.transform]="'rotate(' + draftImage.rotate + 'deg)'"
+            class="w-full h-full object-cover" alt="">
           <input
             type="file"
             accept="image/gif, image/jpeg, image/png"
             (change)="onChangeFile($event)"
             class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
         </div>
-        <div *ngIf="photoFile">
+        <div *ngIf="changingFile">
+          <button type="button" (click)="onClickRotateImage(90)">회전</button>
           <button type="button" (click)="onCancelChangeFile($event)">취소</button>
         </div>
         <div class="mt-4 bg-white shadow">

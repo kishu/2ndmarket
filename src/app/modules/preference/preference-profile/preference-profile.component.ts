@@ -14,15 +14,23 @@ import { ProfileSelectService } from '@app/core/util';
 })
 export class PreferenceProfileComponent implements OnInit {
   submitting = false;
-  photoFile: File;
-  uploadedPhotoUrl: string;
+  changingFile = false;
+  draftImage: DraftImage;
   profileForm = this.fb.group({
     displayName: [],
   });
 
   profile$ = this.authService.profile$.pipe(
+    first(),
     filter(p => !!p),
-    tap(profile => this.displayNameCtl.setValue(profile.displayName))
+    tap(profile => this.displayNameCtl.setValue(profile.displayName)),
+    tap(profile => {
+      this.draftImage = {
+        isFile: false,
+        src: profile.photoURL,
+        rotate: 0
+      };
+    })
   );
 
   get displayNameCtl() { return this.profileForm.get('displayName'); }
@@ -41,14 +49,35 @@ export class PreferenceProfileComponent implements OnInit {
   }
 
   onChangeFile(e: Event) {
+    this.changingFile = true;
     const target = e.target as HTMLInputElement;
-    this.photoFile = target.files[0];
-    this.uploadedPhotoUrl = '';
+    this.draftImage = {
+      isFile: true,
+      file: target.files[0],
+      rotate: 0
+    };
     target.value = '';
   }
 
+  onClickRotateImage(rotate) {
+    this.draftImage = {
+      ...this.draftImage,
+      rotate: (this.draftImage.rotate + rotate) % 360
+    };
+  }
+
   onCancelChangeFile(e: Event) {
-    this.photoFile = null;
+    this.changingFile = false;
+    this.authService.profile$.pipe(
+      first(),
+      filter(p => !!p)
+    ).subscribe(profile => {
+      this.draftImage = {
+        isFile: false,
+        src: profile.photoURL,
+        rotate: 0
+      };
+    });
   }
 
   onSubmit() {
@@ -60,24 +89,20 @@ export class PreferenceProfileComponent implements OnInit {
       first(),
       filter(p => !!p)
     ).subscribe(p => {
-      const draftImage: DraftImage = {
-        isFile: !!this.photoFile,
-        file: this.photoFile || null,
-        src: this.photoFile ? '' : p.photoURL,
-        rotate: 0,
+      this.draftImage = {
+        ...this.draftImage,
         context: `type=profile|id=${p.id}`
       };
-      const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload([draftImage]);
-      uploadComplete$.subscribe(images => {
-        this.uploadedPhotoUrl = images[0];
+      const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload([this.draftImage]);
+      uploadComplete$.subscribe(/* uploaded urls*/urls => {
         this.profilesService.update(p.id, {
-          photoURL: images[0],
+          photoURL: urls[0],
           displayName: this.displayNameCtl.value
         }).then(() => {
           this.profileSelectService.select(p.id);
           alert('프로필을 변경했습니다!');
           this.submitting = false;
-          this.photoFile = null;
+          this.changingFile = false;
         }, err => {
           alert(err);
         });

@@ -18,7 +18,7 @@
         <a
           class="flex items-start p-2"
           [ngClass]="{'opacity-50': message.read}"
-          [routerLink]="['/groups', message.goods.groupId, 'goods', message.goodsId]"
+          [routerLink]="['/goods', message.goodsId]"
           [fragment]="'goodsComments/' + message.goodsCommentId"
           (click)="onClickMessage($event, message)">
           <img [src]="message.goods.images[0]" class="w-12 h-12 mr-2">
