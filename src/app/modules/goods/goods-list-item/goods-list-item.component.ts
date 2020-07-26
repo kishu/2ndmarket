@@ -34,7 +34,7 @@ export class GoodsListItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.goodsSnapshotChangeSubscription.unsubscribe();
+    this.goodsSnapshotChangeSubscription?.unsubscribe();
   }
 
   onClickGoods(e: Event, goods: Goods) {
