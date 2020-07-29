@@ -1,5 +1,5 @@
 <a
-  *ngIf="displayGoods as goods"
+  *ngIf="goods"
   [routerLink]="[goods.id]"
   class="flex flex-col sm:flex-row w-full sm:h-40"
   [ngClass]="{'text-gray-500': goods.soldOut, 'pointer-events-none': !exists}"

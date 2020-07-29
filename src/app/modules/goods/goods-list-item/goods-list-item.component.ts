@@ -10,15 +10,15 @@ import { Goods } from '@app/core/model';
   styleUrls: ['./goods-list-item.component.scss']
 })
 export class GoodsListItemComponent implements OnInit, OnDestroy {
-  displayGoods: Goods;
+  goods: Goods;
   exists = true;
   protected goodsSnapshotChangeSubscription: Subscription;
-  @Input() set goods(goods: Goods) {
-    this.displayGoods = goods;
+  @Input() set item(goods: Goods) {
+    this.goods = goods;
     this.goodsSnapshotChangeSubscription =
       this.goodsService.snapshotChanges(goods.id).subscribe(action => {
         if (action.payload.exists) {
-          this.displayGoods = { id: action.payload.id, ...action.payload.data() };
+          this.goods = { id: action.payload.id, ...action.payload.data() };
         } else {
           this.exists = false;
         }
