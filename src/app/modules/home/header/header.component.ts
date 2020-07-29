@@ -43,8 +43,8 @@ import { ProfileExt } from '@app/core/model';
 })
 export class HeaderComponent implements OnInit {
   isMenuActivated = false;
-  @Output() open: EventEmitter<AnimationEvent> = new EventEmitter();
-  @Output() close: EventEmitter<AnimationEvent> = new EventEmitter();
+  @Output() openMenu: EventEmitter<AnimationEvent> = new EventEmitter();
+  @Output() closeMenu: EventEmitter<AnimationEvent> = new EventEmitter();
 
   profile$ = this.authService.profile$.pipe(filter(p => !!p));
   group$ = this.authService.profile$.pipe(
@@ -96,21 +96,21 @@ export class HeaderComponent implements OnInit {
 
   onAnimationStart(event: AnimationEvent) {
     if (event.toState === 'open') {
-      this.open.emit(event);
+      this.openMenu.emit(event);
     } else {
-      this.close.emit(event);
+      this.closeMenu.emit(event);
     }
   }
 
   onAnimationDone(event: AnimationEvent) {
     if (event.toState === 'open') {
-      this.open.emit(event);
+      this.openMenu.emit(event);
     } else {
-      this.close.emit(event);
+      this.closeMenu.emit(event);
     }
   }
 
-  closeMenu() {
+  onCloseMenu() {
     this.isMenuActivated = false;
   }
 
