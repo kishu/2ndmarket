@@ -23,6 +23,7 @@ import { PreferenceModule } from '@app/modules/preference/preference.module';
 import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
@@ -65,7 +66,8 @@ export function appInitializer(router: Router, authService: AuthService) {
     AuthModule,
     GoodsModule,
     PreferenceModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },

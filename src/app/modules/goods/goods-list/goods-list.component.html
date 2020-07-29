@@ -4,8 +4,8 @@
   <ul class="w-full max-w-md py-2 mx-auto">
     <li
       class="goodsItem relative"
-      *ngFor="let goodsItem of goods; trackBy: trackBy">
-      <app-goods-list-item [goods]="goodsItem"></app-goods-list-item>
+      *ngFor="let item of goods">
+      <app-goods-list-item [item]="item"></app-goods-list-item>
     </li>
   </ul>
   <div class="fixed left-0 right-0 bottom-0 max-w-md p-safe-bottom mx-auto pointer-events-none">
