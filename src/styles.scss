@@ -23,7 +23,6 @@ body {
 
 
 .wrap {
-  @apply relative;
   // padding-top: calc(constant(safe-area-inset-top) + 49px);
   // padding-top: calc(env(safe-area-inset-top) + 49px);
 }
@@ -261,11 +260,6 @@ textarea {
   @apply border-t border-gray-500 border-opacity-50 bg-white;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-}
-
-.header,
-app-header {
-  @apply shadow;
 }
 
 .sticky-wrap {

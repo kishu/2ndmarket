@@ -2,6 +2,7 @@ import { combineLatest } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -48,10 +49,11 @@ export function appInitializer(router: Router, authService: AuthService) {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,

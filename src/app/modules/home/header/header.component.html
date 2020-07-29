@@ -1,19 +1,19 @@
-<div class="header border-b border-green-700 bg-white shadow">
-  <div class="relative w-full max-w-md mx-auto py-3 px-2">
-    <!-- <ng-container *ngIf="profile$ | async as profile">
-      <a [routerLink]="['/']" class="absolute inset-y-0 left-0 w-12 h-12 p-3 flex items-center">
+<div class="border-b border-green-700 bg-white shadow">
+  <div class="relative w-full mx-auto py-3 px-2">
+    <ng-container *ngIf="profile$ | async as profile">
+      <button type="button" class="absolute inset-y-0 left-0 w-12 h-12 p-3 border-0 flex items-center" (click)="toggleMenu()">
         <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-6 h-6 rounded-full mr-2 flex items-center object-cover" alt="">
         <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
-      </a>
-    </ng-container> -->
-    <a [routerLink]="['/']" class="absolute inset-y-0 left-0 p-3 flex items-center">
+      </button>
+    </ng-container>
+    <!-- <button type="button" class="absolute inset-y-0 left-0 p-3 border-0 flex items-center" (click)="toggleMenu()">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z"/>
         <line x1="4" y1="8" x2="20" y2="8" />
         <line x1="4" y1="16" x2="20" y2="16" />
       </svg>
       <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
-    </a>
+    </button> -->
     <h1 class="h-6 px-12 font-bold text-center text-green-700 ellipsis">
       <ng-container *ngIf="group$ | async as group; else defaultTemplate">
         <a [routerLink]="['/goods']">
@@ -41,5 +41,108 @@
         <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600" *ngIf="newMessages.length > 0"></span>
       </a>
     </ng-container>
+  </div>
+</div>
+<div
+  class="fixed inset-0 bg bg-black opacity-0 duration-200 hidden"
+  [ngClass]="{'opacity-75': isMenuActivated}"
+  [@fadeInOut]="isMenuActivated ? 'fadeIn' : 'fadeOut'"
+  (click)="closeMenu()"></div>
+<div
+  class="fixed inset-0 max-w-xs bg-black bg-opacity-75 overflow-hidden"
+  style="width: 80%"
+  [@openClose]="isMenuActivated ? 'open' : 'closed'"
+  (@openClose.start)="onAnimationStart($event)"
+  (@openClose.done)="onAnimationDone($event)">
+  <div class="h-full bg-white flex flex-col justify-between">
+    <div class="border-b border-green-700 shadow">
+      <div class="flex justify-between">
+        <h2 class="h-12 p-3 font-bold text-green-700 ellipsis">
+          <ng-container *ngIf="group$ | async as group; else defaultTemplate">
+            <span>세컨드마켓@</span>
+            <span class="uppercase">{{ group.id }}</span>
+          </ng-container>
+        </h2>
+        <div class="flex-none">
+          <button type="button" class="p-3 border-0" (click)="toggleMenu()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="flex-grow overflow-y-auto scrolling-touch flex flex-col">
+      <div>
+        <h2 class="flex justify-between">
+          <div class="p-3">
+            <a
+              class="flex items-center"
+              [routerLink]="['preference/profile']"
+              (click)="closeMenu()">
+              <ng-container *ngIf="profile$ | async as profile">
+                <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
+                <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+                  <span class="block text-sm ellipsis">{{ profile.displayName }}</span>
+                </span>
+                <span class="flex-shrink-0 mx-2 px-1 text-xs bg-green-600 text-white">프로필 설정</span>
+              </ng-container>
+            </a>
+          </div>
+        </h2>
+        <ul class="border-t border-b border-gray-300">
+          <li>
+            <a
+              class="flex justify-between items-center"
+              [routerLink]="['preference', 'write-goods']"
+              (click)="closeMenu()">
+              <span class="py-2 px-3 text-gray-700">등록한 상품</span>
+              <span class="px-4 text-sm text-green-700">{{ writeGoodsCount$ | async }}개</span>
+            </a>
+          </li>
+          <li class="border-t border-gray-300">
+            <a
+              class="flex justify-between items-center"
+              [routerLink]="['preference', 'favorite-goods']"
+              (click)="closeMenu()">
+              <span class="py-2 px-3 text-gray-700">관심 상품</span>
+              <span class="px-4 text-sm text-green-700">{{ favoriteGoodsCount$ | async }}개</span>
+            </a>
+          </li>
+        </ul>
+
+        <h2 class="py-2 px-3 text-green-800">프로필 전환</h2>
+        <ul class="border-t border-b border-gray-300" *ngIf="profileExts$ | async as profileExts">
+          <li
+            *ngFor="let profileExt of profileExts; first as isFirst"
+            class="relative border-gray-300"
+            [ngClass]="{'border-t': !isFirst}">
+            <button
+              type="button"
+              (click)="onClickSelectProfile(profileExt); closeMenu(); goList();"
+              class="flex justify-between items-center w-full p-0 px-1 border-0 bg-transparent text-gray-800">
+              <span class="flex-shrink-0 w-12 h-12 relative p-2">
+                <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
+                <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600"></span>
+              </span>
+              <span class="flex-grow text-left text-sm ellipsis">{{ profileExt.displayName }}</span>
+              <span
+                class="flex-shrink-0 flex-grow-0 px-2 py-1 mr-2 text-xs leading-tight uppercase"
+                [ngClass]="{
+                  'text-green-700': (selectedProfileId$ | async) === profileExt.id,
+                  'bg-green-600 text-white': (selectedProfileId$ | async) !== profileExt.id
+                }"
+              >
+                {{ (selectedProfileId$ | async) !== profileExt.id ? profileExt.group.id : '' }}
+                {{ (selectedProfileId$ | async) === profileExt.id ? '사용중' : '' }}
+              </span>
+            </button>
+          </li>
+        </ul>
+        <a [routerLink]="['preference/groups']" class="block p-2 bg-green-600 text-white text-center text-sm mt-1">그룹추가</a>
+      </div>
+    </div>
   </div>
 </div>
