@@ -1,42 +1,61 @@
-<div class="h-safe-top"></div>
-<div class="w-full max-w-md py-2 mx-auto">
-  <div class="sticky-wrap mb-2 bg-white shadow" *ngIf="messageExts$ | async as messages">
-    <h2 class="sticky safe-top z-20 border-b border-gray-300 bg-white flex items-center">
-      <span class="p-2 text-gray-700">알림</span>
-      <span class="text-sm text-green-700">{{messages.length}}개</span>
-    </h2>
-    <ul class="-mt-px">
-      <li
-        class="relative border-t px-4 py-12 text-center text-gray-500 text-sm"
-        *ngIf="messages.length === 0">
-        새로운 알림이 없습니다.
-      </li>
-      <li
-        #messageEl
-        class="relative border-t"
-        [ngClass]="{'border-gray-300': isFirst, 'border-gray-200': !isFirst }" *ngFor="let message of messages trackBy:trackById; first as isFirst" [id]="message.id">
-        <a
-          class="flex items-start p-2"
-          [ngClass]="{'opacity-50': message.read}"
-          [routerLink]="['/goods', message.goodsId]"
-          [fragment]="'goodsComments/' + message.goodsCommentId"
-          (click)="onClickMessage($event, message)">
-          <img [src]="message.goods.images[0]" class="w-12 h-12 mr-2">
-          <div class="leading-tight">
-            <p class="mb-1 text-xs text-gray-500">
-              새 댓글이 달렸습니다.
-              <span class="text-gray-400">{{ message.created | fsTimestamp | formatDistanceToNow }} 전</span>
-            </p>
-            <p class="text-sm text-gray-700">{{ message.goodsComment.body }}</p>
-          </div>
-        </a>
-        <button
-          type="button"
-          class="absolute right-0 top-0 m-1 p-1 border-transparent bg-transparent"
-          (click)="onClickDeleteNotice(message, messageEl)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#cbd5e0" width="16px" height="16px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-        </button>
-      </li>
-    </ul>
+<div class="fixed left-0 header-top w-full z-30">
+  <div class="border-b border-green-700 bg-white shadow">
+    <div class="relative w-full mx-auto py-3 px-2">
+      <h1 class="h-6 px-12 font-bold text-center text-green-700 ellipsis">
+        세컨드마켓@NAVER
+      </h1>
+      <button type="button" class="absolute inset-y-0 left-0 p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z"/>
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <line x1="5" y1="12" x2="11" y2="18" />
+          <line x1="5" y1="12" x2="11" y2="6" />
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
+<div class="h-safe-top"></div>
+<ng-container *ngIf="messageExts$ | async as messages">
+  <div class="w-full max-w-md py-2 mx-auto">
+    <div class="sticky-wrap mb-2 bg-white shadow">
+      <h2 class="sticky safe-top z-20 border-b border-gray-300 bg-white flex items-center">
+        <span class="p-2 text-gray-700">알림</span>
+        <span class="text-sm text-green-700">{{messages.length}}개</span>
+      </h2>
+      <ul class="-mt-px">
+        <li
+          class="relative border-t px-4 py-12 text-center text-gray-500 text-sm"
+          *ngIf="messages.length === 0">
+          새로운 알림이 없습니다.
+        </li>
+        <li
+          #messageEl
+          class="relative border-t"
+          [ngClass]="{'border-gray-300': isFirst, 'border-gray-200': !isFirst }" *ngFor="let message of messages trackBy:trackById; first as isFirst" [id]="message.id">
+          <a
+            class="flex items-start p-2"
+            [ngClass]="{'opacity-50': message.read}"
+            [routerLink]="['/goods', message.goodsId]"
+            [fragment]="'goodsComments/' + message.goodsCommentId"
+            (click)="onClickMessage($event, message)">
+            <img [src]="message.goods.images[0]" class="w-12 h-12 mr-2">
+            <div class="leading-tight">
+              <p class="mb-1 text-xs text-gray-500">
+                새 댓글이 달렸습니다.
+                <span class="text-gray-400">{{ message.created | fsTimestamp | formatDistanceToNow }} 전</span>
+              </p>
+              <p class="text-sm text-gray-700">{{ message.goodsComment.body }}</p>
+            </div>
+          </a>
+          <button
+            type="button"
+            class="absolute right-0 top-0 m-1 p-1 border-transparent bg-transparent"
+            (click)="onClickDeleteNotice(message, messageEl)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#cbd5e0" width="16px" height="16px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>

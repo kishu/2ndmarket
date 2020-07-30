@@ -1,3 +1,20 @@
+<div class="fixed left-0 header-top w-full z-30">
+  <div class="border-b border-green-700 bg-white shadow">
+    <div class="relative w-full mx-auto py-3 px-2">
+      <h1 class="h-6 px-12 font-bold text-center text-green-700 ellipsis">
+        관심 상품
+      </h1>
+      <button type="button" class="absolute inset-y-0 left-0 p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z"/>
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <line x1="5" y1="12" x2="11" y2="18" />
+          <line x1="5" y1="12" x2="11" y2="6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
 <div class="h-safe-top"></div>
 <div class="w-full max-w-md my-2 mx-auto" *ngIf="goodsList$ | async as goodsList">
   <div class="sticky-wrap bg-white shadow">

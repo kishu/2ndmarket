@@ -1,6 +1,7 @@
 import { once } from 'lodash-es';
 import { combineLatest, forkJoin, merge, Observable, of, Subject } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Location } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
@@ -57,6 +58,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   constructor(
+    private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
@@ -70,6 +72,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   ngOnInit(): void {
+    this.goods$.pipe(first()).subscribe((g) => this.headerService.title$.next(g.name));
   }
 
   onClickPermission() {
@@ -101,7 +104,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
         if (!entry.isIntersecting && entry.boundingClientRect.top <= 0) {
           this.goods$.pipe(first()).subscribe((g) => this.headerService.title$.next(g.name));
         } else if (entry.isIntersecting && entry.boundingClientRect.top <= 0) {
-          this.headerService.title$.next(null);
+          this.headerService.title$.next('이 로직 지워주세요.');
         }
       });
     }, config);
@@ -179,6 +182,10 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   onClickPhotoViewer() {
     this.showPhotoViewer = !this.showPhotoViewer;
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 
 }

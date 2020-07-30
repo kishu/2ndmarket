@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { Location } from '@angular/common';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { HttpProgressEvent } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +18,7 @@ export class GoodsEditComponent implements OnInit {
   uploadProgress: HttpProgressEvent;
   constructor(
     private router: Router,
+    private location: Location,
     private activatedRoute: ActivatedRoute,
     private goodsService: GoodsService,
     private cloudinaryUploadService: CloudinaryUploadService
@@ -47,6 +49,10 @@ export class GoodsEditComponent implements OnInit {
         err => alert(err)
       );
     });
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 
 }
