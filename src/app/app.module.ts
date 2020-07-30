@@ -60,8 +60,8 @@ export function appInitializer(router: Router, authService: AuthService) {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
-    AngularFirestoreModule,
-    // AngularFirestoreModule.enablePersistence(),
+    // AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     AngularFireFunctionsModule,
     AngularFireMessagingModule,
     AuthModule,
@@ -72,7 +72,7 @@ export function appInitializer(router: Router, authService: AuthService) {
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
-    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true }
+    // { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true }
   ],
   bootstrap: [AppComponent]
 })

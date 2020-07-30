@@ -10,7 +10,7 @@ import { Goods, MessageExt, ProfileExt } from '@app/core/model';
 export class PersistenceService {
   profileExts$: Observable<ProfileExt[]> = this.authService.user$.pipe(
     switchMap(user => user ?
-      this.profilesService.valueChangesQueryByUserId(user.id).pipe(
+      this.profilesService.getQueryByUserId(user.id).pipe(
         switchMap(profiles => {
           return forkJoin(profiles.map(profile => this.groupsService.get(profile.groupId))).pipe(
             map(groups => profiles.map((p, i) => ({ ...p, group: groups[i]})))
