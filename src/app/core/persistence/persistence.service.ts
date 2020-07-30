@@ -24,7 +24,7 @@ export class PersistenceService {
 
   goods$: Observable<Goods[]> = this.authService.profile$.pipe(
     filter(p => !!p),
-    switchMap((profile) => this.goodsService.valueChangesQueryByGroupId(profile.groupId, { limit: 5 })),
+    switchMap((profile) => this.goodsService.getQueryByGroupId(profile.groupId, { limit: 5 })),
     shareReplay(1)
   );
 

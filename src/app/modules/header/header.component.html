@@ -121,7 +121,7 @@
             [ngClass]="{'border-t': !isFirst}">
             <button
               type="button"
-              (click)="onClickSelectProfile(profileExt); onCloseMenu(); goList();"
+              (click)="onClickSelectProfile(profileExt)"
               class="flex justify-between items-center w-full p-0 px-1 border-0 bg-transparent text-gray-800">
               <span class="flex-shrink-0 w-12 h-12 relative p-2">
                 <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">

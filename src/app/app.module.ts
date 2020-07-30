@@ -4,7 +4,7 @@ import { first } from 'rxjs/operators';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -15,13 +15,13 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { environment } from '@environments/environment';
 
-import { HomeModule } from '@app/modules/home/home.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
 import { PreferenceModule } from '@app/modules/preference/preference.module';
 
 import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './modules/header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
@@ -51,10 +51,12 @@ export function appInitializer(router: Router, authService: AuthService) {
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    RouterModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
@@ -62,7 +64,6 @@ export function appInitializer(router: Router, authService: AuthService) {
     // AngularFirestoreModule.enablePersistence(),
     AngularFireFunctionsModule,
     AngularFireMessagingModule,
-    HomeModule,
     AuthModule,
     GoodsModule,
     PreferenceModule,

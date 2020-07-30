@@ -10,7 +10,7 @@ import { HeaderService } from '@app/shared/services';
 import { ProfileExt } from '@app/core/model';
 
 @Component({
-  selector: 'app-header, [app-header]',
+  selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   animations: [
@@ -92,6 +92,9 @@ export class HeaderComponent implements OnInit {
 
   onClickSelectProfile(profileExt: ProfileExt) {
     this.profileSelectService.select(profileExt.id);
+    this.onCloseMenu();
+    // this.router.navigate(['/']);
+
   }
 
   onAnimationStart(event: AnimationEvent) {
@@ -114,7 +117,4 @@ export class HeaderComponent implements OnInit {
     this.isMenuActivated = false;
   }
 
-  goList() {
-    this.router.navigate(['/goods']);
-  }
 }

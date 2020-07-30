@@ -5,7 +5,6 @@ import { DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
 import { GoodsRoutingModule } from './goods-routing.module';
-import { HomeModule } from '@app/modules/home/home.module';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsFormComponent } from './goods-form/goods-form.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
@@ -34,7 +33,6 @@ import { GoodsListItemComponent } from './goods-list-item/goods-list-item.compon
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    HomeModule,
     GoodsRoutingModule
   ],
   providers: [

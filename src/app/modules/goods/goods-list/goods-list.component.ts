@@ -1,6 +1,6 @@
 import { last } from 'lodash-es';
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
-import { first, map, scan, shareReplay, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { first, map, scan, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService } from '@app/core/http';
