@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
@@ -11,6 +12,7 @@ export class PreferenceWriteGoodsComponent implements OnInit {
   goodsList$ = this.persistenceService.writeGoods$;
 
   constructor(
+    private location: Location,
     private goodsCacheService: GoodsCacheService,
     private persistenceService: PersistenceService
   ) {
@@ -22,5 +24,9 @@ export class PreferenceWriteGoodsComponent implements OnInit {
   onClickGoods(e: Event, goods: Goods) {
     e.preventDefault();
     this.goodsCacheService.cache(goods);
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 }

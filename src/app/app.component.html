@@ -1,5 +1,5 @@
 <div #wrapRef class="wrap w-full">
   <div class="safe-top-area"></div>
-  <div app-header class="fixed left-0 header-top w-full z-30" (open)="onOpen($event)" (close)="onClose($event)"></div>
+  <app-header class="fixed left-0 header-top w-full z-30" (openMenu)="onOpen($event)" (closeMenu)="onClose($event)"></app-header>
   <router-outlet></router-outlet>
 </div>

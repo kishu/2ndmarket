@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
     private fcmTokensService: FcmTokensService,
     private renderer: Renderer2,
   ) {
-    console.log(this.wrapRef);
     this.afMessaging.requestToken.pipe(
       withLatestFrom(this.authService.profile$.pipe(first(), filter(p => !!p))),
       switchMap(([token, profile]) => {

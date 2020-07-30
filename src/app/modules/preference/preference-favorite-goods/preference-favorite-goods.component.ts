@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/http';
 import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
@@ -12,6 +13,7 @@ export class PreferenceFavoriteGoodsComponent implements OnInit {
   goodsList$ = this.persistenceService.favoriteGoods$;
 
   constructor(
+    private location: Location,
     private authService: AuthService,
     private goodsCacheService: GoodsCacheService,
     private persistenceService: PersistenceService
@@ -24,6 +26,10 @@ export class PreferenceFavoriteGoodsComponent implements OnInit {
   onClickGoods(e: Event, goods: Goods) {
     e.preventDefault();
     this.goodsCacheService.cache(goods);
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 
 }

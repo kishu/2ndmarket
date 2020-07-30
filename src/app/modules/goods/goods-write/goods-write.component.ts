@@ -78,4 +78,8 @@ export class GoodsWriteComponent implements OnInit {
     });
   }
 
+  onClickHistoryBack() {
+    this.location.back();
+  }
+
 }

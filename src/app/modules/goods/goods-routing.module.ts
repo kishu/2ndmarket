@@ -12,17 +12,9 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['sign-in']);
   imports: [
     RouterModule.forChild([
       { path: 'goods/new/edit', component: GoodsWriteComponent, /* ...canActivate(redirectUnauthorizedToLogin) */ },
-      {
-        path: 'goods',
-        component: GoodsListComponent,
-        children: [
-          { path: ':goodsId', component: GoodsDetailComponent },
-          { path: ':goodsId/edit', component: GoodsEditComponent }
-        ]
-      },
-      // when use guard, reactive form nested goods-write-component is not working
-      // { path: 'groups/:groupId/goods/:goodsId', component: GoodsDetailComponent },
-      // { path: 'groups/:groupId/goods/:goodsId/edit', component: GoodsEditComponent }
+      { path: 'goods', component: GoodsListComponent },
+      { path: 'goods/:goodsId', component: GoodsDetailComponent },
+      { path: 'goods/:goodsId/edit', component: GoodsEditComponent }
     ])
   ],
   exports: [RouterModule]

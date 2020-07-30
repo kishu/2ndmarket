@@ -200,20 +200,12 @@
       </div>
     </div>
   </div>
-  <div class="goods-form-footer">
-    <div class="max-w-md p-2 mx-auto flex items-center justify-between">
-      <button
-        type="button"
-        class="btn-sm border-green-600 bg-green-600"
-        (click)="onClickHistoryBack()">
-        취소
-      </button>
-      <button
-        type="submit"
-        class="btn-sm border-green-600 bg-green-600"
-        [disabled]="goodsForm.invalid || submitting">
-        저장
-      </button>
-    </div>
+  <div class="fixed right-0 top-0 z-40 h-12">
+    <button
+      type="submit"
+      class="h-full border-0 text-green-700"
+      [disabled]="goodsForm.invalid || submitting">
+      저장
+    </button>
   </div>
 </form>
