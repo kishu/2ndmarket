@@ -1,4 +1,4 @@
-import { combineLatest } from 'rxjs';
+import { combineLatest, forkJoin } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -28,12 +28,10 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
     return new Promise(resolve => {
-      combineLatest([
-        authService.user$,
-        authService.profile$
-      ]).pipe(
-        first()
-      ).subscribe(([user, profile]) => {
+      forkJoin([
+        authService.user$.pipe(first()),
+        authService.profileExt$.pipe(first()),
+      ]).subscribe(([user, profile]) => {
         console.log('appInitializer', user, profile);
         if (!user) {
           alert('로그인해 주세요!');
@@ -41,6 +39,8 @@ export function appInitializer(router: Router, authService: AuthService) {
         } else if (!profile) {
           alert('프로파일을 등록해 주세요!');
           router.navigate(['/preference', 'groups']);
+        } else {
+          router.navigate(['/groups', profile.groupId, 'goods']);
         }
         resolve();
       });
@@ -72,7 +72,7 @@ export function appInitializer(router: Router, authService: AuthService) {
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
-    // { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true }
+    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true }
   ],
   bootstrap: [AppComponent]
 })

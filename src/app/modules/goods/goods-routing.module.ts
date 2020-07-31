@@ -11,10 +11,10 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['sign-in']);
 @NgModule({
   imports: [
     RouterModule.forChild([
-      { path: 'goods/new/edit', component: GoodsWriteComponent, /* ...canActivate(redirectUnauthorizedToLogin) */ },
-      { path: 'goods', component: GoodsListComponent },
-      { path: 'goods/:goodsId', component: GoodsDetailComponent },
-      { path: 'goods/:goodsId/edit', component: GoodsEditComponent }
+      { path: 'groups/:groupId/goods/new/edit', component: GoodsWriteComponent, /* ...canActivate(redirectUnauthorizedToLogin) */ },
+      { path: 'groups/:groupId/goods', component: GoodsListComponent },
+      { path: 'groups/:groupId/goods/:goodsId', component: GoodsDetailComponent },
+      { path: 'groups/:groupId/goods/:goodsId/edit', component: GoodsEditComponent }
     ])
   ],
   exports: [RouterModule]

@@ -20,7 +20,7 @@ export class PreferenceProfileComponent implements OnInit {
     displayName: [],
   });
 
-  profile$ = this.authService.profile$.pipe(
+  profile$ = this.authService.profileExt$.pipe(
     first(),
     filter(p => !!p),
     tap(profile => this.displayNameCtl.setValue(profile.displayName)),
@@ -68,7 +68,7 @@ export class PreferenceProfileComponent implements OnInit {
 
   onCancelChangeFile(e: Event) {
     this.changingFile = false;
-    this.authService.profile$.pipe(
+    this.authService.profileExt$.pipe(
       first(),
       filter(p => !!p)
     ).subscribe(profile => {
@@ -85,7 +85,7 @@ export class PreferenceProfileComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    this.authService.profile$.pipe(
+    this.authService.profileExt$.pipe(
       first(),
       filter(p => !!p)
     ).subscribe(p => {
@@ -116,7 +116,7 @@ export class PreferenceProfileComponent implements OnInit {
     }
     forkJoin([
       this.authService.user$.pipe(first(), filter(u => !!u)),
-      this.authService.profile$.pipe(first(), filter(p => !!p))
+      this.authService.profileExt$.pipe(first(), filter(p => !!p))
     ]).pipe(
       switchMap(([u, p]) => {
         this.profilesService.updateRemoveUserId(p.id, u.id);

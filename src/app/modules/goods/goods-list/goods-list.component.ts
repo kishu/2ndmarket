@@ -15,7 +15,13 @@ import { Goods } from '@app/core/model';
 export class GoodsListComponent implements OnInit, OnDestroy {
   private fetchingMoreGoods = false;
   moreGoods$ = new BehaviorSubject<Goods[]>([]);
-  goods$ =
+
+  goods$ = this.activatedRoute.paramMap.pipe(
+    switchMap(paramMap => this.goodsService.getQueryByGroupId(paramMap.get('groupId'), { limit: 5 })),
+    shareReplay(1)
+  );
+
+  ___goods$ =
     combineLatest([
       this.persistenceService.goods$.pipe(first()),
       this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
@@ -31,7 +37,8 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
     private persistenceService: PersistenceService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -51,7 +58,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     this.fetchingMoreGoods = true;
     combineLatest([
       this.goods$.pipe(first()),
-      this.authService.profile$.pipe(first())
+      this.authService.profileExt$.pipe(first())
     ]).pipe(
       switchMap(([goods, profile]) => {
         return this.goodsService.getQueryByGroupId(profile.groupId, {

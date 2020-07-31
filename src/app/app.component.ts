@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     private renderer: Renderer2,
   ) {
     this.afMessaging.requestToken.pipe(
-      withLatestFrom(this.authService.profile$.pipe(first(), filter(p => !!p))),
+      withLatestFrom(this.authService.profileExt$.pipe(first(), filter(p => !!p))),
       switchMap(([token, profile]) => {
         const newToken = {
           profileId: profile.id,

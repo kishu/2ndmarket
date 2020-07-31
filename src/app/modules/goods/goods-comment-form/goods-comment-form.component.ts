@@ -34,7 +34,7 @@ export class GoodsCommentFormComponent implements OnInit {
 
     forkJoin([
       this.authService.user$.pipe(first(), filter(u => !!u)),
-      this.authService.profile$.pipe(first(), filter(p => !!p))
+      this.authService.profileExt$.pipe(first(), filter(p => !!p))
     ]).pipe(
       map(([u, p]) => ({
         userId: u.id,

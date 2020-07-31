@@ -51,7 +51,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   empty$: Observable<boolean> = this.goods$.pipe(first(), map(g => !g));
   permission$: Observable<boolean> = combineLatest([
     this.goods$,
-    this.authService.profile$
+    this.authService.profileExt$
   ]).pipe(
     map(([g, p]) => g.profileId === p?.id),
     shareReplay(1)
@@ -62,7 +62,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   );
   favorited$: Observable<boolean> = combineLatest([
     this.goods$,
-    this.authService.profile$
+    this.authService.profileExt$
   ]).pipe(
     switchMap(([g, p]) => this.goodsFavoritesService.getQueryByGoodsIdAndProfileId(g.id, p.id)),
     map(f => f.length > 0),
@@ -147,7 +147,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     const goodsId = this.goodsId;
     const addGoodsFavorite$ = forkJoin([
       this.authService.user$.pipe(first(), filter(u => !!u)),
-      this.authService.profile$.pipe(first(), filter(p => !!p))
+      this.authService.profileExt$.pipe(first(), filter(p => !!p))
     ]).pipe(
       switchMap(([u, p]) => {
         return this.goodsFavoritesService.add({
@@ -159,7 +159,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       })
     );
     const deleteGoodsFavorite$ = forkJoin([
-      this.authService.profile$.pipe(first(), filter(p => !!p))
+      this.authService.profileExt$.pipe(first(), filter(p => !!p))
     ]).pipe(
       switchMap(([p]) => this.goodsFavoritesService.deleteByGoodsIdAndProfileId(goodsId, p.id))
     );

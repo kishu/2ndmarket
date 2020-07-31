@@ -1,5 +1,5 @@
 import { combineLatest, of } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
 import { AuthService, GroupsService } from '@app/core/http';
@@ -46,8 +46,8 @@ export class HeaderComponent implements OnInit {
   @Output() openMenu: EventEmitter<AnimationEvent> = new EventEmitter();
   @Output() closeMenu: EventEmitter<AnimationEvent> = new EventEmitter();
 
-  profile$ = this.authService.profile$.pipe(filter(p => !!p));
-  group$ = this.authService.profile$.pipe(
+  profile$ = this.authService.profileExt$.pipe(filter(p => !!p));
+  group$ = this.authService.profileExt$.pipe(
     switchMap(profile => {
       if (profile) {
         return this.groupsService.get(profile.groupId);
@@ -81,6 +81,7 @@ export class HeaderComponent implements OnInit {
     private profileSelectService: ProfileSelectService,
     private headerService: HeaderService
   ) {
+    this.persistenceService.profileExts$.pipe(first()).subscribe(p => console.log('p', p));
   }
 
   ngOnInit(): void {

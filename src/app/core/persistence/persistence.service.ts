@@ -22,13 +22,13 @@ export class PersistenceService {
     shareReplay(1)
   );
 
-  goods$: Observable<Goods[]> = this.authService.profile$.pipe(
+  goods$: Observable<Goods[]> = this.authService.profileExt$.pipe(
     filter(p => !!p),
     switchMap((profile) => this.goodsService.getQueryByGroupId(profile.groupId, { limit: 5 })),
     shareReplay(1)
   );
 
-  writeGoods$: Observable<Goods[]> = this.authService.profile$.pipe(
+  writeGoods$: Observable<Goods[]> = this.authService.profileExt$.pipe(
     switchMap(profile => profile ?
       this.goodsService.valueChangesQueryByProfileId(profile.id) :
       of([])
@@ -36,7 +36,7 @@ export class PersistenceService {
     shareReplay(1)
   );
 
-  favoriteGoods$: Observable<Goods[]> = this.authService.profile$.pipe(
+  favoriteGoods$: Observable<Goods[]> = this.authService.profileExt$.pipe(
     switchMap(profile => profile ?
       this.goodsFavoriteService.valueChangesByProfileId(profile.id).pipe(
         switchMap(favorites => favorites.length > 0 ?
@@ -49,7 +49,7 @@ export class PersistenceService {
     shareReplay(1)
   );
 
-  messageExts$: Observable<MessageExt[]> = this.authService.profile$.pipe(
+  messageExts$: Observable<MessageExt[]> = this.authService.profileExt$.pipe(
     switchMap(profile => profile ?
       this.messagesService.valueChangesQueryByProfileId(profile.id).pipe(
         switchMap(messages => {
