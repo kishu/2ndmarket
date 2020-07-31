@@ -92,7 +92,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onClickSelectProfile(profileExt: ProfileExt) {
-    this.profileSelectService.select(profileExt.id);
+    // this.profileSelectService.select(profileExt.id);
     this.onCloseMenu();
     // this.router.navigate(['/']);
 

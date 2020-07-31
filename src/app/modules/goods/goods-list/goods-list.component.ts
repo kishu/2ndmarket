@@ -14,21 +14,25 @@ import { Goods } from '@app/core/model';
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
   private fetchingMoreGoods = false;
-  moreGoods$ = new BehaviorSubject<Goods[]>([]);
+  moreGoods$: BehaviorSubject<Goods[]>;
 
   goods$ = this.activatedRoute.paramMap.pipe(
-    switchMap(paramMap => this.goodsService.getQueryByGroupId(paramMap.get('groupId'), { limit: 5 })),
+    tap(() =>  this.moreGoods$ = new BehaviorSubject([])),
+    switchMap(paramMap => combineLatest([
+      this.goodsService.getQueryByGroupId(paramMap.get('groupId'), { limit: 5 }),
+      this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
+    ])),
+    map(([goods, moreGoods]) => goods.concat(moreGoods)),
     shareReplay(1)
   );
 
-  ___goods$ =
-    combineLatest([
-      this.persistenceService.goods$.pipe(first()),
-      this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
-    ]).pipe(
-      map(([goods, moreGoods]) => goods.concat(moreGoods)),
-      shareReplay(1)
-    );
+  // ___goods$ = combineLatest([
+  //     this.persistenceService.goods$.pipe(first()),
+  //     this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
+  //   ]).pipe(
+  //     map(([goods, moreGoods]) => goods.concat(moreGoods)),
+  //     shareReplay(1)
+  //   );
 
   constructor(
     private router: Router,
@@ -56,24 +60,24 @@ export class GoodsListComponent implements OnInit, OnDestroy {
       return;
     }
     this.fetchingMoreGoods = true;
-    combineLatest([
-      this.goods$.pipe(first()),
-      this.authService.profileExt$.pipe(first())
-    ]).pipe(
-      switchMap(([goods, profile]) => {
-        return this.goodsService.getQueryByGroupId(profile.groupId, {
+    const groupId = this.activatedRoute.snapshot.paramMap.get('groupId');
+    this.goods$.pipe(
+      first(),
+      switchMap(goods => {
+        return this.goodsService.getQueryByGroupId(groupId, {
           startAfter: last(goods).updated,
           limit: 5
-        });
+        })
       })
     ).subscribe(moreGoods => {
+      console.log('m', moreGoods);
       if (moreGoods.length > 0) {
         this.moreGoods$.next(moreGoods);
       } else {
         this.moreGoods$.unsubscribe();
       }
       this.fetchingMoreGoods = false;
-    });
+    })
   }
 
 }

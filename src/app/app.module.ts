@@ -1,4 +1,4 @@
-import { combineLatest, forkJoin } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -17,6 +17,7 @@ import { environment } from '@environments/environment';
 
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
+import { GroupModule } from '@app/modules/group/group.module';
 import { PreferenceModule } from '@app/modules/preference/preference.module';
 
 import { AuthService } from '@app/core/http';
@@ -40,7 +41,7 @@ export function appInitializer(router: Router, authService: AuthService) {
           alert('프로파일을 등록해 주세요!');
           router.navigate(['/preference', 'groups']);
         } else {
-          router.navigate(['/groups', profile.groupId, 'goods']);
+          // router.navigate(['/groups', profile.groupId, 'goods']);
         }
         resolve();
       });
@@ -66,6 +67,7 @@ export function appInitializer(router: Router, authService: AuthService) {
     AngularFireMessagingModule,
     AuthModule,
     GoodsModule,
+    GroupModule,
     PreferenceModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
