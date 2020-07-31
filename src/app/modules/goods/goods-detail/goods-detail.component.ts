@@ -104,7 +104,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
         if (!entry.isIntersecting && entry.boundingClientRect.top <= 0) {
           this.goods$.pipe(first()).subscribe((g) => this.headerService.title$.next(g.name));
         } else if (entry.isIntersecting && entry.boundingClientRect.top <= 0) {
-          this.headerService.title$.next('이 로직 지워주세요.');
+          this.headerService.title$.next(null);
         }
       });
     }, config);
