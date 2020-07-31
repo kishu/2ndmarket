@@ -4,6 +4,7 @@ import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs
 import { Location } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
 import { Goods, NewFavoriteGoods } from '@app/core/model';
@@ -13,8 +14,25 @@ import { HeaderService } from '@app/shared/services';
   selector: 'app-goods-detail, [app-goods-detail]',
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss'],
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        display: 'block',
+      })),
+      state('closed', style({
+        display: 'none',
+      })),
+      transition('open => closed', [
+        animate('0.1s')
+      ]),
+      transition('closed => open', [
+        animate('0s')
+      ]),
+    ]),
+  ]
 })
 export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
+  scrollY: number;
   @HostBinding('class.hidden-after') hiddenAfter = true;
   @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
   private intersectionObserver: IntersectionObserver;
@@ -72,7 +90,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   ngOnInit(): void {
-    this.goods$.pipe(first()).subscribe((g) => this.headerService.title$.next(g.name));
   }
 
   onClickPermission() {
@@ -177,6 +194,24 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
           () => {},
           (err) => alert(err)
         );
+    }
+  }
+
+  onAnimationStart(event: AnimationEvent) {
+    console.log(event);
+    if (event.toState === 'open') {
+      this.scrollY = window.scrollY;
+      (document.querySelector('.wrap') as HTMLElement).classList.add('fixed');
+      (document.querySelector('.wrap') as HTMLElement).style.top = `${0 - this.scrollY}px`;
+    }
+  }
+
+  onAnimationDone(event: AnimationEvent) {
+    console.log(event);
+    if (event.toState === 'closed') {
+      (document.querySelector('.wrap') as HTMLElement).classList.remove('fixed');
+      (document.querySelector('.wrap') as HTMLElement).style.top = '';
+      window.scrollTo(0, this.scrollY);
     }
   }
 

@@ -22,7 +22,7 @@ import { ProfileExt } from '@app/core/model';
         transform: 'translateX(-100%)',
       })),
       transition('open <=> closed', [
-        animate('0.2s')
+        animate('0.15s')
       ]),
     ]),
     trigger('fadeInOut', [
@@ -33,7 +33,7 @@ import { ProfileExt } from '@app/core/model';
         display: 'none',
       })),
       transition('fadeIn => fadeOut', [
-        animate('0.2s')
+        animate('0.15s')
       ]),
       transition('fadeOut => fadeIn', [
         animate('0s')

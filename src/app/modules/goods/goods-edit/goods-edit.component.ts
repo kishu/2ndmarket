@@ -45,7 +45,7 @@ export class GoodsEditComponent implements OnInit {
         images
       };
       this.goodsService.update(goods.id, goods).then(
-        () => this.router.navigate(['../../', goods.id], { relativeTo: this.activatedRoute }),
+        () => this.router.navigate(['../../', goods.id], { replaceUrl: true, relativeTo: this.activatedRoute }),
         err => alert(err)
       );
     });

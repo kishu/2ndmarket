@@ -1,6 +1,7 @@
 import { random } from 'lodash-es';
 import { BehaviorSubject, forkJoin, of } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -35,6 +36,7 @@ export class PreferenceGroupsComponent implements OnInit {
 
   constructor(
     private ngZone: NgZone,
+    private location: Location,
     private router: Router,
     private fb: FormBuilder,
     private fns: AngularFireFunctions,
@@ -123,6 +125,10 @@ export class PreferenceGroupsComponent implements OnInit {
         );
       })
     ).subscribe(() => {}, err => alert(err));
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 
 }
