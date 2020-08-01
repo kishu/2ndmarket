@@ -67,7 +67,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
         return this.goodsService.getQueryByGroupId(groupId, {
           startAfter: last(goods).updated,
           limit: 5
-        })
+        });
       })
     ).subscribe(moreGoods => {
       console.log('m', moreGoods);
@@ -77,7 +77,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
         this.moreGoods$.unsubscribe();
       }
       this.fetchingMoreGoods = false;
-    })
+    });
   }
 
 }

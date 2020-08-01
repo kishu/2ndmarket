@@ -4,7 +4,8 @@ import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileExt, User } from '@app/core/model';
-import { GroupsService, ProfilesService } from '@app/core/http';
+import { GroupsService } from '@app/core/http/groups.service';
+import { ProfilesService } from '@app/core/http/profiles.service';
 import { ProfileSelectService } from '@app/core/util';
 
 enum AuthProvider {
