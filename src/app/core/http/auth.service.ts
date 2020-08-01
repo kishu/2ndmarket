@@ -1,13 +1,11 @@
 import { auth } from 'firebase/app';
-import { combineLatest, forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, forkJoin, Observable, ReplaySubject } from 'rxjs';
 import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { GroupsService } from '@app/core/http/groups.service';
+import { ProfileExt, User } from '@app/core/model';
+import { GroupsService, ProfilesService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/util';
-import { ProfilesService } from '@app/core/http/profiles.service';
-import { UserProfilesService } from '@app/core/http/user-profiles.service';
-import { Profile, ProfileExt, User } from '@app/core/model';
 
 enum AuthProvider {
   google = 'google',
@@ -91,7 +89,6 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
-    private userProfilesService: UserProfilesService,
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
     private selectProfileService: ProfileSelectService,

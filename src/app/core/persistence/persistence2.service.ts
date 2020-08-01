@@ -1,4 +1,4 @@
-import { combineLatest, forkJoin, of, Subject } from 'rxjs';
+import { combineLatest, forkJoin, of, ReplaySubject } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Goods, MessageExt, ProfileExt } from '@app/core/model';
@@ -9,11 +9,11 @@ import { ProfileSelectService } from '@app/core/util';
   providedIn: 'root'
 })
 export class Persistence2Service {
-  profileExt$ = new Subject<ProfileExt>();
-  goods$ = new Subject<Goods>();
-  writtenGoods$ = new Subject<Goods>();
-  favoritedGoods$ = new Subject<Goods>();
-  messagesExt$ = new Subject<MessageExt>();
+  profileExt$ = new ReplaySubject<ProfileExt>(1);
+  goods$ = new ReplaySubject<Goods>(1);
+  writtenGoods$ = new ReplaySubject<Goods>(1);
+  favoritedGoods$ = new ReplaySubject<Goods>(1);
+  messagesExt$ = new ReplaySubject<MessageExt>(1);
 
   constructor(
     private authService: AuthService,
@@ -30,7 +30,7 @@ export class Persistence2Service {
     const goods$ = gId => this.goodsService.valueChangesQueryByGroupId(gId, {limit: 5});
     const writtenGoods$ = pId => this.goodsService.valueChangesQueryByProfileId(pId);
     const favoriteGoods$ = pId => this.favoriteGoodsService.valueChangesByProfileId(pId).pipe(
-      switchMap(favorites => forkJoin(favorites.map(favorite => this.goodsService.get(favorite.goodsId))))
+      switchMap(favorites => forkJoin(favorites.map(f => this.goodsService.get(f.goodsId))))
     );
     const messages$ = pId => this.messagesService.valueChangesQueryByProfileId(pId).pipe(
       switchMap(messages => {
@@ -59,7 +59,7 @@ export class Persistence2Service {
             ]) :
             of([]);
         })
-      ).subscribe(([profileExt, goods, writtenGoods, favoritedGoods, messagesExt]) => {
+      ).subscribe(([goods, writtenGoods, favoritedGoods, messagesExt]) => {
         this.goods$.next(goods);
         this.writtenGoods$.next(writtenGoods);
         this.favoritedGoods$.next(favoritedGoods);

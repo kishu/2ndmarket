@@ -7,4 +7,3 @@ export * from './image';
 export * from './message';
 export * from './profile';
 export * from './user';
-export * from './user-profile';

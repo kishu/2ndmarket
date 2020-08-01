@@ -7,4 +7,3 @@ export * from './favorite-goods.service';
 export * from './groups.service';
 export * from './messages.service';
 export * from './profiles.service';
-export * from './user-profiles.service';
