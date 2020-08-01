@@ -1,5 +1,5 @@
 import { auth } from 'firebase/app';
-import { combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -7,7 +7,7 @@ import { GroupsService } from '@app/core/http/groups.service';
 import { ProfileSelectService } from '@app/core/util';
 import { ProfilesService } from '@app/core/http/profiles.service';
 import { UserProfilesService } from '@app/core/http/user-profiles.service';
-import { Profile, User } from '@app/core/model';
+import { Profile, ProfileExt, User } from '@app/core/model';
 
 enum AuthProvider {
   google = 'google',
@@ -35,35 +35,59 @@ export class AuthService {
     shareReplay(1)
   );
 
-  profileExt$: Observable<Profile | null> = combineLatest([
+  profileExts$: Observable<ProfileExt[]> = combineLatest([
     this.user$,
     this.selectProfileService.profileId$
   ]).pipe(
-    switchMap(([user, selectedProfileId]) => {
-      if (user) {
-        return this.profilesService.getQueryByUserId(user.id).pipe(
-          switchMap(profiles => {
-            return forkJoin(profiles.map(profile => this.groupsService.get(profile.groupId))).pipe(
-              map(groups => profiles.map((p, i) => ({ ...p, group: groups[i]})))
-            );
-          }),
-          map(profileExts => {
-            if (selectedProfileId) {
-              return profileExts.find(profile => profile.id === selectedProfileId) || null;
-            } else if (profileExts.length > 0) {
-              return profileExts[0];
-            } else {
-              return null;
-            }
-          })
-        );
-      } else {
-        return of(null);
-      }
+    switchMap(([user, profileId]) => {
+      return this.profilesService.getQueryByUserId(user.id).pipe(
+        switchMap(profiles => {
+          return forkJoin(
+            ...profiles.map(profile => this.groupsService.get(profile.groupId))
+          ).pipe(
+            map(groups => profiles.map((profile, i) => ({ ...profile, group: groups[i] } as ProfileExt)))
+          );
+        }),
+        tap(profileExts => {
+          const selectedProfileExt = profileExts.find(p => p.id === profileId);
+          this.profileExt$.next(selectedProfileExt);
+        })
+      );
     }),
-    tap(t => console.log('switched profile', t)),
-    shareReplay(1)
+    shareReplay(1),
   );
+
+  profileExt$ = new ReplaySubject<ProfileExt>(1);
+
+  // profileExt$: Observable<Profile | null> = combineLatest([
+  //   this.user$,
+  //   this.selectProfileService.profileId$
+  // ]).pipe(
+  //   switchMap(([user, selectedProfileId]) => {
+  //     if (user) {
+  //       return this.profilesService.getQueryByUserId(user.id).pipe(
+  //         switchMap(profiles => {
+  //           return forkJoin(profiles.map(profile => this.groupsService.get(profile.groupId))).pipe(
+  //             map(groups => profiles.map((p, i) => ({ ...p, group: groups[i]})))
+  //           );
+  //         }),
+  //         map(profileExts => {
+  //           if (selectedProfileId) {
+  //             return profileExts.find(profile => profile.id === selectedProfileId) || null;
+  //           } else if (profileExts.length > 0) {
+  //             return profileExts[0];
+  //           } else {
+  //             return null;
+  //           }
+  //         })
+  //       );
+  //     } else {
+  //       return of(null);
+  //     }
+  //   }),
+  //   tap(t => console.log('switched profile', t)),
+  //   shareReplay(1)
+  // );
 
   constructor(
     private afAuth: AngularFireAuth,
