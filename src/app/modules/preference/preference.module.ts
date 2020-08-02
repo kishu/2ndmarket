@@ -8,7 +8,6 @@ import { PreferenceGroupsComponent } from './preference-groups/preference-groups
 import { PreferenceMessagesComponent } from './preference-messages/preference-messages.component';
 import { PreferenceWriteGoodsComponent } from './preference-write-goods/preference-write-goods.component';
 import { PreferenceFavoriteGoodsComponent } from './preference-favorite-goods/preference-favorite-goods.component';
-import { PreferenceProfileBootstrapComponent } from './preference-profile-bootstrap/preference-profile-bootstrap.component';
 
 @NgModule({
   declarations: [
@@ -16,8 +15,7 @@ import { PreferenceProfileBootstrapComponent } from './preference-profile-bootst
     PreferenceGroupsComponent,
     PreferenceMessagesComponent,
     PreferenceWriteGoodsComponent,
-    PreferenceFavoriteGoodsComponent,
-    PreferenceProfileBootstrapComponent
+    PreferenceFavoriteGoodsComponent
   ],
   imports: [
     CommonModule,

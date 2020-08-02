@@ -5,7 +5,7 @@ import { ReplaySubject } from 'rxjs';
   providedIn: 'root'
 })
 export class ProfileSelectService implements OnDestroy {
-  profileId$ = new ReplaySubject<string| null>(1);
+  profileId$ = new ReplaySubject<string>(1);
 
   constructor() {
     const id = localStorage.getItem('profileId');

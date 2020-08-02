@@ -10,7 +10,7 @@ import { Goods } from '@app/core/model';
   styleUrls: ['./preference-favorite-goods.component.scss']
 })
 export class PreferenceFavoriteGoodsComponent implements OnInit {
-  goodsList$ = this.persistenceService.favoriteGoods$;
+  goodsList$ = this.persistenceService.favoritedGoods$;
 
   constructor(
     private location: Location,

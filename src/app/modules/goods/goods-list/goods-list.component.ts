@@ -1,6 +1,6 @@
 import { last } from 'lodash-es';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { first, map, scan, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, concat, forkJoin, Subject } from 'rxjs';
+import { first, map, scan, shareReplay, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService } from '@app/core/http';
@@ -14,25 +14,31 @@ import { Goods } from '@app/core/model';
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
   private fetchingMoreGoods = false;
-  moreGoods$: BehaviorSubject<Goods[]>;
+  private destroy$ = new Subject<null>();
+  moreGoods$ = new BehaviorSubject<Goods[]>([]);
 
-  goods$ = this.activatedRoute.paramMap.pipe(
-    tap(() =>  this.moreGoods$ = new BehaviorSubject([])),
-    switchMap(paramMap => combineLatest([
-      this.goodsService.getQueryByGroupId(paramMap.get('groupId'), { limit: 5 }),
-      this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
-    ])),
+  goods$ = combineLatest([
+    concat(
+      this.persistenceService.goods$.pipe(first()),
+      this.authService.profileExt$.pipe(
+        skip(1),
+        takeUntil(this.destroy$),
+        tap(() => {
+          this.moreGoods$.unsubscribe();
+          this.moreGoods$ = null;
+          this.moreGoods$ = new BehaviorSubject<Goods[]>([]);
+        }),
+        switchMap(p => this.goodsService.getQueryByGroupId(p.groupId, { limit: 5 }).pipe(first()))
+      ),
+    ),
+    this.moreGoods$.pipe(
+      takeUntil(this.destroy$),
+      scan((a, c) => a.concat(c), [])
+    )
+  ]).pipe(
     map(([goods, moreGoods]) => goods.concat(moreGoods)),
     shareReplay(1)
   );
-
-  // ___goods$ = combineLatest([
-  //     this.persistenceService.goods$.pipe(first()),
-  //     this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
-  //   ]).pipe(
-  //     map(([goods, moreGoods]) => goods.concat(moreGoods)),
-  //     shareReplay(1)
-  //   );
 
   constructor(
     private router: Router,
@@ -48,7 +54,8 @@ export class GoodsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.moreGoods$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   trackBy(index, item) {
@@ -60,17 +67,18 @@ export class GoodsListComponent implements OnInit, OnDestroy {
       return;
     }
     this.fetchingMoreGoods = true;
-    const groupId = this.activatedRoute.snapshot.paramMap.get('groupId');
-    this.goods$.pipe(
-      first(),
-      switchMap(goods => {
-        return this.goodsService.getQueryByGroupId(groupId, {
-          startAfter: last(goods).updated,
+
+    forkJoin([
+      this.authService.profileExt$.pipe(first()),
+      this.goods$.pipe(first(), map(goods => last(goods)))
+    ]).pipe(
+      switchMap(([p, g]) => {
+        return this.goodsService.getQueryByGroupId(p.groupId, {
+          startAfter: g.updated,
           limit: 5
         });
       })
     ).subscribe(moreGoods => {
-      console.log('m', moreGoods);
       if (moreGoods.length > 0) {
         this.moreGoods$.next(moreGoods);
       } else {

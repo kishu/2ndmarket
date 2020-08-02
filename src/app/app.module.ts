@@ -1,4 +1,3 @@
-import { forkJoin } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,29 +17,23 @@ import { environment } from '@environments/environment';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
 import { PreferenceModule } from '@app/modules/preference/preference.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './modules/header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
     return new Promise(resolve => {
-      forkJoin([
-        authService.user$.pipe(first()),
-        authService.profileExt$.pipe(first()),
-      ]).subscribe(([user, profile]) => {
-        console.log('appInitializer', user, profile);
+      authService.user$.pipe(first()).subscribe(user => {
+        console.log('appInitializer', user);
         if (!user) {
           alert('로그인해 주세요!');
           router.navigate(['/sign-in']);
-        } else if (!profile) {
-          alert('프로파일을 등록해 주세요!');
-          router.navigate(['/preference', 'groups']);
         } else {
-          // router.navigate(['/groups', profile.groupId, 'goods']);
+          router.navigate(['/goods']);
         }
         resolve();
       });
@@ -50,8 +43,7 @@ export function appInitializer(router: Router, authService: AuthService) {
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +59,7 @@ export function appInitializer(router: Router, authService: AuthService) {
     AuthModule,
     GoodsModule,
     PreferenceModule,
+    SharedModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
