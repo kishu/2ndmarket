@@ -22,7 +22,7 @@ export class PersistenceService implements OnDestroy {
   favoritedGoods$ = this.authService.profileExt$.pipe(
     switchMap(p => this.favoriteGoodsService.valueChangesByProfileId(p.id).pipe(
       takeUntil(this.destroy$),
-      switchMap(fs => forkJoin(...fs.map(f => this.goodsService.get(f.goodsId))))
+      switchMap(fs => forkJoin(fs.map(f => this.goodsService.get(f.goodsId))))
     )),
     shareReplay(1)
   );
@@ -32,8 +32,8 @@ export class PersistenceService implements OnDestroy {
         takeUntil(this.destroy$),
         switchMap(messages => {
           return messages.length === 0 ? of([]) : forkJoin([
-            forkJoin(...messages.map(m => this.goodsService.get(m.goodsId))),
-            forkJoin(...messages.map(m => this.goodsCommentsService.get(m.goodsCommentId)))
+            forkJoin(messages.map(m => this.goodsService.get(m.goodsId))),
+            forkJoin(messages.map(m => this.goodsCommentsService.get(m.goodsCommentId)))
           ]).pipe(
             map(([goods, goodsComments]) => messages.map((m, i) => {
               return {...m, goods: goods[i], goodsComment: goodsComments[i]} as MessageExt;

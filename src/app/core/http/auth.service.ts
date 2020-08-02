@@ -42,7 +42,7 @@ export class AuthService {
       return this.profilesService.getQueryByUserId(user.id).pipe(
         switchMap(profiles => {
           return forkJoin(
-            ...profiles.map(profile => this.groupsService.get(profile.groupId))
+            profiles.map(profile => this.groupsService.get(profile.groupId))
           ).pipe(
             map(groups => profiles.map((profile, i) => ({ ...profile, group: groups[i] } as ProfileExt)))
           );
