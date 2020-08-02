@@ -32,8 +32,6 @@ export function appInitializer(router: Router, authService: AuthService) {
         if (!user) {
           alert('로그인해 주세요!');
           router.navigate(['/sign-in']);
-        } else {
-          router.navigate(['/goods']);
         }
         resolve();
       });
