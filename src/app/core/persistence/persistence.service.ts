@@ -1,5 +1,5 @@
-import { forkJoin, of, ReplaySubject } from 'rxjs';
-import { first, map, skip, switchMap, tap } from 'rxjs/operators';
+import { forkJoin, of, ReplaySubject, Subject } from 'rxjs';
+import { first, map, shareReplay, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Goods, MessageExt } from '@app/core/model';
 import { AuthService, FavoriteGoodsService, GoodsCommentsService, GoodsService, MessagesService } from '@app/core/http';
@@ -8,46 +8,28 @@ import { AuthService, FavoriteGoodsService, GoodsCommentsService, GoodsService, 
   providedIn: 'root'
 })
 export class PersistenceService implements OnDestroy {
-  goods$ = new ReplaySubject<Goods[]>(1);
-  writtenGoods$ = new ReplaySubject<Goods[]>(1);
-  favoritedGoods$ = new ReplaySubject<Goods[]>(1);
-  messageExts$ = new ReplaySubject<MessageExt[]>(1);
+  private destroy$ = new Subject<null>();
 
-  updatedAll$ = forkJoin([
-    this.goods$.pipe(skip(1), first()),
-    this.writtenGoods$.pipe(skip(1), first()),
-    this.favoritedGoods$.pipe(skip(1), first()),
-    this.messageExts$.pipe(skip(1), first())
-  ]).pipe(
-    map(() => true)
+  goods$ = this.authService.profileExt$.pipe(
+    switchMap(p => this.goodsService.valueChangesQueryByGroupId(p.groupId, {limit: 5})),
+    takeUntil(this.destroy$),
+    shareReplay(1),
   );
-
-  constructor(
-    private authService: AuthService,
-    private favoriteGoodsService: FavoriteGoodsService,
-    private goodsService: GoodsService,
-    private goodsCommentsService: GoodsCommentsService,
-    private messagesService: MessagesService,
-  ) {
-    this.authService.profileExt$.pipe(
-      switchMap(p => this.goodsService.valueChangesQueryByGroupId(p.groupId, {limit: 5})),
-    ).subscribe(
-      g => this.goods$.next(g)
-    );
-    this.authService.profileExt$.pipe(
-      switchMap(p => this.goodsService.valueChangesQueryByProfileId(p.id)),
-    ).subscribe(
-      g => this.writtenGoods$.next(g)
-    );
-    this.authService.profileExt$.pipe(
-      switchMap(p => this.favoriteGoodsService.valueChangesByProfileId(p.id).pipe(
-        switchMap(fs => forkJoin(fs.map(f => this.goodsService.get(f.goodsId))))
-      )),
-    ).subscribe(
-      g => this.favoritedGoods$.next(g)
-    );
-    this.authService.profileExt$.pipe(
-      switchMap(p => this.messagesService.valueChangesQueryByProfileId(p.id).pipe(
+  writtenGoods$ = this.authService.profileExt$.pipe(
+    switchMap(p => this.goodsService.valueChangesQueryByProfileId(p.id)),
+    shareReplay(1)
+  );
+  favoritedGoods$ = this.authService.profileExt$.pipe(
+    switchMap(p => this.favoriteGoodsService.valueChangesByProfileId(p.id).pipe(
+      takeUntil(this.destroy$),
+      switchMap(fs => forkJoin(...fs.map(f => this.goodsService.get(f.goodsId))))
+    )),
+    shareReplay(1)
+  );
+  messageExts$ = this.authService.profileExt$.pipe(
+    switchMap(p => {
+      return this.messagesService.valueChangesQueryByProfileId(p.id).pipe(
+        takeUntil(this.destroy$),
         switchMap(messages => {
           return messages.length === 0 ? of([]) : forkJoin([
             forkJoin(...messages.map(m => this.goodsService.get(m.goodsId))),
@@ -58,17 +40,23 @@ export class PersistenceService implements OnDestroy {
             }))
           );
         })
-      ))
-    ).subscribe(
-      m => this.messageExts$.next(m)
-    );
+      );
+    }),
+    shareReplay(1)
+  );
+
+
+  constructor(
+    private authService: AuthService,
+    private favoriteGoodsService: FavoriteGoodsService,
+    private goodsService: GoodsService,
+    private goodsCommentsService: GoodsCommentsService,
+    private messagesService: MessagesService,
+  ) {
   }
 
   ngOnDestroy() {
-    this.goods$?.unsubscribe();
-    this.writtenGoods$?.unsubscribe();
-    this.favoritedGoods$?.unsubscribe();
-    this.messageExts$?.unsubscribe();
+    this.destroy$.next();
   }
 
 }

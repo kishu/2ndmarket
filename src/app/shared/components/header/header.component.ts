@@ -43,7 +43,7 @@ import { HeaderService } from '@app/shared/services';
 })
 export class HeaderComponent implements OnInit {
   activatedMenu = false;
-  profileUpdating = false;
+
   @Output() openMenu: EventEmitter<AnimationEvent> = new EventEmitter();
   @Output() closeMenu: EventEmitter<AnimationEvent> = new EventEmitter();
 
@@ -80,11 +80,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onClickSelectProfile(profileExt: ProfileExt) {
-    this.profileUpdating = true;
     this.onCloseMenu();
-    this.persistenceService.updatedAll$.subscribe(() => {
-      this.profileUpdating = false;
-    });
     this.profileSelectService.select(profileExt.id);
   }
 
