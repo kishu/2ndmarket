@@ -1,83 +1,62 @@
-import { forkJoin, Observable, of } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { AuthService, GoodsCommentsService, FavoriteGoodsService, GoodsService, GroupsService, MessagesService, ProfilesService } from '@app/core/http';
-import { Goods, MessageExt, ProfileExt } from '@app/core/model';
+import { forkJoin, of, ReplaySubject, Subject } from 'rxjs';
+import { first, map, shareReplay, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Goods, MessageExt } from '@app/core/model';
+import { AuthService, FavoriteGoodsService, GoodsCommentsService, GoodsService, MessagesService } from '@app/core/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PersistenceService {
-  profileExts$: Observable<ProfileExt[]> = this.authService.user$.pipe(
-    switchMap(user => user ?
-      this.profilesService.getQueryByUserId(user.id).pipe(
-        switchMap(profiles => {
-          return forkJoin(profiles.map(profile => this.groupsService.get(profile.groupId))).pipe(
-            map(groups => profiles.map((p, i) => ({ ...p, group: groups[i]})))
+export class PersistenceService implements OnDestroy {
+  private destroy$ = new Subject<null>();
+
+  goods$ = this.authService.profileExt$.pipe(
+    switchMap(p => this.goodsService.valueChangesQueryByGroupId(p.groupId, {limit: 5})),
+    takeUntil(this.destroy$),
+    shareReplay(1),
+  );
+  writtenGoods$ = this.authService.profileExt$.pipe(
+    switchMap(p => this.goodsService.valueChangesQueryByProfileId(p.id)),
+    shareReplay(1)
+  );
+  favoritedGoods$ = this.authService.profileExt$.pipe(
+    switchMap(p => this.favoriteGoodsService.valueChangesByProfileId(p.id).pipe(
+      takeUntil(this.destroy$),
+      switchMap(fs => forkJoin(...fs.map(f => this.goodsService.get(f.goodsId))))
+    )),
+    shareReplay(1)
+  );
+  messageExts$ = this.authService.profileExt$.pipe(
+    switchMap(p => {
+      return this.messagesService.valueChangesQueryByProfileId(p.id).pipe(
+        takeUntil(this.destroy$),
+        switchMap(messages => {
+          return messages.length === 0 ? of([]) : forkJoin([
+            forkJoin(...messages.map(m => this.goodsService.get(m.goodsId))),
+            forkJoin(...messages.map(m => this.goodsCommentsService.get(m.goodsCommentId)))
+          ]).pipe(
+            map(([goods, goodsComments]) => messages.map((m, i) => {
+              return {...m, goods: goods[i], goodsComment: goodsComments[i]} as MessageExt;
+            }))
           );
         })
-      ) :
-      of([])
-    ),
+      );
+    }),
     shareReplay(1)
   );
 
-  goods$: Observable<Goods[]> = this.authService.profile$.pipe(
-    filter(p => !!p),
-    switchMap((profile) => this.goodsService.getQueryByGroupId(profile.groupId, { limit: 5 })),
-    shareReplay(1)
-  );
-
-  writeGoods$: Observable<Goods[]> = this.authService.profile$.pipe(
-    switchMap(profile => profile ?
-      this.goodsService.valueChangesQueryByProfileId(profile.id) :
-      of([])
-    ),
-    shareReplay(1)
-  );
-
-  favoriteGoods$: Observable<Goods[]> = this.authService.profile$.pipe(
-    switchMap(profile => profile ?
-      this.goodsFavoriteService.valueChangesByProfileId(profile.id).pipe(
-        switchMap(favorites => favorites.length > 0 ?
-          forkJoin(favorites.map(favorite => this.goodsService.get(favorite.goodsId))) :
-          of([])
-        )
-      ) :
-      of([])
-    ),
-    shareReplay(1)
-  );
-
-  messageExts$: Observable<MessageExt[]> = this.authService.profile$.pipe(
-    switchMap(profile => profile ?
-      this.messagesService.valueChangesQueryByProfileId(profile.id).pipe(
-        switchMap(messages => {
-          return messages.length > 0 ?
-            forkJoin ([
-              forkJoin(messages.map(m => this.goodsService.get(m.goodsId))),
-              forkJoin(messages.map(m => this.goodsCommentsService.get(m.goodsCommentId)))
-            ]).pipe(
-              map(([goods, goodsComments]) => {
-                return messages.map((m, i) => ({ ...m, goods: goods[i], goodsComment: goodsComments[i]}));
-              })
-            ) :
-            of([]);
-        }),
-      ) :
-      of([])
-    ),
-    shareReplay(1)
-  );
 
   constructor(
     private authService: AuthService,
+    private favoriteGoodsService: FavoriteGoodsService,
     private goodsService: GoodsService,
-    private goodsFavoriteService: FavoriteGoodsService,
     private goodsCommentsService: GoodsCommentsService,
-    private groupsService: GroupsService,
     private messagesService: MessagesService,
-    private profilesService: ProfilesService,
   ) {
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
 }

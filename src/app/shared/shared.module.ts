@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ImagesControlComponent, LimitTimerComponent } from './components';
+import { HeaderComponent, ImagesControlComponent, LimitTimerComponent } from './components';
 import { FormatDistanceToNowPipe, FromBytesPipe, FsDocumentPipe, FsTimestampPipe, LinkkfyPipe,
          MsToMMSSPipe, ObjectUrlPipe, SanitizerPipe } from './pipes';
 
 @NgModule({
   declarations: [
+    HeaderComponent,
     ImagesControlComponent,
     LimitTimerComponent,
     FormatDistanceToNowPipe,
@@ -23,6 +24,7 @@ import { FormatDistanceToNowPipe, FromBytesPipe, FsDocumentPipe, FsTimestampPipe
     RouterModule
   ],
   exports: [
+    HeaderComponent,
     ImagesControlComponent,
     LimitTimerComponent,
     FormatDistanceToNowPipe,

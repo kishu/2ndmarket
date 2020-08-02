@@ -14,6 +14,7 @@ import { PreferenceFavoriteGoodsComponent } from './preference-favorite-goods/pr
       { path: 'preference/messages', component: PreferenceMessagesComponent },
       { path: 'preference/write-goods', component: PreferenceWriteGoodsComponent },
       { path: 'preference/favorite-goods', component: PreferenceFavoriteGoodsComponent },
+      { path: 'preference/favorite-goods', component: PreferenceFavoriteGoodsComponent },
     ])
   ],
   exports: [RouterModule]

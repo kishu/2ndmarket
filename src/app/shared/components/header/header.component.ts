@@ -1,13 +1,13 @@
-import { combineLatest, of } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
-import { AuthService, GroupsService } from '@app/core/http';
 import { Router } from '@angular/router';
+import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
+import { ProfileExt } from '@app/core/model';
+import { AuthService, GroupsService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
 import { ProfileSelectService } from '@app/core/util';
 import { HeaderService } from '@app/shared/services';
-import { ProfileExt } from '@app/core/model';
 
 @Component({
   selector: 'app-header',
@@ -42,44 +42,33 @@ import { ProfileExt } from '@app/core/model';
   ]
 })
 export class HeaderComponent implements OnInit {
-  isMenuActivated = false;
+  activatedMenu = false;
+
   @Output() openMenu: EventEmitter<AnimationEvent> = new EventEmitter();
   @Output() closeMenu: EventEmitter<AnimationEvent> = new EventEmitter();
 
-  profile$ = this.authService.profile$.pipe(filter(p => !!p));
-  group$ = this.authService.profile$.pipe(
-    switchMap(profile => {
-      if (profile) {
-        return this.groupsService.get(profile.groupId);
-      } else {
-        return of(null);
-      }
-    })
-  );
-
+  profileExt$ = this.authService.profileExt$.pipe(shareReplay(1));
   title$ = combineLatest([
-    this.group$,
+    this.profileExt$,
     this.headerService.title$
   ]).pipe(
-    map(([group, title]) => title ? title : `세컨드마켓@${group.name}`)
+    map(([profile, title]) => title ? { type: 'etc', body: title } : { type: 'group', body: profile.group.name })
   );
 
-  newMessages$ = this.persistenceService.messageExts$.pipe(
+  writeGoodsCount$ = this.persistenceService.writtenGoods$.pipe(map(g => g.length));
+  favoriteGoodsCount$ = this.persistenceService.favoritedGoods$.pipe(map(g => g.length));
+  newMessageExts$ = this.persistenceService.messageExts$.pipe(
     map(messages => messages.filter(m => !m.read))
   );
-
-  writeGoodsCount$ = this.persistenceService.writeGoods$.pipe(map(g => g.length));
-  favoriteGoodsCount$ = this.persistenceService.favoriteGoods$.pipe(map(g => g.length));
-  profileExts$ = this.persistenceService.profileExts$;
-  selectedProfileId$ = this.profileSelectService.profileId$.pipe();
+  profileExts$ = this.authService.profileExts$;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private groupsService: GroupsService,
+    private headerService: HeaderService,
     private persistenceService: PersistenceService,
-    private profileSelectService: ProfileSelectService,
-    private headerService: HeaderService
+    private profileSelectService: ProfileSelectService
   ) {
   }
 
@@ -87,14 +76,12 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleMenu() {
-    this.isMenuActivated = !this.isMenuActivated;
+    this.activatedMenu = !this.activatedMenu;
   }
 
   onClickSelectProfile(profileExt: ProfileExt) {
-    this.profileSelectService.select(profileExt.id);
     this.onCloseMenu();
-    // this.router.navigate(['/']);
-
+    this.profileSelectService.select(profileExt.id);
   }
 
   onAnimationStart(event: AnimationEvent) {
@@ -114,7 +101,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onCloseMenu() {
-    this.isMenuActivated = false;
+    this.activatedMenu = false;
   }
 
 }

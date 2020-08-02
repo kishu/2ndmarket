@@ -1,6 +1,6 @@
 import { last } from 'lodash-es';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { first, map, scan, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, concat, forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { first, map, scan, shareReplay, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, GoodsService } from '@app/core/http';
@@ -13,16 +13,17 @@ import { Goods } from '@app/core/model';
   styleUrls: ['./goods-list.component.scss']
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
-  private fetchingMoreGoods = false;
+  private fetching = false;
+  private destroy$ = new Subject<null>();
   moreGoods$ = new BehaviorSubject<Goods[]>([]);
-  goods$ =
-    combineLatest([
-      this.persistenceService.goods$.pipe(first()),
-      this.moreGoods$.pipe(scan((a, c) => a.concat(c), []))
-    ]).pipe(
-      map(([goods, moreGoods]) => goods.concat(moreGoods)),
-      shareReplay(1)
-    );
+
+  goods$ = concat(
+    this.persistenceService.goods$.pipe(first()),
+    this.authService.profileExt$.pipe(
+      switchMap(() => this.persistenceService.goods$.pipe(skip(1), first())),
+    )
+  ).pipe(
+  );
 
   constructor(
     private router: Router,
@@ -31,13 +32,15 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
     private persistenceService: PersistenceService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
 
   ngOnDestroy() {
-    this.moreGoods$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   trackBy(index, item) {
@@ -45,28 +48,29 @@ export class GoodsListComponent implements OnInit, OnDestroy {
   }
 
   onMoreGoods() {
-    if (this.fetchingMoreGoods || this.moreGoods$.closed) {
-      return;
-    }
-    this.fetchingMoreGoods = true;
-    combineLatest([
-      this.goods$.pipe(first()),
-      this.authService.profile$.pipe(first())
-    ]).pipe(
-      switchMap(([goods, profile]) => {
-        return this.goodsService.getQueryByGroupId(profile.groupId, {
-          startAfter: last(goods).updated,
-          limit: 5
-        });
-      })
-    ).subscribe(moreGoods => {
-      if (moreGoods.length > 0) {
-        this.moreGoods$.next(moreGoods);
-      } else {
-        this.moreGoods$.unsubscribe();
-      }
-      this.fetchingMoreGoods = false;
-    });
+    // if (this.fetching || this.moreGoods$.closed) {
+    //   return;
+    // }
+    // this.fetching = true;
+    //
+    // forkJoin([
+    //   this.authService.profileExt$.pipe(first()),
+    //   this.goods$.pipe(first(), map(goods => last(goods)))
+    // ]).pipe(
+    //   switchMap(([p, g]) => {
+    //     return this.goodsService.getQueryByGroupId(p.groupId, {
+    //       startAfter: g.updated,
+    //       limit: 5
+    //     });
+    //   })
+    // ).subscribe(moreGoods => {
+    //   if (moreGoods.length > 0) {
+    //     this.moreGoods$.next(moreGoods);
+    //   } else {
+    //     this.moreGoods$.unsubscribe();
+    //   }
+    //   this.fetching = false;
+    // });
   }
 
 }

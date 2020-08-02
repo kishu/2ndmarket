@@ -33,7 +33,7 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
 
-    this.commentList$ = this.authService.profile$.pipe(
+    this.commentList$ = this.authService.profileExt$.pipe(
       first(),
       filter(p => !!p),
       switchMap(profile => {

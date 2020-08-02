@@ -3,8 +3,8 @@ import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/co
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { AngularFireMessaging } from '@angular/fire/messaging';
-import { AuthService, FcmTokensService } from '@app/core/http';
 import { NewFcmToken } from '@app/core/model';
+import { AuthService, FcmTokensService } from '@app/core/http';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     private renderer: Renderer2,
   ) {
     this.afMessaging.requestToken.pipe(
-      withLatestFrom(this.authService.profile$.pipe(first(), filter(p => !!p))),
+      withLatestFrom(this.authService.profileExt$.pipe(first(), filter(p => !!p))),
       switchMap(([token, profile]) => {
         const newToken = {
           profileId: profile.id,
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
   }
 
-  onOpen(event) {
+  onOpenMenu(event) {
     if (event.phaseName === 'start') {
       this.scrollY = window.scrollY;
       this.renderer.addClass(this.wrapRef.nativeElement, 'fixed');
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onClose(event) {
+  onCloseMenu(event) {
     if (event.phaseName === 'done') {
       this.renderer.removeClass(this.wrapRef.nativeElement, 'fixed');
       this.renderer.removeStyle(this.wrapRef.nativeElement, 'top');

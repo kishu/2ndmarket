@@ -9,7 +9,7 @@ import { Goods } from '@app/core/model';
   styleUrls: ['./preference-write-goods.component.scss']
 })
 export class PreferenceWriteGoodsComponent implements OnInit {
-  goodsList$ = this.persistenceService.writeGoods$;
+  goodsList$ = this.persistenceService.writtenGoods$;
 
   constructor(
     private location: Location,
