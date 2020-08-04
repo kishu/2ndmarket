@@ -17,13 +17,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<null>();
   moreGoods$ = new BehaviorSubject<Goods[]>([]);
 
-  goods$ = concat(
-    this.persistenceService.goods$.pipe(first()),
-    this.authService.profileExt$.pipe(
-      switchMap(() => this.persistenceService.goods$.pipe(skip(1), first())),
-    )
-  ).pipe(
-  );
+  goods$ = this.persistenceService.goods$.pipe(first());
 
   constructor(
     private router: Router,

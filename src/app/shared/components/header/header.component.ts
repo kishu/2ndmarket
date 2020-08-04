@@ -82,6 +82,7 @@ export class HeaderComponent implements OnInit {
   onClickSelectProfile(profileExt: ProfileExt) {
     this.onCloseMenu();
     this.profileSelectService.select(profileExt.id);
+    this.router.navigate(['/profile-change'], { skipLocationChange: true });
   }
 
   onAnimationStart(event: AnimationEvent) {
