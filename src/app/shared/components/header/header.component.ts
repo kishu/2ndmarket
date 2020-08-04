@@ -6,7 +6,6 @@ import { AnimationEvent, animate, state, style, transition, trigger } from '@ang
 import { ProfileExt } from '@app/core/model';
 import { AuthService, GroupsService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
-import { ProfileSelectService } from '@app/core/util';
 import { HeaderService } from '@app/shared/services';
 
 @Component({
@@ -68,7 +67,6 @@ export class HeaderComponent implements OnInit {
     private groupsService: GroupsService,
     private headerService: HeaderService,
     private persistenceService: PersistenceService,
-    private profileSelectService: ProfileSelectService
   ) {
   }
 
@@ -79,10 +77,11 @@ export class HeaderComponent implements OnInit {
     this.activatedMenu = !this.activatedMenu;
   }
 
-  onClickSelectProfile(profileExt: ProfileExt) {
-    this.onCloseMenu();
-    this.profileSelectService.select(profileExt.id);
-    this.router.navigate(['/profile-change'], { skipLocationChange: true });
+  onClickSelectProfile(curr: ProfileExt, target: ProfileExt) {
+    if (curr.id !== target.id) {
+      this.onCloseMenu();
+      this.router.navigate(['/profile-change', target.id], { skipLocationChange: true });
+    }
   }
 
   onAnimationStart(event: AnimationEvent) {

@@ -1,4 +1,4 @@
-import { filter, map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AuthService, MessagesService } from '@app/core/http';
@@ -19,15 +19,11 @@ export class PreferenceMessagesComponent implements OnInit {
     private renderer: Renderer2,
     private authService: AuthService,
     private messagesService: MessagesService,
-    private persistenceService: PersistenceService,
-    private headerService: HeaderService,
+    private persistenceService: PersistenceService
     ) {
   }
 
   ngOnInit(): void {
-    this.messageExts$.pipe(
-      map(messages => console.log(messages))
-    );
   }
 
   trackById(index, item) {

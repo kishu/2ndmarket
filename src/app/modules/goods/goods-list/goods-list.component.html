@@ -15,5 +15,5 @@
       </svg>
     </a>
   </div>
-  <app-goods-more *ngIf="!moreGoods$.closed" (more)="onMoreGoods()"></app-goods-more>
+  <app-goods-more *ngIf="!moreGoods$.isStopped" (more)="onMoreGoods()"></app-goods-more>
 </div>

@@ -110,32 +110,32 @@
         </ul>
 
         <h2 class="py-2 px-3 text-green-800">프로필 전환</h2>
-        <ul class="border-t border-b border-gray-300" *ngIf="profileExts$ | async as profileExts">
-          <li
-            *ngFor="let profileExt of profileExts; first as isFirst"
-            class="relative border-gray-300"
-            [ngClass]="{'border-t': !isFirst}">
-            <button
-              (click)="onClickSelectProfile(profileExt)"
-              class="flex justify-between items-center w-full p-0 px-1 border-0 bg-transparent text-gray-800">
-              <span class="flex-shrink-0 w-12 h-12 relative p-2">
-                <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
-                <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600"></span>
-              </span>
-              <span class="flex-grow text-left text-sm ellipsis">{{ profileExt.displayName }}</span>
-              <ng-container *ngIf="profileExt$ | async as selectedProfileExt">
-                <span
-                  class="flex-shrink-0 flex-grow-0 px-2 py-1 mr-2 text-xs leading-tight uppercase"
-                  [ngClass]="{
-                    'text-green-700': selectedProfileExt.id === profileExt.id,
-                    'bg-green-600 text-white': selectedProfileExt.id !== profileExt.id
-                  }">
-                  {{ selectedProfileExt.id === profileExt.id ? '사용중' : profileExt.group.name }}
+        <ng-container *ngIf="profileExt$ | async as selectedProfileExt">
+          <ul class="border-t border-b border-gray-300" *ngIf="profileExts$ | async as profileExts">
+            <li
+              *ngFor="let profileExt of profileExts; first as isFirst"
+              class="relative border-gray-300"
+              [ngClass]="{'border-t': !isFirst}">
+              <button
+                (click)="onClickSelectProfile(selectedProfileExt, profileExt)"
+                class="flex justify-between items-center w-full p-0 px-1 border-0 bg-transparent text-gray-800">
+                <span class="flex-shrink-0 w-12 h-12 relative p-2">
+                  <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
+                  <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600"></span>
                 </span>
-              </ng-container>
-            </button>
-          </li>
-        </ul>
+                <span class="flex-grow text-left text-sm ellipsis">{{ profileExt.displayName }}</span>
+                  <span
+                    class="flex-shrink-0 flex-grow-0 px-2 py-1 mr-2 text-xs leading-tight uppercase"
+                    [ngClass]="{
+                      'text-green-700': selectedProfileExt.id === profileExt.id,
+                      'bg-green-600 text-white': selectedProfileExt.id !== profileExt.id
+                    }">
+                    {{ selectedProfileExt.id === profileExt.id ? '사용중' : profileExt.group.name }}
+                  </span>
+              </button>
+            </li>
+          </ul>
+        </ng-container>
         <a [routerLink]="['preference/groups']" (click)="toggleMenu()" class="block p-2 bg-green-600 text-white text-center text-sm mt-1">그룹추가</a>
       </div>
     </div>

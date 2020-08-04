@@ -1,7 +1,7 @@
-import { BehaviorSubject, forkJoin, of, ReplaySubject } from 'rxjs';
+import { forkJoin, of, ReplaySubject, Subject } from 'rxjs';
 import { first, map, skip, switchMap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Goods, MessageExt } from '@app/core/model';
+import { Goods, MessageExt, ProfileExt } from '@app/core/model';
 import { AuthService, FavoriteGoodsService, GoodsCommentsService, GoodsService, MessagesService } from '@app/core/http';
 
 @Injectable({
@@ -13,27 +13,23 @@ export class PersistenceService implements OnDestroy {
   favoritedGoods$ = new ReplaySubject<Goods[]>(1);
   messageExts$ = new ReplaySubject<MessageExt[]>(1);
 
-  protected reset$ = new BehaviorSubject(null);
+  reset$ = new Subject<ProfileExt>();
 
   protected goodsSubscription = this.reset$.pipe(
-    switchMap(() => this.authService.profileExt$.pipe(first())),
     switchMap(p => this.goodsService.valueChangesQueryByGroupId(p.groupId, {limit: 5})),
   ).subscribe(g => this.goods$.next(g));
 
   protected writtenGoodsSubscription = this.reset$.pipe(
-    switchMap(() => this.authService.profileExt$.pipe(first())),
     switchMap(p => this.goodsService.valueChangesQueryByProfileId(p.id)),
   ).subscribe(g => this.writtenGoods$.next(g));
 
   protected favoritedGoodsSubscription = this.reset$.pipe(
-    switchMap(() => this.authService.profileExt$.pipe(first())),
     switchMap(p => this.favoriteGoodsService.valueChangesByProfileId(p.id).pipe(
       switchMap(fs => forkJoin(fs.map(f => this.goodsService.get(f.goodsId))))
     )),
   ).subscribe(g => this.favoritedGoods$.next(g));
 
   protected messageExtsSubscription = this.reset$.pipe(
-    switchMap(() => this.authService.profileExt$.pipe(first())),
     switchMap(p => {
       return this.messagesService.valueChangesQueryByProfileId(p.id).pipe(
         switchMap(messages => {
@@ -57,28 +53,34 @@ export class PersistenceService implements OnDestroy {
     private goodsCommentsService: GoodsCommentsService,
     private messagesService: MessagesService,
   ) {
+    this.authService.profileExt$.pipe(first()).subscribe(p => this.reset$.next(p));
   }
 
-  reset() {
+  reset(profileExt: ProfileExt) {
     return new Promise((resolve, reject) => {
       forkJoin([
         this.goods$.pipe(skip(1), first()),
         this.writtenGoods$.pipe(skip(1), first()),
         this.favoritedGoods$.pipe(skip(1), first()),
         this.messageExts$.pipe(skip(1), first())
-      ]).subscribe((s) => {
-        console.log('reset', s);
-        resolve();
-      });
-      this.reset$.next(null);
+      ]).subscribe(() => resolve());
+      this.reset$.next(profileExt);
     });
   }
 
   ngOnDestroy() {
-    this.goodsSubscription.unsubscribe();
-    this.writtenGoodsSubscription.unsubscribe();
-    this.favoritedGoodsSubscription.unsubscribe();
-    this.messageExtsSubscription.unsubscribe();
+    [
+      this.goods$,
+      this.writtenGoods$,
+      this.favoritedGoods$,
+      this.messageExts$
+    ].forEach(s => s.complete());
+    [
+      this.goodsSubscription,
+      this.writtenGoodsSubscription,
+      this.favoritedGoodsSubscription,
+      this.messageExtsSubscription
+    ].forEach(o => o.unsubscribe());
   }
 
 }

@@ -1,7 +1,7 @@
 import { auth } from 'firebase/app';
 import { combineLatest, forkJoin, Observable, ReplaySubject } from 'rxjs';
-import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileExt, User } from '@app/core/model';
 import { GroupsService } from '@app/core/http/groups.service';
@@ -17,7 +17,7 @@ enum AuthProvider {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   user$: Observable<User | null> = this.afAuth.user.pipe(
     map(user => {
       if (user) {
@@ -30,11 +30,10 @@ export class AuthService {
       } else {
         return null;
       }
-    }),
-    shareReplay(1)
+    })
   );
 
-  profileExts$: Observable<ProfileExt[]> = combineLatest([
+  profileSubscription = combineLatest([
     this.user$,
     this.selectProfileService.profileId$
   ]).pipe(
@@ -49,14 +48,15 @@ export class AuthService {
         }),
         tap(profileExts => {
           const selectedProfileExt = profileExts.find(p => p.id === profileId);
+          this.profileExts$.next(profileExts);
           this.profileExt$.next(selectedProfileExt);
         })
       );
-    }),
-    shareReplay(1)
-  );
+    })
+  ).subscribe();
 
   profileExt$ = new ReplaySubject<ProfileExt>(1);
+  profileExts$ = new ReplaySubject<ProfileExt[]>(1);
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -64,6 +64,12 @@ export class AuthService {
     private profilesService: ProfilesService,
     private selectProfileService: ProfileSelectService,
   ) {
+  }
+
+  ngOnDestroy() {
+    this.profileSubscription.unsubscribe();
+    this.profileExt$.complete();
+    this.profileExts$.complete();
   }
 
   signInWithRedirect(provider: string) {

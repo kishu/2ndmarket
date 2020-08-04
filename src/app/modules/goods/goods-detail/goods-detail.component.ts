@@ -198,7 +198,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   onAnimationStart(event: AnimationEvent) {
-    console.log(event);
     if (event.toState === 'open') {
       this.scrollY = window.scrollY;
       (document.querySelector('.wrap') as HTMLElement).classList.add('fixed');
@@ -207,7 +206,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   onAnimationDone(event: AnimationEvent) {
-    console.log(event);
     if (event.toState === 'closed') {
       (document.querySelector('.wrap') as HTMLElement).classList.remove('fixed');
       (document.querySelector('.wrap') as HTMLElement).style.top = '';
