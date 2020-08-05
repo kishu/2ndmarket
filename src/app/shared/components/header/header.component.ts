@@ -1,8 +1,7 @@
 import { combineLatest } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
 import { ProfileExt } from '@app/core/model';
 import { AuthService, GroupsService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
@@ -11,41 +10,10 @@ import { HeaderService } from '@app/shared/services';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  animations: [
-    trigger('openClose', [
-      state('open', style({
-        transform: 'translateX(0)',
-      })),
-      state('closed', style({
-        transform: 'translateX(-100%)',
-      })),
-      transition('open <=> closed', [
-        animate('0.15s')
-      ]),
-    ]),
-    trigger('fadeInOut', [
-      state('fadeIn', style({
-        display: 'block',
-      })),
-      state('fadeOut', style({
-        display: 'none',
-      })),
-      transition('fadeIn => fadeOut', [
-        animate('0.15s')
-      ]),
-      transition('fadeOut => fadeIn', [
-        animate('0s')
-      ]),
-    ]),
-  ]
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
   activatedMenu = false;
-
-  @Output() openMenu: EventEmitter<AnimationEvent> = new EventEmitter();
-  @Output() closeMenu: EventEmitter<AnimationEvent> = new EventEmitter();
-
   profileExt$ = this.authService.profileExt$.pipe(shareReplay(1));
   title$ = combineLatest([
     this.profileExt$,
@@ -81,22 +49,6 @@ export class HeaderComponent implements OnInit {
     if (curr.id !== target.id) {
       this.onCloseMenu();
       this.router.navigate(['/profile-change', target.id], { skipLocationChange: true });
-    }
-  }
-
-  onAnimationStart(event: AnimationEvent) {
-    if (event.toState === 'open') {
-      this.openMenu.emit(event);
-    } else {
-      this.closeMenu.emit(event);
-    }
-  }
-
-  onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'open') {
-      this.openMenu.emit(event);
-    } else {
-      this.closeMenu.emit(event);
     }
   }
 

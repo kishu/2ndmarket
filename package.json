@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0",
+    "start": "ng serve",
     "bundle-analyzer": "ng build --prod --stats-json && webpack-bundle-analyzer ./dist/2ndmarket/stats-es2015.json",
     "build": "ng lint && ng build",
     "build:prod": "ng lint && ng build --prod",

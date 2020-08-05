@@ -1,7 +1,6 @@
 import { first } from 'rxjs/operators';
 
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { Router, RouteReuseStrategy, RouterModule } from '@angular/router';
 
@@ -45,8 +44,8 @@ export function appInitializer(router: Router, authService: AuthService) {
     AppComponent
   ],
   imports: [
+    RouterModule,
     BrowserModule,
-    BrowserAnimationsModule,
     RouterModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
