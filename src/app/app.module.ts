@@ -23,7 +23,7 @@ import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { CustomRouteReuseStrategy } from '@app/custom-route-reuse.strategy';
+import { CacheRouteReuseStrategy } from '@app/./cache-route-reuse.strategy';
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
@@ -64,7 +64,7 @@ export function appInitializer(router: Router, authService: AuthService) {
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
-    // { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy },
+    { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },
     { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true }
   ],
   bootstrap: [AppComponent]

@@ -104,4 +104,9 @@ export class HeaderComponent implements OnInit {
     this.activatedMenu = false;
   }
 
+  onClickSignOut() {
+    this.activatedMenu = false;
+    this.authService.signOut().then(() => this.router.navigate(['/sign-in']));
+  }
+
 }

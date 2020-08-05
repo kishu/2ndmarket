@@ -1,6 +1,6 @@
 import { auth } from 'firebase/app';
 import { combineLatest, forkJoin, Observable, ReplaySubject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileExt, User } from '@app/core/model';
@@ -11,7 +11,8 @@ import { ProfileSelectService } from '@app/core/util';
 enum AuthProvider {
   google = 'google',
   facebook = 'facebook',
-  twitter = 'twitter'
+  twitter = 'twitter',
+  github = 'github'
 }
 
 @Injectable({
@@ -37,6 +38,7 @@ export class AuthService implements OnDestroy {
     this.user$,
     this.selectProfileService.profileId$
   ]).pipe(
+    filter(([user, profileId]) => !!user && !!profileId),
     switchMap(([user, profileId]) => {
       return this.profilesService.getQueryByUserId(user.id).pipe(
         switchMap(profiles => {
@@ -83,6 +85,9 @@ export class AuthService implements OnDestroy {
         break;
       case AuthProvider.twitter:
         authProvider = new auth.TwitterAuthProvider();
+        break;
+      case AuthProvider.github:
+        authProvider = new auth.GithubAuthProvider();
         break;
     }
     return this.afAuth.signInWithRedirect(authProvider);
