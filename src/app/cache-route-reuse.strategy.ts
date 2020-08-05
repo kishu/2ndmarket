@@ -17,9 +17,8 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
     return '';
   }
 
-  shouldReuseRoute(before: ActivatedRouteSnapshot, curr:  ActivatedRouteSnapshot): boolean {
-    this.allowRetrieveCache['goods'] =
-      this.getPath(before) === 'goods/:goodsId' && this.getPath(curr) === 'goods';
+  shouldReuseRoute(before: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
+    this.allowRetrieveCache.goods = this.getPath(before) === 'goods/:goodsId' && this.getPath(curr) === 'goods';
     return before.routeConfig === curr.routeConfig;
   }
 

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService, ProfilesService } from '@app/core/http';
-import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { ProfileSelectService } from "@app/core/util";
-import { filter, first, map, switchMap } from "rxjs/operators";
+import { filter, first, map, switchMap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService, ProfilesService } from '@app/core/http';
+import { ProfileSelectService } from '@app/core/util';
 
 @Component({
   selector: 'app-sign-in',
@@ -42,7 +42,7 @@ export class SignInComponent implements OnInit {
         ).subscribe(profile => {
           if (profile) {
             this.profileSelectService.select(profile.id);
-            this.router.navigate([''])
+            this.router.navigate(['']);
           } else {
             this.router.navigate(['preference/groups']);
           }
