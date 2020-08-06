@@ -18,10 +18,13 @@
         </button>
       </div>
       <h1 class="h-6 px-16 font-bold text-center text-green-700 ellipsis">
-        <ng-container *ngIf="title$ | async as title">
+        <ng-container *ngIf="title$ | async as title; else defaultTemplate">
           <span>{{ title.type === 'etc' ? title.body : '세컨드마켓@' }}</span>
           <span *ngIf="title.type === 'group'" class="uppercase">{{ title.body }}</span>
         </ng-container>
+        <ng-template #defaultTemplate>
+          <span>세컨드마켓</span>
+        </ng-template>
       </h1>
       <div class="absolute inset-y-0 right-0 p-3">
         <ng-container *ngIf="newMessageExts$ | async as newMessages">

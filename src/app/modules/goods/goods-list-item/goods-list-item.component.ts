@@ -15,14 +15,6 @@ export class GoodsListItemComponent implements OnInit, OnDestroy {
   protected goodsSnapshotChangeSubscription: Subscription;
   @Input() set item(goods: Goods) {
     this.goods = goods;
-    this.goodsSnapshotChangeSubscription =
-      this.goodsService.snapshotChanges(goods.id).subscribe(action => {
-        if (action.payload.exists) {
-          this.goods = { id: action.payload.id, ...action.payload.data() };
-        } else {
-          this.exists = false;
-        }
-      });
   }
 
   constructor(
@@ -41,6 +33,16 @@ export class GoodsListItemComponent implements OnInit, OnDestroy {
     if (this.exists) {
       e.preventDefault();
       this.goodsCacheService.cache(goods);
+      if (!this.goodsSnapshotChangeSubscription) {
+        this.goodsSnapshotChangeSubscription =
+          this.goodsService.snapshotChanges(goods.id).subscribe(action => {
+            if (action.payload.exists) {
+              this.goods = {id: action.payload.id, ...action.payload.data()};
+            } else {
+              this.exists = false;
+            }
+          });
+      }
     }
   }
 
