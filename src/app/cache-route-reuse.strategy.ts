@@ -7,7 +7,9 @@ import { ActivatedRouteSnapshot, DetachedRouteHandle } from '@angular/router';
 export class CacheRouteReuseStrategy implements RouteReuseStrategy {
   storedRouteHandles = new Map<string, DetachedRouteHandle>();
   allowRetrieveCache = {
-    goods: false
+    goods: false,
+    'preference/written-goods': false,
+    'preference/favorited-goods': false
   };
 
   private getPath(route: ActivatedRouteSnapshot): string {
@@ -18,7 +20,17 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
   }
 
   shouldReuseRoute(before: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-    this.allowRetrieveCache.goods = this.getPath(before) === 'goods/:goodsId' && this.getPath(curr) === 'goods';
+    switch (this.getPath(curr)) {
+      case 'goods':
+        this.allowRetrieveCache.goods = this.getPath(before) === 'goods/:goodsId';
+        break;
+      case 'preference/written-goods':
+        this.allowRetrieveCache['preference/written-goods'] = this.getPath(before) === 'goods/:goodsId';
+        break;
+      case 'preference/favorited-goods':
+        this.allowRetrieveCache['preference/favorited-goods'] = this.getPath(before) === 'goods/:goodsId';
+        break;
+    }
     return before.routeConfig === curr.routeConfig;
   }
 

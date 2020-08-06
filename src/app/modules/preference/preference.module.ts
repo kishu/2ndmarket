@@ -6,16 +6,16 @@ import { PreferenceRoutingModule } from './preference-routing.module';
 import { PreferenceProfileComponent } from './preference-profile/preference-profile.component';
 import { PreferenceGroupsComponent } from './preference-groups/preference-groups.component';
 import { PreferenceMessagesComponent } from './preference-messages/preference-messages.component';
-import { PreferenceWriteGoodsComponent } from './preference-write-goods/preference-write-goods.component';
-import { PreferenceFavoriteGoodsComponent } from './preference-favorite-goods/preference-favorite-goods.component';
+import { PreferenceWrittenGoodsComponent } from './preference-written-goods/preference-written-goods.component';
+import { PreferenceFavoritedGoodsComponent } from './preference-favorited-goods/preference-favorited-goods.component';
 
 @NgModule({
   declarations: [
     PreferenceProfileComponent,
     PreferenceGroupsComponent,
     PreferenceMessagesComponent,
-    PreferenceWriteGoodsComponent,
-    PreferenceFavoriteGoodsComponent
+    PreferenceWrittenGoodsComponent,
+    PreferenceFavoritedGoodsComponent
   ],
   imports: [
     CommonModule,

@@ -5,11 +5,11 @@ import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
 
 @Component({
-  selector: 'app-preference-favorite-goods, [app-preference-favorite-goods]',
-  templateUrl: './preference-favorite-goods.component.html',
-  styleUrls: ['./preference-favorite-goods.component.scss']
+  selector: 'app-preference-favorited-goods, [app-preference-favorited-goods]',
+  templateUrl: './preference-favorited-goods.component.html',
+  styleUrls: ['./preference-favorited-goods.component.scss']
 })
-export class PreferenceFavoriteGoodsComponent implements OnInit {
+export class PreferenceFavoritedGoodsComponent implements OnInit {
   goodsList$ = this.persistenceService.favoritedGoods$;
 
   constructor(

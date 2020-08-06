@@ -1,5 +1,5 @@
 import { once } from 'lodash-es';
-import { combineLatest, forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { combineLatest, concat, forkJoin, Observable, of, Subject } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -33,19 +33,16 @@ import { HeaderService } from '@app/shared/services';
 })
 export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
   scrollY: number;
-  @HostBinding('class.hidden-after') hiddenAfter = true;
   @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
   private intersectionObserver: IntersectionObserver;
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
   private destroy$ = new Subject<null>();
 
-  goods$: Observable<Goods> = merge(
+  goods$: Observable<Goods> = concat(
     this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(filter(g => !!g)),
-    this.goodsService.valueChanges(this.goodsId).pipe(
-      takeUntil(this.destroy$)
-    )
+    this.goodsService.valueChanges(this.goodsId).pipe(takeUntil(this.destroy$))
   ).pipe(
-    shareReplay(1)
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   empty$: Observable<boolean> = this.goods$.pipe(first(), map(g => !g));
@@ -54,11 +51,12 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     this.authService.profileExt$
   ]).pipe(
     map(([g, p]) => g.profileId === p?.id),
-    shareReplay(1)
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   favoriteCount$: Observable<number> = this.goods$.pipe(
     first(),
-    map(goods => goods.favoritesCnt)
+    map(goods => goods.favoritesCnt),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   favorited$: Observable<boolean> = combineLatest([
     this.goods$,
@@ -66,7 +64,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   ]).pipe(
     switchMap(([g, p]) => this.goodsFavoritesService.getQueryByGoodsIdAndProfileId(g.id, p.id)),
     map(f => f.length > 0),
-    shareReplay(1)
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   showPermission = false;
   showPhotoViewer = false;
@@ -164,9 +162,9 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       switchMap(([p]) => this.goodsFavoritesService.deleteByGoodsIdAndProfileId(goodsId, p.id))
     );
     forkJoin([
-      this.favorited$.pipe(first()),
-      this.favoriteCount$.pipe(first()),
-      this.permission$.pipe(first())
+      this.favorited$,
+      this.favoriteCount$,
+      this.permission$
     ]).pipe(
       switchMap(([favorited, favoriteCount, permission]) => {
         if (permission) {

@@ -4,11 +4,11 @@ import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
 
 @Component({
-  selector: 'app-preference-write-goods, [app-preference-write-goods]',
-  templateUrl: './preference-write-goods.component.html',
-  styleUrls: ['./preference-write-goods.component.scss']
+  selector: 'app-preference-written-goods, [app-preference-written-goods]',
+  templateUrl: './preference-written-goods.component.html',
+  styleUrls: ['./preference-written-goods.component.scss']
 })
-export class PreferenceWriteGoodsComponent implements OnInit {
+export class PreferenceWrittenGoodsComponent implements OnInit {
   goodsList$ = this.persistenceService.writtenGoods$;
 
   constructor(

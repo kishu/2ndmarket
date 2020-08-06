@@ -14,7 +14,7 @@ import { HeaderService } from '@app/shared/services';
 })
 export class HeaderComponent implements OnInit {
   activatedMenu = false;
-  profileExt$ = this.authService.profileExt$.pipe(shareReplay(1));
+  profileExt$ = this.authService.profileExt$;
   title$ = combineLatest([
     this.profileExt$,
     this.headerService.title$
