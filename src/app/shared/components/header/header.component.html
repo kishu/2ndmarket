@@ -27,17 +27,19 @@
         </ng-template>
       </h1>
       <div class="absolute inset-y-0 right-0 p-3">
-        <ng-container *ngIf="newMessageExts$ | async as newMessages">
-          <a [routerLink]="['/preference', 'messages']" class="block">
-            <!-- <ng-container *ngIf="(noticeCount$ | async) as noticeCount"><span *ngIf=" noticeCount > 0">{{ noticeCount }}</span></ng-container> -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bell" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round" [ngClass]="{'active vibe': newMessages.length > 0}">
-              <path stroke="none" d="M0 0h24v24H0z"/>
-              <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
-              <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
-            </svg>
-            <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600" *ngIf="newMessages.length > 0"></span>
-          </a>
-        </ng-container>
+        <a [routerLink]="['/preference', 'messages']" class="block">
+          <!-- <ng-container *ngIf="(noticeCount$ | async) as noticeCount"><span *ngIf=" noticeCount > 0">{{ noticeCount }}</span></ng-container> -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            [ngClass]="{ 'active vibe': (newMessages$ | async) > 0 }"
+            width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icon-tabler-bell">
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+            <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+          </svg>
+          <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600" *ngIf="(newMessages$ | async) > 0"></span>
+        </a>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, share, shareReplay } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProfileExt } from '@app/core/model';
@@ -24,8 +24,10 @@ export class HeaderComponent implements OnInit {
 
   writeGoodsCount$ = this.persistenceService.writtenGoods$.pipe(map(g => g.length));
   favoriteGoodsCount$ = this.persistenceService.favoritedGoods$.pipe(map(g => g.length));
-  newMessageExts$ = this.persistenceService.messageExts$.pipe(
-    map(messages => messages.filter(m => !m.read))
+  newMessages$ = this.persistenceService.messageExts$.pipe(
+    map(messages => messages.filter(m => !m.read)),
+    map(messages => messages.length),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   profileExts$ = this.authService.profileExts$;
 
