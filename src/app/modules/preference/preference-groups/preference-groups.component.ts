@@ -121,7 +121,7 @@ export class PreferenceGroupsComponent implements OnInit {
               addNewProfile(group.id, this.email, user.id).then(profile => this.profileSelectService.select(profile.id)) :
               updateAddUserIdToProfile(profiles[0].id, user.id).then(() => this.profileSelectService.select(profiles[0].id));
           }),
-          switchMap(() => this.router.navigate(['/groups', group.id, 'goods']))
+          switchMap(() => this.router.navigate(['/goods']))
         );
       })
     ).subscribe(() => {}, err => alert(err));
