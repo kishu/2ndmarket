@@ -1,8 +1,8 @@
 import { once } from 'lodash-es';
 import { combineLatest, concat, forkJoin, Observable, of, Subject } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, first, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
@@ -161,10 +161,11 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     ]).pipe(
       switchMap(([p]) => this.goodsFavoritesService.deleteByGoodsIdAndProfileId(goodsId, p.id))
     );
+
     forkJoin([
-      this.favorited$,
-      this.favoriteCount$,
-      this.permission$
+      this.favorited$.pipe(first()),
+      this.favoriteCount$.pipe(first()),
+      this.permission$.pipe(first())
     ]).pipe(
       switchMap(([favorited, favoriteCount, permission]) => {
         if (permission) {

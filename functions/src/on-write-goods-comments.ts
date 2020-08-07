@@ -14,7 +14,7 @@ export const onWriteGoodsComments = functions
       const goodsDoc = await db.doc(`goods/${goodsCommentData.goodsId}`).get();
       const goodsData = goodsDoc.data();
 
-      const partialGoods= { commentsCnt: admin.firestore.FieldValue.increment(1) };
+      const partialGoods= { commentsCnt: admin.firestore.FieldValue.increment(created ? 1 : -1) };
       promises.push(goodsDoc.ref.update(partialGoods));
 
       if (created && goodsCommentData.profileId !== goodsData?.profileId) {
