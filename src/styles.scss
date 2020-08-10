@@ -68,7 +68,7 @@ input,
 select,
 textarea {
   @apply block w-full py-2 px-3;
-  @apply border-0 rounded-none border-gray-500 bg-transparent text-gray-700;
+  @apply border-b border-gray-400 rounded-none bg-transparent text-gray-700;
   @apply appearance-none outline-none;
 
   &.input-sm {
@@ -85,7 +85,7 @@ textarea {
 }
 
 .form-label {
-  @apply block px-3 pt-2 -mb-1 uppercase tracking-wide text-gray-500 text-xs;
+  @apply block px-3 pt-2 -mb-1 uppercase tracking-wide text-gray-600 text-xs;
 }
 
 .goodsItem {
@@ -244,12 +244,6 @@ textarea {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.goods-form {
-  @apply w-full mt-2;
-  padding-bottom: calc(constant(safe-area-inset-bottom) + 3rem);
-  padding-bottom: calc(env(safe-area-inset-bottom) + 3rem);
 }
 
 .goods-form-footer {

@@ -6,7 +6,7 @@
           <div class="p-3">
             <a
               class="flex items-center"
-              [routerLink]="['preference/profile']">
+              [routerLink]="['profile']">
               <ng-container *ngIf="profileExt$ | async as profile">
                 <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
                 <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
@@ -19,6 +19,17 @@
         </h2>
         <ul class="border-t border-b border-gray-300">
           <li>
+            <a
+              class="flex justify-between items-center"
+              routerLink="/preference/messages">
+              <span class="relative py-2 pl-3 pr-5 text-gray-700">
+                알림
+                <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
+              </span>
+              <span class="px-4 text-sm text-green-700">9999 개</span>
+            </a>
+          </li>
+          <li class="border-t border-gray-300">
             <a
               class="flex justify-between items-center"
               routerLink="/preference/written-goods">

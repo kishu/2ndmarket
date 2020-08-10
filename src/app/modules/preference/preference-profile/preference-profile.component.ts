@@ -1,5 +1,6 @@
 import { forkJoin } from 'rxjs';
 import { filter, first, switchMap, tap } from 'rxjs/operators';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DraftImage } from '@app/core/model';
@@ -36,6 +37,7 @@ export class PreferenceProfileComponent implements OnInit {
   get displayNameCtl() { return this.profileForm.get('displayName'); }
 
   constructor(
+    private location: Location,
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
@@ -135,4 +137,8 @@ export class PreferenceProfileComponent implements OnInit {
   //   this.authService.signOut();
   //   this.router.navigate(['/sign-in']);
   // }
+
+  onClickHistoryBack() {
+    this.location.back();
+  }
 }

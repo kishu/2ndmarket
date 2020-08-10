@@ -1,61 +1,75 @@
-<div class="h-safe-top"></div>
-<div class="w-full max-w-md pt-8 pb-24 mx-auto">
-  <ng-container *ngIf="profile$ | async as profile">
-    <form
-      *ngIf="profile"
-      class="profile-form"
-      [formGroup]="profileForm"
-      (ngSubmit)="onSubmit()">
-      <div class="w-2/3 max-w-xs mx-auto">
-        <div class="relative w-32 h-32 mx-auto overflow-hidden rounded-full">
-<!--          <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt="">-->
-          <img
-            *ngIf="draftImage"
-            [src]="(draftImage.isFile ? draftImage.file : (draftImage.src || 'https://via.placeholder.com/150')) | objectUrl | sanitizer: 'url'"
-            [style.transform]="'rotate(' + draftImage.rotate + 'deg)'"
-            class="w-full h-full object-cover" alt="">
-          <input
-            type="file"
-            accept="image/gif, image/jpeg, image/png"
-            (change)="onChangeFile($event)"
-            class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
-        </div>
-        <div *ngIf="changingFile">
-          <button type="button" (click)="onClickRotateImage(90)">회전</button>
-          <button type="button" (click)="onCancelChangeFile($event)">취소</button>
-        </div>
-        <div class="mt-4 bg-white shadow">
-          <label class="form-label" for="displayName">
-            닉네임
-          </label>
-          <input
-            class=""
-            id="displayName"
-            name="displayName"
-            type="text"
-            formControlName="displayName"
-            placeholder="닉네임을 입력해 주세요."
-            minlength="2"
-            maxlength="20"
-            required>
-        </div>
-        <div class="flex justify-between py-1 px-3 text-xs" *ngIf="displayNameCtl.invalid && (displayNameCtl.dirty || displayNameCtl.touched)">
-          <p class="text-red-600 text-xs">닉네임을 입력해 주세요.</p>
-        </div>
-        <div class="mt-1">
-          <button
-            type="submit"
-            [disabled]="profileForm.invalid || submitting"
-            class="block w-full btn-sm border-green-600 bg-green-600">
-            {{ submitting ? '변경중...' : '변경' }}
-          </button>
-        </div>
+<ng-container *ngIf="profile$ | async as profile">
+  <div class="fixed left-0 header-top w-full bg-white z-30">
+    <div class="relative w-full mx-auto px-12">
+      <div class="absolute inset-y-0 left-0 flex">
+        <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <line x1="5" y1="12" x2="11" y2="18" />
+            <line x1="5" y1="12" x2="11" y2="6" />
+          </svg>
+        </button>
       </div>
-    </form>
-    <div class="fixed left-0 right-0 bottom-0 bg-white p-safe-bottom border-t border-gray-400">
-      <div class="max-w-md mx-auto p-2">
-        <button type="button" class="block btn btn-sm w-full border-green-600 bg-green-600 text-center" (click)="onRemoveProfile()">{{ profile.email }} <span class="inline-block">연결 해제</span></button>
+      <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
+        프로필 설정
+      </h1>
+    </div>
+  </div>
+  <form
+    *ngIf="profile"
+    class="profile-form"
+    [formGroup]="profileForm"
+    (ngSubmit)="onSubmit()">
+    <div class="w-2/3 max-w-xs mx-auto pt-8 pb-24">
+      <div class="relative w-32 h-32 mx-auto overflow-hidden rounded-full">
+<!--          <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt="">-->
+        <img
+          *ngIf="draftImage"
+          [src]="(draftImage.isFile ? draftImage.file : (draftImage.src || 'https://via.placeholder.com/150')) | objectUrl | sanitizer: 'url'"
+          [style.transform]="'rotate(' + draftImage.rotate + 'deg)'"
+          class="w-full h-full object-cover" alt="">
+        <input
+          type="file"
+          accept="image/gif, image/jpeg, image/png"
+          (change)="onChangeFile($event)"
+          class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
+      </div>
+      <div *ngIf="changingFile">
+        <button type="button" (click)="onClickRotateImage(90)">회전</button>
+        <button type="button" (click)="onCancelChangeFile($event)">취소</button>
+      </div>
+      <div class="mt-4 bg-white shadow">
+        <label class="form-label" for="displayName">
+          닉네임
+        </label>
+        <input
+          class=""
+          id="displayName"
+          name="displayName"
+          type="text"
+          formControlName="displayName"
+          placeholder="닉네임을 입력해 주세요."
+          minlength="2"
+          maxlength="20"
+          required>
+      </div>
+      <div class="flex justify-between py-1 px-3 text-xs" *ngIf="displayNameCtl.invalid && (displayNameCtl.dirty || displayNameCtl.touched)">
+        <p class="text-red-600 text-xs">닉네임을 입력해 주세요.</p>
+      </div>
+      <div class="mt-1">
+        <button
+          type="submit"
+          [disabled]="profileForm.invalid || submitting"
+          class="block w-full btn-sm border-green-600 bg-green-600">
+          {{ submitting ? '변경중...' : '변경' }}
+        </button>
       </div>
     </div>
-  </ng-container>
-</div>
+  </form>
+  <div class="fixed left-0 right-0 bottom-0 bg-white p-safe-bottom border-t border-gray-400">
+    <div class="max-w-md mx-auto p-2">
+      <button type="button" class="block btn btn-sm w-full border-green-600 bg-green-600 text-center" (click)="onRemoveProfile()">{{ profile.email }} <span class="inline-block">연결 해제</span></button>
+    </div>
+  </div>
+</ng-container>
