@@ -1,6 +1,6 @@
 <ng-container *ngIf="goods$ | async as goods">
-  <div class="fixed left-0 header-top z-30 p-3">
-    <button type="button" class="p-0 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
+  <div class="fixed left-0 header-top bg-white z-30 px-safe">
+    <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z"/>
         <line x1="5" y1="12" x2="19" y2="12" />
@@ -9,17 +9,30 @@
       </svg>
     </button>
   </div>
-  <div class="fixed right-0 mr-10 py-3 header-top z-30">
+  <div class="fixed right-0 header-top z-30 flex">
+    <div class="w-12 h-12 bg-white"></div>
+    <ng-container *ngIf="(permission$ | async) === false">
+      <button
+        type="button"
+        class="p-3 border-0 flex items-center bg-white text-gray-500"
+        [ngClass]="{'text-red-500': favorited$ | async}"
+        (click)="onClickFavorite()">
+        <!-- <span class="mr-px text-sm text-gray-600" [ngClass]="{'text-red-600': favorited$ | async}">{{ favoriteCount$ | async }}</span> -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart" [ngClass]="{'active': favorited$ | async}" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20l-7 -7a4 4 0 0 1 6.5 -6a.9 .9 0 0 0 1 0a4 4 0 0 1 6.5 6l-7 7" />
+        </svg>
+      </button>
+    </ng-container>
     <ng-container *ngIf="permission$ | async">
       <button
         type="button"
-        class="p-0 border-0 flex items-center"
+        class="p-3 border-0 flex items-center bg-white"
         (click)="onClickPermission()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="0.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z"/>
-          <circle cx="12" cy="12" r="1" />
-          <circle cx="12" cy="19" r="1" />
-          <circle cx="12" cy="5" r="1" />
+          <circle cx="12" cy="12" r="1" fill="#2f855a" />
+          <circle cx="12" cy="19" r="1" fill="#2f855a" />
+          <circle cx="12" cy="5" r="1" fill="#2f855a" />
         </svg>
       </button>
       <div class="absolute right-0 p-2 border border-green-700 bg-white" style="top: 100%" *ngIf="showPermission">
@@ -56,22 +69,16 @@
       </div>
     </ng-container>
   </div>
-  <div class="w-full max-w-md min-h-screen mx-auto mt-2 shadow flex flex-col">
+  <div class="w-full min-h-screen mx-auto flex flex-col">
     <div *ngIf="goods.images.length > 0">
       <img [src]="goods.images[0]" class="w-full" alt="">
     </div>
-    <div class="relative bg-white">
-      <div #goodsNameRef class="relative z-20">
+    <div class="px-safe bg-white">
+      <div #goodsNameRef>
         <div class="p-4 bg-white">
           <h2 class="text-lg leading-tight break-words">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h2>
           <div class="mt-2 flex items-center">
             <div class="text-lg"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
-            <button type="button" *ngIf="(permission$ | async) === false" class="p-0 border-0 flex items-center" (click)="onClickFavorite()">
-              <!-- <span class="mr-px text-sm text-gray-600" [ngClass]="{'text-red-600': favorited$ | async}">{{ favoriteCount$ | async }}</span> -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart" [ngClass]="{'active': favorited$ | async}" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20l-7 -7a4 4 0 0 1 6.5 -6a.9 .9 0 0 0 1 0a4 4 0 0 1 6.5 6l-7 7" />
-              </svg>
-            </button>
           </div>
         </div>
       </div>
@@ -93,17 +100,26 @@
         <div
           class="fixed z-50 inset-0 duration-100"
           [ngClass]="{'hidden': !showPhotoViewer}">
-          <ul class="w-full h-full overflow-x-auto flex scroll-snap-x bg-black bg-opacity-75">
+          <ul class="w-full h-full overflow-x-auto flex scroll-snap-x bg-black bg-opacity-90">
             <ng-container *ngFor="let src of goods.images">
-              <li class="scroll-snap-start min-w-full h-full p-2">
+              <li class="scroll-snap-start min-w-full h-full p-px">
                 <img [src]="src" class="w-full h-full object-contain" alt="" (click)="onClickPhotoViewer()">
               </li>
             </ng-container>
           </ul>
+          <div class="absolute right-0 top-0 p-2 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="36" height="36" viewBox="0 0 24 24" stroke-width="1" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="px-safe border-t border-gray-300 bg-white">
       <div
-        class="flex items-center px-4 py-3 border-t border-gray-300 bg-white"
+        class="flex items-center px-4 py-3"
         *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
         <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
         <div>
@@ -112,9 +128,9 @@
         </div>
       </div>
     </div>
-    <div class="comment-wrap relative bg-gray-400 flex-grow flex flex-col min-h-50vh">
-      <div app-goods-comment-list [goods]="goods" class="flex-grow"></div>
-      <div app-goods-comment-form [goodsId]="goods.id" class="border-t border-gray-400 bg-white"></div>
+    <div class="flex-grow min-h-50vh flex flex-col">
+      <div app-goods-comment-list [goods]="goods" class="relative flex-grow px-safe bg-gray-400"></div>
+      <div app-goods-comment-form [goodsId]="goods.id" class="px-safe border-t border-gray-400 bg-white"></div>
     </div>
   </div>
 </ng-container>

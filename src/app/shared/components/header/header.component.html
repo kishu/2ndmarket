@@ -1,23 +1,23 @@
 <div class="fixed left-0 header-top w-full z-30">
-  <div class="border-b border-green-700 bg-white shadow">
-    <div class="relative w-full mx-auto py-3 px-2">
+  <div class="px-safe border-b border-green-700 bg-white shadow">
+    <div class="relative w-full mx-auto py-3 px-4">
       <!-- <ng-container *ngIf="profile$ | async as profile">
         <button type="button" class="absolute inset-y-0 left-0 w-12 h-12 p-2 border-0 flex items-center" (click)="toggleMenu()">
           <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 flex items-center object-cover" alt="">
           <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
         </button>
       </ng-container> -->
-      <div class="absolute inset-y-0 left-0 p-3">
-        <button type="button" class="flex items-center p-0 border-0">
+      <div class="absolute inset-y-0 left-0 flex">
+        <a [routerLink]="['/goods']" routerLinkActive="bg-gray-300" class="block p-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
             <line x1="4" y1="8" x2="20" y2="8" />
             <line x1="4" y1="16" x2="20" y2="16" />
           </svg>
           <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
-        </button>
+        </a>
       </div>
-      <h1 class="h-6 px-16 font-bold text-center text-green-700 ellipsis">
+      <h1 class="h-6 px-24 text-center font-bold text-green-700 ellipsis">
         <ng-container *ngIf="title$ | async as title; else defaultTemplate">
           <span>{{ title.type === 'etc' ? title.body : '세컨드마켓@' }}</span>
           <span *ngIf="title.type === 'group'" class="uppercase">{{ title.body }}</span>
@@ -26,8 +26,14 @@
           <span>세컨드마켓</span>
         </ng-template>
       </h1>
-      <div class="absolute inset-y-0 right-0 p-3">
-        <a [routerLink]="['/preference', 'messages']" class="block">
+      <div class="absolute inset-y-0 right-0 flex">
+        <a [routerLink]="['/preference']" routerLinkActive="bg-gray-300" class="p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="7" r="4" />
+            <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+          </svg>
+        </a>
+        <a [routerLink]="['/preference', 'messages']" routerLinkActive="bg-gray-300" class="p-3">
           <!-- <ng-container *ngIf="(noticeCount$ | async) as noticeCount"><span *ngIf=" noticeCount > 0">{{ noticeCount }}</span></ng-container> -->
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,12 +1,12 @@
 <div *ngIf="goods$ | async as goods">
-  <ul class="w-full max-w-md py-2 mx-auto">
+  <ul class="bg-white sm:py-2 px-safe">
     <li
-      class="goodsItem relative"
+      class="relative overflow-hidden"
       *ngFor="let item of goods">
       <app-goods-list-item [item]="item"></app-goods-list-item>
     </li>
   </ul>
-  <div class="fixed left-0 right-0 bottom-0 max-w-md p-safe-bottom mx-auto pointer-events-none">
+  <div class="fixed left-0 right-0 bottom-0 p-safe-bottom pointer-events-none">
     <a [routerLink]="['new', 'edit']" class="inline-block border border-white rounded-full bg-green-700 text-white p-2 m-3 pointer-events-auto">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-color-picker" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z"/>

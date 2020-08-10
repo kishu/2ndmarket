@@ -1,28 +1,29 @@
 <a
   *ngIf="goods"
   [routerLink]="[goods.id]"
-  class="flex flex-col sm:flex-row w-full sm:h-40"
-  [ngClass]="{'text-gray-500': goods.soldOut, 'pointer-events-none': !exists}"
+  class="flex flex-col sm:flex-row w-full sm:h-48 p-4 sm:py-2"
+  [ngClass]="{'pointer-events-none': !exists}"
   (click)="onClickGoods($event, goods)">
   <div
-    class="relative sm:w-5/12 h-40 sm:h-auto bg-gray-200">
-    <div
-      class="image-list h-full"
-      [ngClass]="{'opacity-75': goods.soldOut}">
-      <ng-container *ngFor="let src of goods.images">
-        <div class="flex relative image-item min-w-full h-full">
-          <img [src]="src" class="w-full object-cover" alt="">
-        </div>
-      </ng-container>
-    </div>
-    <div class="absolute left-0 right-0 top-0 bottom-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" *ngIf="exists && goods.soldOut">
-      <div class="w-16 h-16 p-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock" width="48" height="48" viewBox="0 0 24 24" stroke-width="1" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" />
-          <path d="M8 11v-4a4 4 0 0 1 8 0v4" fill="rgba(26, 32, 44, 0.9" />
-          <rect x="5" y="11" width="14" height="10" rx="2" fill="rgba(26, 32, 44, 0.75)" />
-          <circle cx="12" cy="16" r="1" />
-        </svg>
+    class="flex-shrink-0 relative sm:w-64 h-48 sm:h-auto">
+    <div class="relative w-full h-full">
+      <div
+        class="image-list h-full rounded-lg"
+        [ngClass]="{'opacity-50': goods.soldOut}">
+        <ng-container *ngFor="let src of goods.images">
+          <div class="flex relative image-item min-w-full h-full">
+            <img [src]="src" class="w-full object-cover" alt="">
+          </div>
+        </ng-container>
+      </div>
+      <div class="absolute inset-0 rounded-lg bg-black bg-opacity-5 pointer-events-none"></div>
+      <div
+        class="absolute right-0 bottom-0 mb-3 bg-black bg-opacity-75 font-bold text-white px-2 py-px italic pointer-events-none"
+        [ngClass]="{'opacity-50': goods.soldOut}">
+        {{ goods.price | number:'2.' }}
+      </div>
+      <div class="absolute left-0 top-0 m-2 bg-black bg-opacity-75 rounded-md text-xs text-white px-2 py-1 pointer-events-none" *ngIf="exists && goods.soldOut">
+        판매완료
       </div>
     </div>
     <div class="absolute left-0 right-0 top-0 bottom-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" *ngIf="!exists">
@@ -37,24 +38,33 @@
       </div>
     </div>
   </div>
-  <div class="relative sm:w-7/12 px-4 py-3 sm:pb-16">
+  <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0 sm:pb-16" [ngClass]="{'opacity-50': goods.soldOut}">
     <h3 class="goodsName tracking-tight">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>
-    <div class="font-bold">{{ goods.price | number:'2.' }}원</div>
-    <span class="absolute right-0 bottom-0 px-4 py-3 text-sm leading-relaxed text-gray-500 flex items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message-circle mr-px" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z"/>
-        <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" />
-        <line x1="12" y1="12" x2="12" y2="12.01" />
-        <line x1="8" y1="12" x2="8" y2="12.01" />
-        <line x1="16" y1="12" x2="16" y2="12.01" />
-      </svg>
-      <span class="ml-px mr-2">{{ goods.commentsCnt }}</span>
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart mr-px" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z"/>
-        <path d="M12 20l-7 -7a4 4 0 0 1 6.5 -6a.9 .9 0 0 0 1 0a4 4 0 0 1 6.5 6l-7 7" />
-      </svg>
-      <span class="ml-px">{{ goods.favoritesCnt }}</span>
-      <!-- {{ goods.created | fsTimestamp | formatDistanceToNow }} 전 -->
-    </span>
+    <div class="hidden sm:block mt-1">
+      <p class="text-sm line-clamp-2 text-gray-800">{{ goods.memo }}</p>
+    </div>
+    <div class="flex justify-between sm:flex-col">
+      <!-- <div class="font-bold">{{ goods.price | number:'2.' }}원</div> -->
+      <div class="text-sm text-gray-600 sm:mt-1">
+        #{{ goods.condition }}
+        #{{ goods.purchased }}
+      </div>
+      <span class="text-sm leading-relaxed text-gray-500 flex items-center sm:mt-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message-circle mr-px" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z"/>
+          <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" />
+          <line x1="12" y1="12" x2="12" y2="12.01" />
+          <line x1="8" y1="12" x2="8" y2="12.01" />
+          <line x1="16" y1="12" x2="16" y2="12.01" />
+        </svg>
+        <span class="ml-px mr-2">{{ goods.commentsCnt }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart mr-px" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z"/>
+          <path d="M12 20l-7 -7a4 4 0 0 1 6.5 -6a.9 .9 0 0 0 1 0a4 4 0 0 1 6.5 6l-7 7" />
+        </svg>
+        <span class="ml-px">{{ goods.favoritesCnt }}</span>
+        <!-- {{ goods.created | fsTimestamp | formatDistanceToNow }} 전 -->
+      </span>
+    </div>
   </div>
 </a>

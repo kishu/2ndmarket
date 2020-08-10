@@ -15,7 +15,7 @@ export class GoodsMoreComponent implements OnInit {
 
   ngOnInit(): void {
     const config = {
-      rootMargin: '0px 0px 50% 0px ',
+      rootMargin: '0px 0px 100% 0px ',
       threshold: [0]
     };
     this.intersectionObserver = new IntersectionObserver(entries => {
