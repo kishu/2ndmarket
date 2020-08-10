@@ -1,6 +1,6 @@
 <form
   *ngIf="goods"
-  class="px-2 pb-12 overflow-hidden"
+  class="p-2 pb-12 overflow-hidden"
   [formGroup]="goodsForm"
   (ngSubmit)="onSubmit()">
   <div class="form-row mb-2">
@@ -198,5 +198,14 @@
         <p class="text-red-600 text-xs leading-tight">상품 설명을 적어주세요.</p>
       </div>
     </div>
+  </div>
+  <div class="fixed right-0 top-0 z-40 h-12">
+    <button
+      type="submit"
+      class="h-full p-3 border-0 text-green-700 bg-white"
+      [ngClass]="{'opacity-50': goodsForm.invalid || submitting}"
+      [disabled]="goodsForm.invalid || submitting">
+      저장
+    </button>
   </div>
 </form>

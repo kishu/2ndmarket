@@ -1,12 +1,19 @@
-<div class="fixed left-0 header-top z-30 p-3">
-  <button type="button" class="p-0 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
-    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z"/>
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <line x1="5" y1="12" x2="11" y2="18" />
-      <line x1="5" y1="12" x2="11" y2="6" />
-    </svg>
-  </button>
+<div class="fixed left-0 header-top w-full bg-white z-30">
+  <div class="relative w-full mx-auto px-12">
+    <div class="absolute inset-y-0 left-0 flex">
+      <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z"/>
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <line x1="5" y1="12" x2="11" y2="18" />
+          <line x1="5" y1="12" x2="11" y2="6" />
+        </svg>
+      </button>
+    </div>
+    <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
+      그룹 추가
+    </h1>
+  </div>
 </div>
 <div class="w-full max-w-md mx-auto p-4">
   <h2 class="p-2 text-green-800">Step-1. 메일주소 입력</h2>
@@ -17,7 +24,7 @@
       (ngSubmit)="onEmailSubmit()">
       <div class="form-row">
         <div class="form-col w-full">
-          <div class="bg-white shadow">
+          <div class="bg-gray-200">
             <div class="flex">
               <div class="w-4/12">
                 <label class="form-label" for="account">이메일</label>
@@ -57,7 +64,7 @@
       <div class="mt-1">
         <button
           type="submit"
-          class="btn-sm block w-full border-green-600 bg-green-600"
+          class="btn btn-sm block w-full border-green-600 bg-green-600"
           [disabled]="!emailForm.valid">
           {{ submitting ? '보내는 중...' : '이메일 보내기' }}
         </button>
@@ -74,7 +81,7 @@
       (ngSubmit)="onVerifySubmit()">
       <div class="form-row">
         <div class="form-col w-full">
-          <div class="bg-white shadow">
+          <div class="bg-gray-200">
             <label class="form-label" for="account">이메일</label>
             <div class="relative">
               <input
@@ -103,7 +110,7 @@
       <h2 class="p-2 text-green-800">Step-2. 인증번호 입력</h2>
       <div class="form-row">
         <div class="form-col w-full">
-          <div class="bg-white shadow">
+          <div class="bg-gray-200">
             <label class="form-label" for="code">인증번호</label>
             <div class="relative">
               <input
@@ -134,13 +141,13 @@
       <div class="flex justify-between mt-1">
         <button
           type="button"
-          class="btn-sm border-green-600 bg-white text-green-600"
+          class="btn btn-sm border-green-600 bg-white"
           (click)="onEmailSubmit()">
-          인증번호 재전송
+          <span class="text-green-600">인증번호 재전송</span>
         </button>
         <button
           type="submit"
-          class="btn-sm border-green-600 bg-green-600"
+          class="btn btn-sm border-green-600 bg-green-600"
           [disabled]="!verifyForm.valid">
           인증
         </button>

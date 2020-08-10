@@ -22,8 +22,9 @@
     <div
       class="absolute right-0 top-0 w-10">
       <button
-        class="w-full p-1 border-transparent leading-tight text-green-700"
         type="submit"
+        class="w-full p-1 border-transparent leading-tight text-green-700"
+        [ngClass]="{'opacity-50': commentForm.invalid || submitting}"
         [disabled]="commentForm.invalid || submitting">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-right-circle" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z"/>
