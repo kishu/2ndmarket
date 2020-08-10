@@ -1,9 +1,9 @@
-import { map } from "rxjs/operators";
+import { map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { AuthService } from "@app/core/http";
-import { PersistenceService } from "@app/core/persistence";
-import { ProfileExt } from "@app/core/model";
+import { Router } from '@angular/router';
+import { AuthService } from '@app/core/http';
+import { PersistenceService } from '@app/core/persistence';
+import { ProfileExt } from '@app/core/model';
 
 @Component({
   selector: 'app-preference',
