@@ -29,7 +29,7 @@
     "@angular/platform-browser-dynamic": "~10.0.5",
     "@angular/router": "~10.0.5",
     "@angular/service-worker": "~10.0.5",
-    "array-move": "^3.0.0",
+    "array-move": "^3.0.1",
     "date-fns": "^2.14.0",
     "firebase": "^7.17.2",
     "linkifyjs": "^2.1.9",

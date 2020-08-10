@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { PreferenceComponent } from './preference/preference.component';
 import { PreferenceProfileComponent } from './preference-profile/preference-profile.component';
 import { PreferenceGroupsComponent } from './preference-groups/preference-groups.component';
 import { PreferenceMessagesComponent } from './preference-messages/preference-messages.component';
@@ -9,6 +10,7 @@ import { PreferenceFavoritedGoodsComponent } from './preference-favorited-goods/
 @NgModule({
   imports: [
     RouterModule.forChild([
+      { path: 'preference', component: PreferenceComponent },
       { path: 'preference/profile', component: PreferenceProfileComponent },
       { path: 'preference/groups', component: PreferenceGroupsComponent },
       { path: 'preference/messages', component: PreferenceMessagesComponent },

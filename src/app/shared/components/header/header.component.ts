@@ -1,9 +1,7 @@
 import { combineLatest } from 'rxjs';
-import { map, share, shareReplay } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ProfileExt } from '@app/core/model';
-import { AuthService, GroupsService } from '@app/core/http';
+import { AuthService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
 import { HeaderService } from '@app/shared/services';
 
@@ -13,7 +11,6 @@ import { HeaderService } from '@app/shared/services';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  activatedMenu = false;
   profileExt$ = this.authService.profileExt$;
   title$ = combineLatest([
     this.profileExt$,
@@ -21,9 +18,6 @@ export class HeaderComponent implements OnInit {
   ]).pipe(
     map(([profile, title]) => title ? { type: 'etc', body: title } : { type: 'group', body: profile.group.name })
   );
-
-  writeGoodsCount$ = this.persistenceService.writtenGoods$.pipe(map(g => g.length));
-  favoriteGoodsCount$ = this.persistenceService.favoritedGoods$.pipe(map(g => g.length));
   newMessages$ = this.persistenceService.messageExts$.pipe(
     map(messages => messages.filter(m => !m.read)),
     map(messages => messages.length),
@@ -32,35 +26,13 @@ export class HeaderComponent implements OnInit {
   profileExts$ = this.authService.profileExts$;
 
   constructor(
-    private router: Router,
     private authService: AuthService,
-    private groupsService: GroupsService,
     private headerService: HeaderService,
     private persistenceService: PersistenceService,
   ) {
   }
 
   ngOnInit(): void {
-  }
-
-  toggleMenu() {
-    this.activatedMenu = !this.activatedMenu;
-  }
-
-  onClickSelectProfile(curr: ProfileExt, target: ProfileExt) {
-    if (curr.id !== target.id) {
-      this.onCloseMenu();
-      this.router.navigate(['/profile-change', target.id], { skipLocationChange: true });
-    }
-  }
-
-  onCloseMenu() {
-    this.activatedMenu = false;
-  }
-
-  onClickSignOut() {
-    this.activatedMenu = false;
-    this.authService.signOut().then(() => this.router.navigate(['/sign-in']));
   }
 
 }

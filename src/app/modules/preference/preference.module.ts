@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
+import { PreferenceComponent } from './preference/preference.component';
 import { PreferenceRoutingModule } from './preference-routing.module';
 import { PreferenceProfileComponent } from './preference-profile/preference-profile.component';
 import { PreferenceGroupsComponent } from './preference-groups/preference-groups.component';
@@ -11,6 +12,7 @@ import { PreferenceFavoritedGoodsComponent } from './preference-favorited-goods/
 
 @NgModule({
   declarations: [
+    PreferenceComponent,
     PreferenceProfileComponent,
     PreferenceGroupsComponent,
     PreferenceMessagesComponent,
