@@ -12,7 +12,11 @@
         </button>
       </div>
       <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
-        상품정보
+        <ng-container [ngSwitch]="intersected">
+          <span *ngSwitchDefault>상품정보</span>
+          <span *ngSwitchCase="true">{{ goods.name }}</span>
+        </ng-container>
+
       </h1>
       <div class="absolute inset-y-0 right-0 flex">
         <ng-container *ngIf="(permission$ | async) === false">

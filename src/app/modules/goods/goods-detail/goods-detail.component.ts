@@ -8,7 +8,6 @@ import { AnimationEvent, animate, state, style, transition, trigger } from '@ang
 import { AuthService, GoodsService, FavoriteGoodsService, GroupsService, ProfilesService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
 import { Goods, NewFavoriteGoods } from '@app/core/model';
-import { HeaderService } from '@app/shared/services';
 
 @Component({
   selector: 'app-goods-detail, [app-goods-detail]',
@@ -33,6 +32,8 @@ import { HeaderService } from '@app/shared/services';
 })
 export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
   scrollY: number;
+  intersected = false;
+
   @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
   private intersectionObserver: IntersectionObserver;
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
@@ -82,8 +83,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     private profilesService: ProfilesService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
-    private goodsFavoritesService: FavoriteGoodsService,
-    private headerService: HeaderService
+    private goodsFavoritesService: FavoriteGoodsService
   ) {
   }
 
@@ -99,7 +99,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     this.goodsCacheService.remove();
     if (this.goodsNameRef) {
       this.intersectionObserver.unobserve(this.goodsNameRef.nativeElement);
-      this.headerService.title$.next(null);
     }
   }
 
@@ -117,9 +116,9 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     this.intersectionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting && entry.boundingClientRect.top <= 0) {
-          this.goods$.pipe(first()).subscribe((g) => this.headerService.title$.next(g.name));
+          this.intersected = true;
         } else if (entry.isIntersecting && entry.boundingClientRect.top <= 0) {
-          this.headerService.title$.next(null);
+          this.intersected = false;
         }
       });
     }, config);

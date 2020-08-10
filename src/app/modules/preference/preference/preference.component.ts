@@ -11,11 +11,11 @@ import { ProfileExt } from '@app/core/model';
   styleUrls: ['./preference.component.scss']
 })
 export class PreferenceComponent implements OnInit {
-  activatedMenu = true;
   profileExt$ = this.authService.profileExt$;
   profileExts$ = this.authService.profileExts$;
   writeGoodsCount$ = this.persistenceService.writtenGoods$.pipe(map(g => g.length));
   favoriteGoodsCount$ = this.persistenceService.favoritedGoods$.pipe(map(g => g.length));
+  newMessagesCount$ = this.persistenceService.newMessageCount$;
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -32,7 +32,6 @@ export class PreferenceComponent implements OnInit {
   }
 
   onClickSignOut() {
-    this.activatedMenu = false;
     this.authService.signOut().then(() => this.router.navigate(['/sign-in']));
   }
 

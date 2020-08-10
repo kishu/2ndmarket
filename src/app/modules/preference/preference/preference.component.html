@@ -24,9 +24,9 @@
               routerLink="/preference/messages">
               <span class="relative py-2 pl-3 pr-5 text-gray-700">
                 알림
-                <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
+                <span *ngIf="(newMessagesCount$ | async) > 0" class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
               </span>
-              <span class="px-4 text-sm text-green-700">9999 개</span>
+              <span class="px-4 text-sm text-green-700">{{ newMessagesCount$ | async }} 개</span>
             </a>
           </li>
           <li class="border-t border-gray-300">
@@ -59,7 +59,7 @@
                 class="flex justify-between items-center w-full p-0 px-1 border-0 bg-transparent text-gray-800">
                 <span class="flex-shrink-0 w-12 h-12 relative p-2">
                   <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
-                  <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600"></span>
+<!--                  <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600"></span>-->
                 </span>
                 <span class="flex-grow text-left text-sm ellipsis">{{ profileExt.displayName }}</span>
                 <span

@@ -1,5 +1,5 @@
 import { forkJoin, of, ReplaySubject, Subject } from 'rxjs';
-import { first, map, skip, switchMap } from 'rxjs/operators';
+import { first, map, skip, switchMap, tap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Goods, MessageExt, ProfileExt } from '@app/core/model';
 import { AuthService, FavoriteGoodsService, GoodsCommentsService, GoodsService, MessagesService } from '@app/core/http';
@@ -12,6 +12,7 @@ export class PersistenceService implements OnDestroy {
   writtenGoods$ = new ReplaySubject<Goods[]>(1);
   favoritedGoods$ = new ReplaySubject<Goods[]>(1);
   messageExts$ = new ReplaySubject<MessageExt[]>(1);
+  newMessageCount$ = new ReplaySubject<number>(1);
 
   reset$ = new Subject<ProfileExt>();
 
@@ -39,7 +40,10 @@ export class PersistenceService implements OnDestroy {
           ]).pipe(
             map(([goods, goodsComments]) => messages.map((m, i) => {
               return {...m, goods: goods[i], goodsComment: goodsComments[i]} as MessageExt;
-            }))
+            })),
+            tap(messageExts => {
+              this.newMessageCount$.next(messageExts.filter(m => !m.read).length);
+            })
           );
         }),
       );
@@ -62,7 +66,8 @@ export class PersistenceService implements OnDestroy {
         this.goods$.pipe(skip(1), first()),
         this.writtenGoods$.pipe(skip(1), first()),
         this.favoritedGoods$.pipe(skip(1), first()),
-        this.messageExts$.pipe(skip(1), first())
+        this.messageExts$.pipe(skip(1), first()),
+        this.newMessageCount$.pipe(skip(1), first())
       ]).subscribe(() => resolve());
       this.reset$.next(profileExt);
     });
@@ -73,7 +78,8 @@ export class PersistenceService implements OnDestroy {
       this.goods$,
       this.writtenGoods$,
       this.favoritedGoods$,
-      this.messageExts$
+      this.messageExts$,
+      this.newMessageCount$,
     ].forEach(s => s.complete());
     [
       this.goodsSubscription,

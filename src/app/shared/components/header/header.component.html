@@ -17,13 +17,8 @@
         </a>
       </div>
       <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
-        <ng-container *ngIf="title$ | async as title; else defaultTemplate">
-          <span>{{ title.type === 'etc' ? title.body : '세컨드마켓@' }}</span>
-          <span *ngIf="title.type === 'group'" class="uppercase">{{ title.body }}</span>
-        </ng-container>
-        <ng-template #defaultTemplate>
-          <span>세컨드마켓</span>
-        </ng-template>
+        <span>세컨드마켓</span>
+        <span *ngIf="profileExt$ | async as profileExt" class="uppercase">@{{ profileExt.group.name }}</span>
       </h1>
       <div class="absolute inset-y-0 right-0 flex">
         <a [routerLink]="['/preference']" routerLinkActive="bg-gray-300" class="p-3">
@@ -31,7 +26,7 @@
             <circle cx="12" cy="7" r="4" />
             <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
           </svg>
-          <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600" *ngIf="(newMessages$ | async) > 0"></span>
+          <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600" *ngIf="(newMessagesCount$ | async) > 0"></span>
         </a>
       </div>
     </div>

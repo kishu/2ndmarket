@@ -1,10 +1,8 @@
-import { map } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AuthService, MessagesService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
 import { MessageExt } from '@app/core/model';
-import { HeaderService } from '@app/shared/services';
 
 @Component({
   selector: 'app-preference-messages, [app-preference-messages]',
