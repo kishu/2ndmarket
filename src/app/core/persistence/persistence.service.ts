@@ -34,16 +34,14 @@ export class PersistenceService implements OnDestroy {
     switchMap(p => {
       return this.messagesService.valueChangesQueryByProfileId(p.id).pipe(
         switchMap(messages => {
+          this.newMessageCount$.next(messages.filter(m => !m.read).length);
           return messages.length === 0 ? of([]) : forkJoin([
             forkJoin(messages.map(m => this.goodsService.get(m.goodsId))),
             forkJoin(messages.map(m => this.goodsCommentsService.get(m.goodsCommentId)))
           ]).pipe(
             map(([goods, goodsComments]) => messages.map((m, i) => {
               return {...m, goods: goods[i], goodsComment: goodsComments[i]} as MessageExt;
-            })),
-            tap(messageExts => {
-              this.newMessageCount$.next(messageExts.filter(m => !m.read).length);
-            })
+            }))
           );
         }),
       );
