@@ -1,19 +1,21 @@
 <div class="fixed left-0 header-top w-full z-30">
   <div class="px-safe border-b border-green-700 bg-white shadow">
     <div class="relative w-full mx-auto px-12">
-      <!-- <ng-container *ngIf="profile$ | async as profile">
-        <button type="button" class="absolute inset-y-0 left-0 w-12 h-12 p-2 border-0 flex items-center" (click)="toggleMenu()">
-          <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 flex items-center object-cover" alt="">
-          <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
-        </button>
-      </ng-container> -->
       <div class="absolute inset-y-0 left-0 flex">
-        <a [routerLink]="['/goods']" routerLinkActive="bg-gray-300" class="block p-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <a [routerLink]="['/preference']" class="block p-3" *ngIf="router.url === '/goods'">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-align-justified" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
-            <polyline points="5 12 3 12 12 3 21 12 19 12" />
-            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="18" x2="20" y2="18" />
+          </svg>
+        </a>
+        <a [routerLink]="['/goods']" class="block p-3 bg-gray-300" *ngIf="router.url === '/preference'">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-align-justified" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="18" x2="20" y2="18" />
           </svg>
         </a>
       </div>
@@ -22,10 +24,11 @@
         <span *ngIf="profileExt$ | async as profileExt" class="uppercase">@{{ profileExt.group.name }}</span>
       </h1>
       <div class="absolute inset-y-0 right-0 flex">
-        <a [routerLink]="['/preference']" routerLinkActive="bg-gray-300" class="p-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="7" r="4" />
-            <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+        <a [routerLink]="['/goods', 'new', 'edit']" class="p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-color-picker" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <line x1="11" y1="7" x2="17" y2="13" />
+            <path d="M5 19v-4l9.7 -9.7a1 1 0 0 1 1.4 0l2.6 2.6a1 1 0 0 1 0 1.4l-9.7 9.7h-4" />
           </svg>
           <span class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600" *ngIf="(newMessagesCount$ | async) > 0"></span>
         </a>

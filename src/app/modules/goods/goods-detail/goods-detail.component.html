@@ -1,5 +1,5 @@
 <ng-container *ngIf="goods$ | async as goods">
-  <div class="fixed left-0 header-top w-full bg-white z-30">
+  <div class="fixed left-0 header-top w-full px-safe bg-white z-30">
     <div class="relative w-full mx-auto px-12">
       <div class="absolute inset-y-0 left-0 flex">
         <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
@@ -83,20 +83,16 @@
     <div *ngIf="goods.images.length > 0">
       <img [src]="goods.images[0]" class="w-full" alt="">
     </div>
-    <div class="px-safe bg-white">
-      <div #goodsNameRef>
-        <div class="p-4 bg-white">
-          <h2 class="text-lg leading-tight break-words">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h2>
-          <div class="mt-2 flex items-center">
-            <div class="text-lg"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
-          </div>
+    <div class="px-safe">
+      <div class="p-4">
+        <h2 class="text-lg leading-tight break-words" #goodsNameRef>{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h2>
+        <div class="mt-2 flex items-center">
+          <div class="text-lg"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
         </div>
-      </div>
-      <div class="px-4 py-3 bg-white">
-        <p class="leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkkfy"></p>
+        <p class="mt-4 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkkfy"></p>
         <div class="my-3 text-sm">
-          <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.condition }}</span>
-          <span class="inline-block py-1 px-3 mr-1 bg-gray-500 text-white"># {{ goods.purchased }}</span>
+          <span class="text-green-900 opacity-50">#새상품 #택배가능 #쿠폰</span>
+          <!-- <span class="text-green-900 opacity-50">#{{ goods.condition }} #{{ goods.purchased }}</span> -->
         </div>
         <ng-container *ngIf="goods.images.length > 1">
           <ul class="goods-images">
@@ -127,7 +123,7 @@
         </div>
       </div>
     </div>
-    <div class="px-safe border-t border-gray-300 bg-white">
+    <div class="px-safe border-t border-gray-300">
       <div
         class="flex items-center px-4 py-3"
         *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">

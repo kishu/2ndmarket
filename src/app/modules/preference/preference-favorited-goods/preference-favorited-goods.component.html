@@ -1,5 +1,5 @@
 <ng-container *ngIf="goodsList$ | async as goodsList">
-  <div class="fixed left-0 header-top w-full bg-white z-30">
+  <div class="fixed left-0 header-top w-full px-safe bg-white z-30">
     <div class="relative w-full mx-auto px-12">
       <div class="absolute inset-y-0 left-0 flex">
         <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
@@ -16,7 +16,7 @@
       </h1>
     </div>
   </div>
-  <div class="sticky-wrap bg-white shadow">
+  <div class="sticky-wrap px-safe bg-white shadow">
     <h2 class="sticky safe-top z-20 border-b border-gray-300 bg-white flex items-center">
       <span class="p-2 text-gray-700">관심 상품</span>
     </h2>
