@@ -17,9 +17,13 @@
     </div>
   </div>
   <app-goods-form [goods]="goods" [submitting]="submitting" (formSubmit)="onSubmit($event)"></app-goods-form>
-  <div *ngIf="submitting" style="position:absolute; top:0;left:0;right:0;bottom:0;background:#fff;opacity:.9">
-    <div style="position:absolute; top:50%;left:50%;transform:translate(-50%, -50%)">
-      업로드... <span *ngIf="uploadProgress">{{ uploadProgress.loaded + '/' + uploadProgress.total }}</span>
+  <div *ngIf="submitting" class="fixed inset-0 flex flex-col justify-center items-center bg-white z-50">
+    <div class="w-32 h-1 mb-2 bg-gray-300" *ngFor="let progress of uploadProgress">
+      <div
+        class="h-1 bg-green-500"
+        *ngIf="progress"
+        [style.width.%]="progress.loaded / progress.total * 100"></div>
     </div>
+    <p>업로드...</p>
   </div>
 </ng-container>

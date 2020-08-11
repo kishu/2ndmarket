@@ -79,7 +79,7 @@ export class CloudinaryUploadService {
           return this.request(draft).pipe(
             tap(e => {
               if (e.type === HttpEventType.UploadProgress) {
-                uploadProgress$.next( { current: i, total: fileCount, ...e });
+                uploadProgress$.next( { current: i, fileCount, ...e });
               }
             })
           );
@@ -108,4 +108,3 @@ export class CloudinaryUploadService {
   }
 
 }
-

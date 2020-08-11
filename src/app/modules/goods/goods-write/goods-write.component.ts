@@ -15,7 +15,7 @@ import { GoodsTransaction, NewGoods } from '@app/core/model';
 export class GoodsWriteComponent implements OnInit {
   submitting = false;
   goods$: Observable<NewGoods>;
-  uploadProgress: HttpProgressEvent;
+  uploadProgress: any[] = [];
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -65,7 +65,8 @@ export class GoodsWriteComponent implements OnInit {
     const createdId = this.goodsService.createId();
     draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${createdId}`}));
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
-    uploadProgress$.subscribe(e => this.uploadProgress = e); // {type: 1, loaded: 163840, total: 165310}
+    uploadProgress$.pipe(first()).subscribe(e => this.uploadProgress = Array(e.fileCount).fill({ loaded: 0, total: 100 }));
+    uploadProgress$.subscribe(e => this.uploadProgress[e.current] = e); // {type: 1, loaded: 163840, total: 165310}
     uploadComplete$.subscribe(images => {
       goods = {
         ...goods,
