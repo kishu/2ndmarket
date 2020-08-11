@@ -72,13 +72,14 @@ export class CloudinaryUploadService {
   upload(draftImages: DraftImage[]): [Subject<any>, Subject<string[]>] {
     const uploadProgress$ = new ReplaySubject<any>();
     const uploadComplete$ = new ReplaySubject<string[]>();
+    const fileCount = draftImages.map(d => d.isFile).length;
     forkJoin(
       draftImages.map((draft, i) => {
         if (draft.isFile) {
           return this.request(draft).pipe(
             tap(e => {
               if (e.type === HttpEventType.UploadProgress) {
-                uploadProgress$.next( { idx: i, ...e });
+                uploadProgress$.next( { current: i, total: fileCount, ...e });
               }
             })
           );
