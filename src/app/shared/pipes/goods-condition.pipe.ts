@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GoodsCondition } from "@app/core/model";
+import { GoodsCondition } from '@app/core/model';
 
 @Pipe({
   name: 'goodsCondition'
 })
 export class GoodsConditionPipe implements PipeTransform {
   transform(condition: GoodsCondition | string): string {
-    switch(condition) {
+    switch (condition) {
       case GoodsCondition.boxed:
         condition = '미개봉';
         break;
