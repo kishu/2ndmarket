@@ -15,6 +15,11 @@ export enum GoodsCategory {
   kids = 'kids'               // 유아, 출산
 }
 
+export enum GoodsTransaction {
+  sale = 'sale',              // 판매
+  purchase = 'purchase'       // 구매
+}
+
 export enum GoodsPurchased {
   unknown = 'unknown',        // 알 수 없음
   week = 'week',              // 일주일 이내
@@ -43,6 +48,7 @@ export interface Goods {
   profileId: string;
   name: string;
   shared: boolean;
+  transaction: GoodsTransaction;
   purchased: GoodsPurchased;
   condition: GoodsCondition;
   price: number;

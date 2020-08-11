@@ -1,7 +1,7 @@
 import * as sha1 from 'sha1';
 import { parse } from 'url-parser';
 import { forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpProgressEvent, HttpRequest, HttpResponse } from '@angular/common/http';
@@ -56,26 +56,29 @@ export class CloudinaryUploadService {
       const origin = parse(src);
       const pathnames = origin.pathname.split('/');
       const options = pathnames[4]?.split(',');
-      if (options[3]?.startsWith('a_')) {
-        const originalRotate = parseInt(options[3].replace('a_', ''), 10);
-        options[3] = `a_${(originalRotate + rotate) % 360}`;
-        pathnames[4] = options.join(',');
+      const aIdx = options.findIndex(o => o.startsWith('a_'));
+      if (aIdx > -1) {
+        const originalRotate = parseInt(options[aIdx].replace('a_', ''), 10);
+        options[aIdx] = `a_${(originalRotate + rotate) % 360}`;
+      } else {
+        options.push(`a_${rotate % 360}`);
       }
+      pathnames[4] = options.join(',');
       src = `${origin.protocol}//${origin.host}${pathnames.join('/')}`;
     }
     return of(src);
   }
 
-  upload(draftImages: DraftImage[]): [Subject<HttpProgressEvent>, Subject<string[]>] {
-    const uploadProgress$ = new ReplaySubject<HttpProgressEvent>();
+  upload(draftImages: DraftImage[]): [Subject<any>, Subject<string[]>] {
+    const uploadProgress$ = new ReplaySubject<any>();
     const uploadComplete$ = new ReplaySubject<string[]>();
     forkJoin(
-      draftImages.map(draft => {
+      draftImages.map((draft, i) => {
         if (draft.isFile) {
           return this.request(draft).pipe(
             tap(e => {
               if (e.type === HttpEventType.UploadProgress) {
-                uploadProgress$.next(e as HttpProgressEvent);
+                uploadProgress$.next( { idx: i, ...e });
               }
             })
           );

@@ -5,7 +5,7 @@ import { HttpProgressEvent } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
-import { GoodsCondition, GoodsPurchased, GoodsShipping, NewGoods } from '@app/core/model';
+import { GoodsTransaction, NewGoods } from '@app/core/model';
 
 @Component({
   selector: 'app-goods-write',
@@ -35,6 +35,7 @@ export class GoodsWriteComponent implements OnInit {
         profileId: p.id,
         name: '',
         shared: false,
+        transaction: GoodsTransaction.sale,
         purchased: '',
         condition: '',
         price: null,

@@ -91,8 +91,7 @@
         </div>
         <p class="mt-4 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkkfy"></p>
         <div class="my-3 text-sm">
-          <span class="text-green-900 opacity-50">#새상품 #택배가능 #쿠폰</span>
-          <!-- <span class="text-green-900 opacity-50">#{{ goods.condition }} #{{ goods.purchased }}</span> -->
+          <span class="text-green-900 opacity-50">#{{ goods.condition | goodsCondition }} #{{ goods.purchased | goodsPurchased }}</span>
         </div>
         <ng-container *ngIf="goods.images.length > 1">
           <ul class="goods-images">

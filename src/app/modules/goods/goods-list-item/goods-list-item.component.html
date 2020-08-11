@@ -50,8 +50,8 @@
     </div>
     <div class="flex justify-between sm:flex-col">
       <div class="text-sm text-green-900 opacity-50 sm:mt-1">
-        <span class="mr-1">#새상품</span>
-        <span class="mr-1">#가격조정가능</span>
+        <span class="mr-1">#{{ goods.condition | goodsCondition }}</span>
+        <span class="mr-1">#{{ goods.purchased | goodsPurchased }}</span>
       </div>
       <!-- <div class="text-sm text-green-900 opacity-50 sm:mt-1">
         #{{ goods.condition }}
