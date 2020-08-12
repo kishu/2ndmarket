@@ -3,7 +3,7 @@
     <div class="flex-grow overflow-y-auto scrolling-touch flex flex-col">
       <div>
         <h2 class="flex justify-between">
-          <div class="p-3">
+          <div class="p-4">
             <a
               class="flex items-center"
               [routerLink]="['profile']">
@@ -17,38 +17,54 @@
             </a>
           </div>
         </h2>
-        <ul class="border-t border-b border-gray-300">
-          <li>
+        <ul class="flex justify-between px-3">
+          <li class="w-1/3 px-1">
             <a
-              class="flex justify-between items-center"
+              class="flex flex-col items-center w-full relative border rounded p-2 pb-4"
               routerLink="/preference/messages">
-              <span class="relative py-2 pl-3 pr-5 text-gray-700">
-                알림
-                <span *ngIf="(newMessagesCount$ | async) > 0" class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
+              <span class="block py-2 text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bell" width="36" height="36" viewBox="0 0 24 24" stroke-width="1" stroke="#A0AEC5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z"/>
+                  <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+                  <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+                </svg>
               </span>
-              <span class="px-4 text-sm text-green-700">{{ newMessagesCount$ | async }} 개</span>
+              <span class="text-xs text-gray-700">알림 <strong class="text-green-700">{{ newMessagesCount$ | async }}</strong>개</span>
+              <span *ngIf="(newMessagesCount$ | async) > 0" class="absolute right-0 top-0 w-1 h-1 m-3 rounded-full bg-red-600"></span>
             </a>
           </li>
-          <li class="border-t border-gray-300">
+          <li class="w-1/3 px-1">
             <a
-              class="flex justify-between items-center"
+              class="flex flex-col items-center w-full relative border rounded p-2 pb-4"
               routerLink="/preference/written-goods">
-              <span class="py-2 px-3 text-gray-700">등록한 상품</span>
-              <span class="px-4 text-sm text-green-700">{{ writeGoodsCount$ | async }} 개</span>
+              <span class="block py-2 text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-gift" width="36" height="36" viewBox="0 0 24 24" stroke-width="1" stroke="#A0AEC5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z"/>
+                  <rect x="3" y="8" width="18" height="4" rx="1" />
+                  <line x1="12" y1="8" x2="12" y2="21" />
+                  <path d="M19 12v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-7" />
+                  <path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5" />
+                </svg>
+              </span>
+              <span class="text-xs text-gray-700">등록상품 <strong class="text-green-700">{{ writeGoodsCount$ | async }}</strong>개</span>
             </a>
           </li>
-          <li class="border-t border-gray-300">
+          <li class="w-1/3 px-1">
             <a
-              class="flex justify-between items-center"
+              class="flex flex-col items-center w-full relative border rounded p-2 pb-4"
               routerLink="/preference/favorited-goods">
-              <span class="py-2 px-3 text-gray-700">관심 상품</span>
-              <span class="px-4 text-sm text-green-700">{{ favoriteGoodsCount$ | async }} 개</span>
+              <span class="block py-2 text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart" width="36" height="36" viewBox="0 0 24 24" stroke-width="1" stroke="#A0AEC5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z"/>
+                  <path d="M12 20l-7 -7a4 4 0 0 1 6.5 -6a.9 .9 0 0 0 1 0a4 4 0 0 1 6.5 6l-7 7" />
+                </svg>
+              </span>
+              <span class="text-xs text-gray-700">관심상품 <strong class="text-green-700">{{ favoriteGoodsCount$ | async }}</strong>개</span>
             </a>
           </li>
         </ul>
-
-        <h2 class="py-2 px-3 text-green-800">프로필 전환</h2>
         <ng-container *ngIf="profileExt$ | async as selectedProfileExt">
+          <h2 class="mt-4 py-2 px-4 text-green-800">프로필 전환</h2>
           <ul class="border-t border-b border-gray-300" *ngIf="profileExts$ | async as profileExts">
             <li
               *ngFor="let profileExt of profileExts; first as isFirst"
@@ -56,7 +72,7 @@
               [ngClass]="{'border-t': !isFirst}">
               <button
                 (click)="onClickSelectProfile(selectedProfileExt, profileExt)"
-                class="flex justify-between items-center w-full p-0 px-1 border-0 bg-transparent text-gray-800">
+                class="flex justify-between items-center w-full p-0 px-2 border-0 bg-transparent text-gray-800">
                 <span class="flex-shrink-0 w-12 h-12 relative p-2">
                   <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
 <!--                  <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600"></span>-->

@@ -1,19 +1,21 @@
 <ng-container *ngIf="profile$ | async as profile">
-  <div class="fixed left-0 header-top w-full px-safe bg-white z-30">
-    <div class="relative w-full mx-auto px-12">
-      <div class="absolute inset-y-0 left-0 flex">
-        <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z"/>
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <line x1="5" y1="12" x2="11" y2="18" />
-            <line x1="5" y1="12" x2="11" y2="6" />
-          </svg>
-        </button>
+  <div class="fixed left-0 header-top w-full z-30">
+    <div class="px-safe border-b border-green-700 bg-white bg-opacity-95 shadow">
+      <div class="relative w-full mx-auto px-12">
+        <div class="absolute inset-y-0 left-0 flex">
+          <button type="button" class="p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z"/>
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <line x1="5" y1="12" x2="11" y2="18" />
+              <line x1="5" y1="12" x2="11" y2="6" />
+            </svg>
+          </button>
+        </div>
+        <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
+          프로필 설정
+        </h1>
       </div>
-      <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
-        프로필 설정
-      </h1>
     </div>
   </div>
   <form
@@ -34,10 +36,23 @@
           accept="image/gif, image/jpeg, image/png"
           (change)="onChangeFile($event)"
           class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
-      </div>
-      <div *ngIf="changingFile">
-        <button type="button" (click)="onClickRotateImage(90)">회전</button>
-        <button type="button" (click)="onCancelChangeFile($event)">취소</button>
+        <div
+          *ngIf="changingFile"
+          class="absolute inset-0">
+          <button
+            type="button"
+            class="flex w-full h-full justify-center items-center"
+            (click)="onClickRotateImage(90)">
+            <span class="w-12 h-12 p-2 rounded-full bg-black bg-opacity-25">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-clockwise-2" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z"/>
+                <path d="M9 4.55a8 8 0 0 1 6 14.9m0 -4.45v5h5" />
+                <path d="M11 19.95a8 8 0 0 1 -5.3 -12.8" stroke-dasharray=".001 4.13" />
+              </svg>
+            </span>
+          </button>
+          <!-- <button type="button" (click)="onCancelChangeFile($event)">취소</button> -->
+        </div>
       </div>
       <div class="mt-4 bg-gray-200">
         <label class="form-label" for="displayName">

@@ -1,29 +1,28 @@
 <ng-container *ngIf="goodsList$ | async as goodsList">
-  <div class="fixed left-0 header-top w-full px-safe bg-white z-30">
-    <div class="relative w-full mx-auto px-12">
-      <div class="absolute inset-y-0 left-0 flex">
-        <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z"/>
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <line x1="5" y1="12" x2="11" y2="18" />
-            <line x1="5" y1="12" x2="11" y2="6" />
-          </svg>
-        </button>
+  <div class="fixed left-0 header-top w-full z-30">
+    <div class="px-safe border-b border-green-700 bg-white bg-opacity-95 shadow">
+      <div class="relative w-full mx-auto px-12">
+        <div class="absolute inset-y-0 left-0 flex">
+          <button type="button" class="p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z"/>
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <line x1="5" y1="12" x2="11" y2="18" />
+              <line x1="5" y1="12" x2="11" y2="6" />
+            </svg>
+          </button>
+        </div>
+        <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
+          관심 상품 {{goodsList.length}}개
+        </h1>
       </div>
-      <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
-        관심 상품 {{goodsList.length}}개
-      </h1>
     </div>
   </div>
-  <div class="sticky-wrap px-safe bg-white shadow">
-    <h2 class="sticky safe-top z-20 border-b border-gray-300 bg-white flex items-center">
-      <span class="p-2 text-gray-700">관심 상품</span>
-    </h2>
+  <div class="sticky-wrap px-safe">
     <div *ngIf="goodsList.length === 0">
       관심 상품이 없습니다.
     </div>
-    <ul *ngIf="goodsList.length > 0" class="grid grid-cols-3 md:grid-cols-4 gap-px p-2">
+    <ul *ngIf="goodsList.length > 0" class="grid grid-cols-3 md:grid-cols-4 gap-px p-4">
       <li *ngFor="let goods of goodsList">
         <div class="relative square">
           <a
@@ -36,7 +35,9 @@
               class="block w-full h-full object-cover"
               [ngClass]="{'opacity-50': goods.soldOut}"
               alt="{{ goods.name }}">
-            <span class="absolute left-0 right-0 top-0 bottom-0 h-8 bg-black bg-opacity-75 text-white text-sm m-auto flex justify-center items-center" *ngIf="goods.soldOut">판매완료</span>
+            <span class="absolute left-0 top-0 m-1 bg-black bg-opacity-75 rounded-md text-xs text-white px-2 py-1 pointer-events-none" *ngIf="goods.soldOut">
+              판매완료
+            </span>
           </a>
         </div>
       </li>

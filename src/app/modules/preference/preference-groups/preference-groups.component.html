@@ -1,18 +1,20 @@
-<div class="fixed left-0 header-top w-full px-safe bg-white z-30">
-  <div class="relative w-full mx-auto px-12">
-    <div class="absolute inset-y-0 left-0 flex">
-      <button type="button" class="p-3 border-0 flex items-center bg-white" (click)="onClickHistoryBack()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z"/>
-          <line x1="5" y1="12" x2="19" y2="12" />
-          <line x1="5" y1="12" x2="11" y2="18" />
-          <line x1="5" y1="12" x2="11" y2="6" />
-        </svg>
-      </button>
+<div class="fixed left-0 header-top w-full z-30">
+  <div class="px-safe border-b border-green-700 bg-white bg-opacity-95 shadow">
+    <div class="relative w-full mx-auto px-12">
+      <div class="absolute inset-y-0 left-0 flex">
+        <button type="button" class="p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <line x1="5" y1="12" x2="11" y2="18" />
+            <line x1="5" y1="12" x2="11" y2="6" />
+          </svg>
+        </button>
+      </div>
+      <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
+        그룹 추가
+      </h1>
     </div>
-    <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
-      그룹 추가
-    </h1>
   </div>
 </div>
 <div class="w-full max-w-md mx-auto p-4">

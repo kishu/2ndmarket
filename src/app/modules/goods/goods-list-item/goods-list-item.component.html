@@ -46,10 +46,10 @@
   <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0 sm:pb-16" [ngClass]="{'opacity-50': goods.soldOut}">
     <h3 class="text-lg tracking-tight">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>
     <div class="hidden sm:block mt-1">
-      <p class="line-clamp-2 text-gray-700">{{ goods.memo }}</p>
+      <p class="line-clamp-2 text-gray-700 leading-tight">{{ goods.memo }}</p>
     </div>
-    <div class="flex justify-between sm:flex-col">
-      <div class="text-sm text-green-900 opacity-50 sm:mt-1">
+    <div class="flex justify-between sm:flex-col mt-1 sm:mt-0">
+      <div class="text-sm text-green-900 opacity-50 sm:mt-2">
         <span class="mr-1">#{{ goods.condition | goodsCondition }}</span>
         <span class="mr-1">#{{ goods.purchased | goodsPurchased }}</span>
       </div>
