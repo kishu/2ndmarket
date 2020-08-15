@@ -1,10 +1,38 @@
 <div *ngIf="goods$ | async as goods">
+  <form
+    class="p-2"
+    [formGroup]="searchForm"
+    (ngSubmit)="onSubmitSearch()">
+    <div class="flex">
+      <div class="flex-1">
+        <label for="keyword" class="hidden">검색어</label>
+        <input
+          class=""
+          id="keyword"
+          name="keyword"
+          type="text"
+          formControlName="keyword"
+          placeholder="검색어를 입력해 주세요."
+          minlength="2"
+          maxlength="200"
+          required>
+      </div>
+      <div class="flex-1">
+        <button [disabled]="searchForm.invalid" type="submit" class="p-2 bg-green-600 text-white text-center text-sm mt-1">검색</button>
+        &nbsp;
+        <button type="button" (click)="onClickCancelSearch()" class="p-2 bg-green-600 text-white text-center text-sm mt-1 ml-1">취소</button>
+      </div>
+    </div>
+    <div class="flex justify-between py-1 px-3" *ngIf="keywordCtl.invalid && (keywordCtl.dirty || keywordCtl.touched)">
+      <p class="text-red-600 text-xs leading-tight">검색을 입력해 주세요.</p>
+    </div>
+  </form>
   <ul class="bg-white sm:py-2 px-safe">
     <li
       class="relative overflow-hidden"
-      *ngFor="let item of goods">
+      *ngFor="let item of goods; trackBy: trackBy">
       <app-goods-list-item [item]="item"></app-goods-list-item>
     </li>
   </ul>
-  <app-goods-more *ngIf="!moreGoods$.isStopped" (more)="onMoreGoods()"></app-goods-more>
+  <app-goods-more *ngIf="more" (more)="onMoreGoods()"></app-goods-more>
 </div>

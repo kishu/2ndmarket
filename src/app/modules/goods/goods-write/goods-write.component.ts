@@ -1,14 +1,11 @@
+import * as findHashtags from 'find-hashtags';
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
-import * as linkify from 'linkifyjs';
-import hashtag from 'linkifyjs/plugins/hashtag';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
 import { GoodsDeal, NewGoods } from '@app/core/model';
-
-hashtag(linkify);
 
 @Component({
   selector: 'app-goods-write',
@@ -66,6 +63,8 @@ export class GoodsWriteComponent implements OnInit {
       return;
     }
     this.submitting = true;
+    const originTags = findHashtags(goods.memo);
+    const lowercaseTags = originTags.map(t => t.toLowerCase());
     const createdId = this.goodsService.createId();
     draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${createdId}`}));
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
@@ -74,7 +73,7 @@ export class GoodsWriteComponent implements OnInit {
     uploadComplete$.subscribe(images => {
       goods = {
         ...goods,
-        tags: linkify.find(goods.memo).filter(t => t.type === 'hashtag').map(t => t.value.replace('#', '')),
+        tags: { origin: originTags, lowercase: lowercaseTags },
         price: parseInt(goods.price.replace(/,/g, ''), 10),
         images
       };

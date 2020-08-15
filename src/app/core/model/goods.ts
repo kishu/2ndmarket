@@ -56,7 +56,10 @@ export interface Goods {
   images: string/* url */[];
   contact: string;
   memo: string;
-  tags: string[];
+  tags: {
+    origin: string[],
+    lowercase: string[]
+  };
   favoritesCnt: number;
   commentsCnt: number;
   soldOut: boolean | firestore.Timestamp;

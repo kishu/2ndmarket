@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService, QueryOptions } from '@app/core/http/firestore.service';
-import { Goods, NewGoods, UpdateGoods } from '@app/core/model';
+import { Goods, NewGoods } from '@app/core/model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +26,8 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.update(goodsId, updateGoods);
   }
 
-  getQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
+  getQueryByGroupId(groupId: string, options: Partial<QueryOptions> = { limit: 100 }): Observable<Goods[]> {
     options = {
-      limit: 100,
       ...options,
       where: [
         ['groupId', '==', groupId]
@@ -38,40 +37,27 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.getQuery(options);
   }
 
-  valueChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<Goods[]> {
+  getQueryByGroupIdAndTag(groupId: string, tag: string, options: Partial<QueryOptions> = { limit: 100 }) {
     options = {
-      limit: 100,
       ...options,
       where: [
-        ['groupId', '==', groupId]
+        ['groupId', '==', groupId],
+        ['tags.lowercase', 'array-contains', tag]
+      ],
+      orderBy: [['updated', 'desc']],
+    };
+    return super.getQuery(options);
+  }
+
+  valueChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions> = { limit: 100 }): Observable<Goods[]> {
+    options = {
+      ...options,
+      where: [
+        ['groupId', '==', groupId],
       ],
       orderBy: [['updated', 'desc']],
     };
     return super.valueChangesQuery(options);
-  }
-
-  snapshotChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>): Observable<DocumentChangeAction<Goods>[]> {
-    options = {
-      limit: 100,
-      ...options,
-      where: [
-        ['groupId', '==', groupId]
-      ],
-      orderBy: [['updated', 'desc']],
-    };
-    return super.snapshotChangesQuery2(options);
-  }
-
-  stateChangesQueryByGroupId(groupId: string, options: Partial<QueryOptions>) {
-    options = {
-      limit: 100,
-      ...options,
-      where: [
-        ['groupId', '==', groupId]
-      ],
-      orderBy: [['updated', 'desc']],
-    };
-    return super.query(options).stateChanges();
   }
 
   valueChangesQueryByProfileId(profileId: string, limit: number = 100): Observable<Goods[]> {
