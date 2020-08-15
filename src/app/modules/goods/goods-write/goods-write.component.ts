@@ -1,11 +1,14 @@
 import { forkJoin, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
+import * as linkify from 'linkifyjs';
+import hashtag from 'linkifyjs/plugins/hashtag';
 import { Component, OnInit } from '@angular/core';
-import { HttpProgressEvent } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService, CloudinaryUploadService, GoodsService, ProfilesService } from '@app/core/http';
-import { GoodsTransaction, NewGoods } from '@app/core/model';
+import { GoodsDeal, NewGoods } from '@app/core/model';
+
+hashtag(linkify);
 
 @Component({
   selector: 'app-goods-write',
@@ -35,7 +38,7 @@ export class GoodsWriteComponent implements OnInit {
         profileId: p.id,
         name: '',
         shared: false,
-        transaction: GoodsTransaction.sale,
+        deal: GoodsDeal.sale,
         purchased: '',
         condition: '',
         price: null,
@@ -43,6 +46,7 @@ export class GoodsWriteComponent implements OnInit {
         images: [],
         contact: '',
         memo: '',
+        tags: [],
         soldOut: false,
         favoritesCnt: 0,
         commentsCnt: 0,
@@ -70,6 +74,7 @@ export class GoodsWriteComponent implements OnInit {
     uploadComplete$.subscribe(images => {
       goods = {
         ...goods,
+        tags: linkify.find(goods.memo).filter(t => t.type === 'hashtag').map(t => t.value.replace('#', '')),
         price: parseInt(goods.price.replace(/,/g, ''), 10),
         images
       };

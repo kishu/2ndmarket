@@ -15,7 +15,7 @@ export enum GoodsCategory {
   kids = 'kids'               // 유아, 출산
 }
 
-export enum GoodsTransaction {
+export enum GoodsDeal {
   sale = 'sale',              // 판매
   purchase = 'purchase'       // 구매
 }
@@ -48,7 +48,7 @@ export interface Goods {
   profileId: string;
   name: string;
   shared: boolean;
-  transaction: GoodsTransaction;
+  deal: GoodsDeal;
   purchased: GoodsPurchased;
   condition: GoodsCondition;
   price: number;
@@ -56,6 +56,7 @@ export interface Goods {
   images: string/* url */[];
   contact: string;
   memo: string;
+  tags: string[];
   favoritesCnt: number;
   commentsCnt: number;
   soldOut: boolean | firestore.Timestamp;

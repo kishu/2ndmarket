@@ -1,10 +1,14 @@
 import { Observable } from 'rxjs';
+import * as linkify from 'linkifyjs';
+import hashtag from 'linkifyjs/plugins/hashtag';
 import { Location } from '@angular/common';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { HttpProgressEvent } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CloudinaryUploadService, GoodsService } from '@app/core/http';
 import { Goods } from '@app/core/model';
+
+hashtag(linkify);
 
 @Component({
   selector: 'app-goods-edit, [app-goods-edit]',
@@ -41,6 +45,7 @@ export class GoodsEditComponent implements OnInit {
     uploadComplete$.subscribe(images => {
       goods = {
         ...goods,
+        tags: linkify.find(goods.memo).filter(t => t.type === 'hashtag').map(t => t.value.replace('#', '')),
         price: parseInt(goods.price.replace(/,/g, ''), 10),
         images
       };
