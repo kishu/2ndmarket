@@ -14,13 +14,11 @@ import { Goods } from '@app/core/model';
   styleUrls: ['./goods-list.component.scss']
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
-
   searchForm = this.fb.group({
     keyword: [],
   });
 
   goods$ = new ReplaySubject<Goods[]>(1);
-  private keyword: string;
   more = false;
 
   get keywordCtl() {
@@ -36,7 +34,12 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     private goodsCacheService: GoodsCacheService,
     private persistenceService: PersistenceService
   ) {
-    this.initGoods();
+    this.activatedRoute.queryParamMap.pipe(
+      map(m => m.get('tag')?.trim())
+    ).subscribe(keyword => {
+      this.keywordCtl.reset(keyword);
+      keyword ? this.searchGoods(keyword) : this.initGoods();
+    });
   }
 
   ngOnInit(): void {
@@ -57,23 +60,22 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onClickCancelSearch() {
-    this.keywordCtl.reset();
-    this.keyword = '';
-    this.initGoods();
-  }
-
-  onSubmitSearch() {
-    this.searchForm.disable();
-    this.keyword = this.keywordCtl.value;
+  searchGoods(keyword: string) {
     this.authService.profileExt$.pipe(
       first(),
-      switchMap(p => this.goodsService.getQueryByGroupIdAndTag(p.groupId, this.keyword, { limit: 5 }))
+      switchMap(p => this.goodsService.getQueryByGroupIdAndTag(p.groupId, keyword, { limit: 5 }))
     ).subscribe(g => {
       this.more = g.length >= 5;
       this.goods$.next(g);
-      this.searchForm.enable();
     });
+  }
+
+  onClickCancelSearch() {
+    this.router.navigate(['/goods']);
+  }
+
+  onSubmitSearch() {
+    this.router.navigate(['/goods'], { queryParams: { tag: this.keywordCtl.value.trim() } });
   }
 
   onMoreGoods() {
@@ -86,9 +88,10 @@ export class GoodsListComponent implements OnInit, OnDestroy {
       this.goods$.pipe(first())
     ]).pipe(
       switchMap(([p, g]) => {
+        const tag = this.activatedRoute.snapshot.queryParamMap.get('tag')?.trim();
         const options = {startAfter: last(g).updated, limit: 5};
-        const more$ = this.keyword ?
-          this.goodsService.getQueryByGroupIdAndTag(p.groupId, this.keyword, options) :
+        const more$ = tag ?
+          this.goodsService.getQueryByGroupIdAndTag(p.groupId, tag, options) :
           this.goodsService.getQueryByGroupId(p.groupId, options);
         return more$.pipe(
           first(),

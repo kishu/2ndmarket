@@ -1,8 +1,10 @@
-<div class="fixed left-0 header-top w-full z-30" *ngIf="router.url === '/goods' || router.url === '/preference'">
+<div
+  *ngIf="routePath === 'goods' || routePath === 'preference'"
+  class="fixed left-0 header-top w-full z-30" >
   <div class="px-safe border-b border-green-700 bg-white bg-opacity-95 shadow">
     <div class="relative w-full mx-auto px-12">
       <div class="absolute inset-y-0 left-0 flex">
-        <a [routerLink]="['/preference']" class="block p-3" *ngIf="router.url === '/goods'">
+        <a [routerLink]="['/preference']" class="block p-3" *ngIf="routePath === 'goods'">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-align-justified" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
             <line x1="4" y1="6" x2="20" y2="6" />
@@ -10,7 +12,7 @@
             <line x1="4" y1="18" x2="20" y2="18" />
           </svg>
         </a>
-        <a [routerLink]="['/goods']" class="block p-3 bg-gray-300" *ngIf="router.url === '/preference'">
+        <a [routerLink]="['/goods']" class="block p-3 bg-gray-300" *ngIf="routePath === 'preference'">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-align-justified" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
             <line x1="4" y1="6" x2="20" y2="6" />
