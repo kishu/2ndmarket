@@ -14,6 +14,7 @@ import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-fo
 import { GoodsMoreComponent } from './goods-more/goods-more.component';
 import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsListItemComponent } from './goods-list-item/goods-list-item.component';
+import { GoodsImageViewerComponent } from './goods-image-viewer/goods-image-viewer.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { GoodsListItemComponent } from './goods-list-item/goods-list-item.compon
     GoodsDetailComponent,
     GoodsEditComponent,
     GoodsFormComponent,
+    GoodsImageViewerComponent,
     GoodsListComponent,
     GoodsListItemComponent,
     GoodsMoreComponent,

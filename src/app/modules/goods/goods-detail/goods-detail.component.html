@@ -97,31 +97,19 @@
           </div>
           <ng-container *ngIf="goods.images.length > 1">
             <ul class="goods-images">
-              <ng-container *ngFor="let src of goods.images">
+              <ng-container *ngFor="let src of goods.images; index as i">
                 <li class="relative border border-white">
-                  <div class="attachImage"><img [src]="src" class="image" alt="" (click)="onClickPhotoViewer()"></div>
+                  <div class="attachImage"><img [src]="src" class="image" alt="" (click)="onClickPhotoViewer(i)"></div>
                 </li>
               </ng-container>
             </ul>
           </ng-container>
-          <div
-            class="fixed z-50 inset-0 duration-100"
-            [ngClass]="{'hidden': !showPhotoViewer}">
-            <ul class="w-full h-full overflow-x-auto flex scroll-snap-x bg-black bg-opacity-90">
-              <ng-container *ngFor="let src of goods.images">
-                <li class="scroll-snap-start min-w-full h-full p-px">
-                  <img [src]="src" class="w-full h-full object-contain" alt="" (click)="onClickPhotoViewer()">
-                </li>
-              </ng-container>
-            </ul>
-            <div class="absolute right-0 top-0 p-2 pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="36" height="36" viewBox="0 0 24 24" stroke-width="1" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z"/>
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </div>
-          </div>
+          <app-goods-image-viewer
+            *ngIf="showImageViewer"
+            [selectedIdx]="selectedImageIdx"
+            [images]="goods.images"
+            (exit)="onExitImageViewer()">
+          </app-goods-image-viewer>
         </div>
       </div>
       <div class="px-safe border-t border-gray-300">
