@@ -26,14 +26,12 @@ export class SwipeDirective implements OnInit, OnDestroy {
   }
 
   handleTouchStart(e) {
-    e.preventDefault();
     e.stopImmediatePropagation();
     this.sX = e.changedTouches[0].screenX;
     this.sY = e.changedTouches[0].screenY;
   }
 
   handleTouchEnd(e) {
-    e.preventDefault();
     e.stopImmediatePropagation();
     const dX = e.changedTouches[0].screenX - this.sX;
     const dY = e.changedTouches[0].screenY - this.sY;
