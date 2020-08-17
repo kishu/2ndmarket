@@ -1,5 +1,5 @@
 import { once } from 'lodash-es';
-import { combineLatest, concat, forkJoin, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, forkJoin, Observable, of, Subject } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -38,6 +38,8 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   private intersectionObserver: IntersectionObserver;
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
   private destroy$ = new Subject<null>();
+
+  heroImageLoaded$ = new BehaviorSubject<boolean>(false);
 
   goods$: Observable<Goods> = concat(
     this.goodsCacheService.getCachedGoods$(this.goodsId).pipe(filter(g => !!g)),
@@ -92,6 +94,11 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   onClickPermission() {
     this.showPermission = !this.showPermission;
+  }
+
+  onLoadHeroImage() {
+    this.heroImageLoaded$.next(true);
+    this.heroImageLoaded$.complete();
   }
 
   ngOnDestroy() {
