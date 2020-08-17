@@ -99,14 +99,14 @@
             <ul class="goods-images">
               <ng-container *ngFor="let src of goods.images; index as i">
                 <li class="relative border border-white">
-                  <div class="attachImage"><img [src]="src" class="image" alt="" (click)="onClickPhotoViewer(i)"></div>
+                  <div class="attachImage"><img [src]="src" class="image" alt="" (click)="onClickImageViewer(i)"></div>
                 </li>
               </ng-container>
             </ul>
           </ng-container>
           <app-goods-image-viewer
-            *ngIf="showImageViewer"
-            [selectedIdx]="selectedImageIdx"
+            *ngIf="showImageViewerBy > -1"
+            [selectedIdx]="showImageViewerBy"
             [images]="goods.images"
             (exit)="onExitImageViewer()">
           </app-goods-image-viewer>

@@ -70,8 +70,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     shareReplay({ bufferSize: 1, refCount: true })
   );
   showPermission = false;
-  showImageViewer = false;
-  selectedImageIdx = 0;
+  showImageViewerBy = -1;
 
   private get goodsId() {
     return this.activatedRoute.snapshot.paramMap.get('goodsId');
@@ -219,13 +218,12 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     }
   }
 
-  onClickPhotoViewer(idx: number) {
-    this.selectedImageIdx = idx;
-    this.showImageViewer = true;
+  onClickImageViewer(idx: number) {
+    this.showImageViewerBy = idx;
   }
 
   onExitImageViewer() {
-    this.showImageViewer = false;
+    this.showImageViewerBy = -1;
   }
 
   onClickHistoryBack() {
