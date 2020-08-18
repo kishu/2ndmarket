@@ -18,6 +18,8 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     keyword: [],
   });
 
+  isSearchResults: boolean;
+
   goods$ = new ReplaySubject<Goods[]>(1);
   more = false;
 
@@ -32,7 +34,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
   ) {
     this.activatedRoute.queryParamMap.pipe(
       map(m => m.get('tag')?.trim())
@@ -68,14 +70,20 @@ export class GoodsListComponent implements OnInit, OnDestroy {
       this.more = g.length >= 5;
       this.goods$.next(g);
     });
+    this.isSearchResults = true;
   }
 
   onClickCancelSearch() {
     this.router.navigate(['/goods']);
+    this.isSearchResults = false;
   }
 
   onSubmitSearch() {
     this.router.navigate(['/goods'], { queryParams: { tag: this.keywordCtl.value.trim() } });
+  }
+
+  onChangeKeyword() {
+    this.isSearchResults = false;
   }
 
   onMoreGoods() {
