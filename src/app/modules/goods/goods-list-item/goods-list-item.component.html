@@ -50,6 +50,9 @@
     </div>
     <div class="flex justify-between sm:flex-col mt-1 sm:mt-0">
       <div class="text-sm text-green-900 opacity-50 sm:mt-2">
+        <ng-container *ngFor="let tag of goods.tags.origin">
+          <span class="mr-1">#{{ tag }}</span>
+        </ng-container>
         <span class="mr-1">#{{ goods.condition | goodsCondition }}</span>
         <span class="mr-1">#{{ goods.purchased | goodsPurchased }}</span>
       </div>

@@ -24,7 +24,6 @@ export class GoodsImageViewerComponent implements OnInit {
   onLoadImage(e: Event, selected: boolean) {
     if (selected) {
       const target = e.target as HTMLElement;
-      console.log(target.offsetLeft);
       this.scrollElRef.nativeElement.scrollTo(target.offsetLeft, 0);
       setTimeout(() => this.completed = true);
     }

@@ -57,9 +57,6 @@
           <ng-container *ngIf="goods.images.length > 1">
             <ul class="goods-images">
               <ng-container *ngFor="let src of goods.images; index as i">
-<!--                <li class="relative border border-white">-->
-<!--                  <div class="attachImage"><img [src]="src" class="image" alt="" (click)="onClickImageViewer(i)"></div>-->
-<!--                </li>-->
                 <li class="relative border border-white">
                   <a [routerLink]="['./']" fragment="imageViewer" [state]="{ selectedIdx: i }">
                     <div class="attachImage"><img [src]="src" class="image" alt=""></div>
