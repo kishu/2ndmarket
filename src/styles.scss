@@ -136,14 +136,6 @@ textarea {
   }
 }
 
-.endline {
-  @apply relative text-gray-300 text-sm text-center;
-  &:before {
-    @apply absolute inset-y-0 left-0 right-0 w-full h-px m-auto bg-gray-400;
-    content: '';
-  }
-}
-
 .scroll-snap-start {
 	scroll-snap-align: start;
 }
@@ -435,4 +427,12 @@ textarea {
 
 .bg-opacity-95 {
   --bg-opacity: 0.95;
+}
+
+.w-9 {
+  width: 2.25rem;
+}
+
+.pr-9 {
+  padding-right: 2.25rem;
 }

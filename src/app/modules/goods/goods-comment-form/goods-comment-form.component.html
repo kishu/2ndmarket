@@ -1,6 +1,6 @@
-<div class="p-2">
+<div class="py-2 px-3">
   <form
-    class="relative w-full pr-10"
+    class="relative w-full pr-9"
     [formGroup]="commentForm"
     (ngSubmit)="onSubmit()">
     <div class="relative">
@@ -20,10 +20,10 @@
       </div>
     </div>
     <div
-      class="absolute right-0 top-0 w-10">
+      class="absolute right-0 top-0 w-9">
       <button
         type="submit"
-        class="w-full p-1 border-transparent leading-tight text-green-700"
+        class="w-full p-1 border-transparent leading-tight text-green-700 flex justify-center items-center"
         [ngClass]="{'opacity-50': commentForm.invalid || submitting}"
         [disabled]="commentForm.invalid || submitting">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-right-circle" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

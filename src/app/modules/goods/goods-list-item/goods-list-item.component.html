@@ -28,7 +28,7 @@
         {{ goods.price | number:'2.' }}
       </div>
       <div class="absolute left-0 top-0 m-2 bg-black bg-opacity-75 rounded-md text-xs text-white px-2 py-1 pointer-events-none" *ngIf="exists && goods.soldOut">
-        판매완료
+        거래완료
       </div>
     </div>
     <div class="absolute left-0 right-0 top-0 bottom-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" *ngIf="!exists">
@@ -44,7 +44,7 @@
     </div>
   </div>
   <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0 sm:pb-16" [ngClass]="{'opacity-50': goods.soldOut}">
-    <h3 class="text-lg tracking-tight">{{ goods.soldOut ? '[판매완료]' : '' }} {{ goods.name }}</h3>
+    <h3 class="text-lg tracking-tight">{{ goods.soldOut ? '[거래완료]' : '' }} {{ goods.name }}</h3>
     <div class="hidden sm:block mt-1">
       <p class="line-clamp-2 text-gray-700 leading-tight">{{ goods.memo }}</p>
     </div>
