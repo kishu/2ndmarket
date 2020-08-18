@@ -66,10 +66,14 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
     );
   }
 
-  onClickDelete(comment: GoodsComment) {
-    if (confirm(comment.body + '를 삭제할까요?')) {
-      this.commentsService.delete(comment.id);
-    }
+  onDelete(comment: GoodsComment) {
+    this.authService.profileExt$.pipe(
+      first()
+    ).subscribe(p => {
+      if (p.id === comment.profileId && confirm(comment.body + '를 삭제할까요?')) {
+        this.commentsService.delete(comment.id);
+      }
+    });
   }
 
   trackById(index, item) {

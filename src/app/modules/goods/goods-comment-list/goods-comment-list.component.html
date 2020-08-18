@@ -22,6 +22,7 @@
               class="flex mb-1"
               [ngClass]="{'flex-row-reverse': talk.permission}">
               <p
+                appLongpress
                 class="talk mx-1 shadow max-w-sm break-all whitespace-pre-wrap rounded-xxlg"
                 [ngClass]="{
                   'rounded-tl-none': !talk.permission,
@@ -31,9 +32,9 @@
                   'rounded-br-none': talk.permission && !isLast,
                   'rounded-br-xlg': talk.permission && isLast
                 }"
-                (click)="onClickDelete(talk)">{{ talk.body }}</p>
+                (longpress)="onDelete(talk)">{{ talk.body }}</p>
               <div class="flex flex-shrink-0 items-end">
-                <span class="text-xs flex-shrink-0 text-gray-500" *ngIf="isLast">{{ talk.created | fsTimestamp | date:'hh:mm' }}</span>
+                <span class="text-xs flex-shrink-0 text-gray-500" *ngIf="isLast">{{ talk.created | fsTimestamp | date:'HH:mm' }}</span>
               </div>
             </div>
           </div>

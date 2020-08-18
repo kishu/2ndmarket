@@ -10,7 +10,7 @@ export class GoodsImageViewerComponent implements OnInit {
   @Input() images: string/* image src url */[];
   @ViewChild('scrollEl', { static: true }) scrollElRef: ElementRef;
 
-  selectedIdx = history.state.selectedIdx;
+  selectedIdx = history.state.selectedIdx || 0;
   completed = false;
 
   constructor(
