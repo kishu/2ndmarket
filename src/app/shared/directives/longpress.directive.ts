@@ -4,7 +4,7 @@ import { Directive, ElementRef, EventEmitter, OnDestroy, OnInit, Output } from '
   selector: '[appLongpress]'
 })
 export class LongpressDirective implements OnInit, OnDestroy {
-  @Output() longpress = new EventEmitter
+  @Output() longpress = new EventEmitter();
   private timerId;
 
   constructor(
