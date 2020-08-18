@@ -70,7 +70,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     shareReplay({ bufferSize: 1, refCount: true })
   );
   showPermission = false;
-  showImageViewerBy = -1;
 
   private get goodsId() {
     return this.activatedRoute.snapshot.paramMap.get('goodsId');
@@ -79,7 +78,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   constructor(
     private location: Location,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private groupService: GroupsService,
     private profilesService: ProfilesService,
@@ -216,14 +215,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       (document.querySelector('.wrap') as HTMLElement).style.top = '';
       window.scrollTo(0, this.scrollY);
     }
-  }
-
-  onClickImageViewer(idx: number) {
-    this.showImageViewerBy = idx;
-  }
-
-  onExitImageViewer() {
-    this.showImageViewerBy = -1;
   }
 
   onClickHistoryBack() {

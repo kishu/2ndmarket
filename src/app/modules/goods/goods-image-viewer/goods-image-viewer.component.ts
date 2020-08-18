@@ -1,45 +1,45 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-goods-image-viewer',
   templateUrl: './goods-image-viewer.component.html',
   styleUrls: ['./goods-image-viewer.component.scss']
 })
-export class GoodsImageViewerComponent implements OnInit, OnDestroy {
+export class GoodsImageViewerComponent implements OnInit {
   @Input() images: string/* image src url */[];
-  @Input() selectedIdx: number;
-  @Output() exit = new EventEmitter();
   @ViewChild('scrollEl', { static: true }) scrollElRef: ElementRef;
 
+  selectedIdx = history.state.selectedIdx;
   completed = false;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(
+    private location: Location
+  ) {
   }
 
-  ngOnDestroy() {
-    this.exit.complete();
+  ngOnInit(): void {
   }
 
   onLoadImage(e: Event, selected: boolean) {
     if (selected) {
       const target = e.target as HTMLElement;
+      console.log(target.offsetLeft);
       this.scrollElRef.nativeElement.scrollTo(target.offsetLeft, 0);
       setTimeout(() => this.completed = true);
     }
   }
 
   onSwipeUp() {
-    this.exit.emit();
+    this.location.back();
   }
 
   onSwipeDown() {
-    this.exit.emit();
+    this.location.back();
   }
 
   onClickImage() {
-    this.exit.emit();
+    this.location.back();
   }
 
 }
