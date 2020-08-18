@@ -1,5 +1,6 @@
+import { countBy } from 'lodash-es';
 import { Observable } from 'rxjs';
-import { filter, first, map, switchMap } from 'rxjs/operators';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GoodsComment, Goods } from '@app/core/model';
@@ -18,6 +19,7 @@ export interface GoodsCommentExtend extends GoodsComment {
 export class GoodsCommentListComponent implements OnInit, AfterViewInit {
   @Input() goods: Goods;
   commentList$: Observable<GoodsComment[]>;
+  commentUserCount: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -38,6 +40,11 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
       filter(p => !!p),
       switchMap(profile => {
         return this.commentsService.valueChangesQueryByGoodsId(goodsId).pipe(
+          tap(comments => {
+            this.commentUserCount = Object.keys(
+              countBy(comments, 'profileId')
+            ).length;
+          }),
           map(comments => {
             return comments.map(c => {
               return {
