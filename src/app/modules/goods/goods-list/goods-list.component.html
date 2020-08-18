@@ -3,7 +3,7 @@
     class="p-4 pb-0"
     [formGroup]="searchForm"
     (ngSubmit)="onSubmitSearch()">
-    <div class="flex w-full rounded-full bg-gray-300">
+    <div class="flex w-full rounded-full bg-gray-300 overflow-hidden">
       <div class="flex-grow">
         <label for="keyword" class="hidden">검색어</label>
         <input
@@ -13,20 +13,22 @@
           type="text"
           formControlName="keyword"
           maxlength="200"
-          class="px-4 border-0"
+          class="h-full px-4 py-1 border-0 text-sm"
           (change)="onChangeKeyword()"
           (keydown)="onChangeKeyword()">
       </div>
-      <div class="flex-shrink-0 p-1">
-        <button *ngIf="!isSearchResults" [disabled]="searchForm.invalid" type="submit" class="w-8 h-8 rounded-full bg-green-600 text-white flex justify-center items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <div *ngIf="!isSearchResults" class="flex-shrink-0 p-1">
+        <button [disabled]="searchForm.invalid" type="submit" class="w-6 h-6 rounded-full bg-green-600 text-white flex justify-center items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
             <circle cx="10" cy="10" r="7" />
             <line x1="21" y1="21" x2="15" y2="15" />
           </svg>
         </button>
-        <button *ngIf="isSearchResults" type="button" (click)="onClickCancelSearch()" class="w-8 h-8 rounded-full bg-gray-500 text-white flex justify-center items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      </div>
+      <div *ngIf="isSearchResults" class="flex-shrink-0 p-1">
+        <button *ngIf="isSearchResults" type="button" (click)="onClickCancelSearch()" class="w-6 h-6 rounded-full bg-gray-500 text-white flex justify-center items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
