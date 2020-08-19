@@ -50,16 +50,16 @@ export function appInitializer(router: Router, authService: AuthService) {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
-    // AngularFirestoreModule,
-    AngularFirestoreModule.enablePersistence(),
+    AngularFirestoreModule,
+    // AngularFirestoreModule.enablePersistence(),
     AngularFireFunctionsModule,
-    AngularFireMessagingModule,
+    // AngularFireMessagingModule,
     AuthModule,
     GoodsModule,
     PreferenceModule,
     SharedModule,
     AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
