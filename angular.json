@@ -42,6 +42,7 @@
             "aot": true,
             "assets": [
               "src/assets",
+              "src/manifest.json",
               "src/firebase-messaging-sw.js"
             ],
             "styles": [
