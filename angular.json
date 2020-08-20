@@ -43,6 +43,7 @@
             "aot": true,
             "assets": [
               "src/assets",
+              "src/favicon.ico",
               "src/manifest.json",
               "src/manifest.webmanifest",
               "src/firebase-messaging-sw.js"
