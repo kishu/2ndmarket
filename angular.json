@@ -24,6 +24,7 @@
               "@firebase/functions",
               "@firebase/firestore",
               "@firebase/util",
+              "find-hashtags",
               "firebase",
               "linkifyjs",
               "querystring",
@@ -43,6 +44,7 @@
             "assets": [
               "src/assets",
               "src/manifest.json",
+              "src/manifest.webmanifest",
               "src/firebase-messaging-sw.js"
             ],
             "styles": [
@@ -78,7 +80,7 @@
                   "maximumError": "10kb"
                 }
               ],
-              "serviceWorker": false,
+              "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
             }
           }
@@ -114,8 +116,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/firebase-messaging-sw.js",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/firebase-messaging-sw.js"
             ],
             "styles": [
               "src/styles.scss"

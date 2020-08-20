@@ -47,29 +47,28 @@ export function appInitializer(router: Router, authService: AuthService) {
     RouterModule,
     BrowserModule,
     RouterModule,
+    AppRoutingModule,
+    AuthModule,
+    GoodsModule,
+    PreferenceModule,
+    SharedModule,
+    /*
+     * angular.json configuration
+     * "serviceWorker": true,
+     * "ngswConfigPath": "ngsw-config.json"
+     */
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
     AngularFirestoreModule,
-    // AngularFirestoreModule.enablePersistence(),
+    AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
     AngularFireFunctionsModule,
     /*
      * angular.json options
      * "src/firebase-messaging-sw.js"
      */
-    // AngularFireMessagingModule,
-    AuthModule,
-    GoodsModule,
-    PreferenceModule,
-    SharedModule,
-    AppRoutingModule,
-    /*
-     * angular.json configuration
-     * "serviceWorker": true,
-     * "ngswConfigPath": "ngsw-config.json"
-     * "src/firebase-messaging-sw.js"
-     */
-    // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    AngularFireMessagingModule
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
