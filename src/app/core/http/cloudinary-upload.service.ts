@@ -102,7 +102,7 @@ export class CloudinaryUploadService {
       uploadProgress$.complete();
       uploadComplete$.complete();
     }, err => {
-      alert(err);
+      alert(`Error: ${err.statusText}(${err.status}, ${err.ok})\n${err.url}`);
     });
     return [uploadProgress$, uploadComplete$];
   }

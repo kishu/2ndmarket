@@ -1,8 +1,9 @@
 import { first } from 'rxjs/operators';
 
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { Router, RouteReuseStrategy, RouterModule } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -11,18 +12,19 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
-import { environment } from '@environments/environment';
-
+import { CacheRouteReuseStrategy } from '@app/./cache-route-reuse.strategy';
+import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
 import { PreferenceModule } from '@app/modules/preference/preference.module';
 import { SharedModule } from '@app/shared/shared.module';
-
 import { AuthService } from '@app/core/http';
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { CacheRouteReuseStrategy } from '@app/./cache-route-reuse.strategy';
+
+import { SentryErrorHandler } from './sentry-error-handler';
+import { environment } from '@environments/environment';
+
+
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
@@ -61,8 +63,8 @@ export function appInitializer(router: Router, authService: AuthService) {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
-    AngularFirestoreModule,
-    AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
+    // AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence({ synchronizeTabs: false }),
     AngularFireFunctionsModule,
     /*
      * angular.json options
@@ -73,7 +75,8 @@ export function appInitializer(router: Router, authService: AuthService) {
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
     { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },
-    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true }
+    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true },
+    { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]
 })
