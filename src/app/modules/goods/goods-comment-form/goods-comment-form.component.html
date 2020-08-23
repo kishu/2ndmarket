@@ -5,11 +5,11 @@
     (ngSubmit)="onSubmit()">
     <div class="relative">
       <div class="block w-full py-2 px-3 border leading-tight whitespace-pre-wrap opacity-0">
-        {{ body.value }}
+        {{ bodyRef.value }}
       </div>
       <div class="absolute inset-0">
         <textarea
-          #body
+          #bodyRef
           class="w-full h-full border border-gray-300 m-0 bg-gray-200 leading-tight rounded-xxlg"
           formControlName="body"
           minlength="2"

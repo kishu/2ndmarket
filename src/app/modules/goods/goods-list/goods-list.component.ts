@@ -14,18 +14,8 @@ import { Goods } from '@app/core/model';
   styleUrls: ['./goods-list.component.scss']
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
-  searchForm = this.fb.group({
-    keyword: [],
-  });
-
-  isSearchResults: boolean;
-
   goods$ = new ReplaySubject<Goods[]>(1);
   more = false;
-
-  get keywordCtl() {
-    return this.searchForm.get('keyword');
-  }
 
   constructor(
     private router: Router,
@@ -39,7 +29,6 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     this.activatedRoute.queryParamMap.pipe(
       map(m => m.get('tag')?.trim())
     ).subscribe(keyword => {
-      this.keywordCtl.reset(keyword);
       keyword ? this.searchGoods(keyword) : this.initGoods();
     });
   }
@@ -70,20 +59,6 @@ export class GoodsListComponent implements OnInit, OnDestroy {
       this.more = g.length >= 5;
       this.goods$.next(g);
     });
-    this.isSearchResults = true;
-  }
-
-  onClickCancelSearch() {
-    this.router.navigate(['/goods']);
-    this.isSearchResults = false;
-  }
-
-  onSubmitSearch() {
-    this.router.navigate(['/goods'], { queryParams: { tag: this.keywordCtl.value.trim() } });
-  }
-
-  onChangeKeyword() {
-    this.isSearchResults = false;
   }
 
   onMoreGoods() {

@@ -1,6 +1,6 @@
 import { forkJoin } from 'rxjs';
-import { first, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Component, Input, OnInit } from '@angular/core';
+import { first, filter, map, switchMap } from 'rxjs/operators';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
 import { NewGoodsComment } from '@app/core/model';
@@ -12,6 +12,7 @@ import { NewGoodsComment } from '@app/core/model';
 })
 export class GoodsCommentFormComponent implements OnInit {
   @Input() goodsId: string;
+  @ViewChild('bodyRef', { static: true }) bodyRef: ElementRef;
   submitting = false;
   commentForm = this.fb.group({
     body: ['']
@@ -31,6 +32,7 @@ export class GoodsCommentFormComponent implements OnInit {
 
   onSubmit() {
     this.submitting = true;
+    this.bodyRef.nativeElement.focus();
 
     forkJoin([
       this.authService.user$.pipe(first(), filter(u => !!u)),
@@ -43,8 +45,10 @@ export class GoodsCommentFormComponent implements OnInit {
         ...this.commentForm.value,
         created: GoodsCommentsService.serverTimestamp()
       } as NewGoodsComment)),
-      tap(() => this.commentForm.reset()),
-      switchMap(c => this.goodsCommentsService.add(c))
+      switchMap(c => {
+        this.commentForm.reset();
+        return this.goodsCommentsService.add(c);
+      })
     ).subscribe(
       () => this.submitting = false,
       (err) => alert(err)

@@ -15,6 +15,7 @@ import { GoodsMoreComponent } from './goods-more/goods-more.component';
 import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsListItemComponent } from './goods-list-item/goods-list-item.component';
 import { GoodsImageViewerComponent } from './goods-image-viewer/goods-image-viewer.component';
+import { GoodsSearchFormComponent } from './goods-search-form/goods-search-form.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { GoodsImageViewerComponent } from './goods-image-viewer/goods-image-view
     GoodsImageViewerComponent,
     GoodsListComponent,
     GoodsListItemComponent,
+    GoodsSearchFormComponent,
     GoodsMoreComponent,
     GoodsWriteComponent
   ],
