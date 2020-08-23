@@ -17,6 +17,10 @@ export class GoodsListComponent implements OnInit, OnDestroy {
   goods$ = new ReplaySubject<Goods[]>(1);
   more = false;
 
+  get tag() {
+    return this.activatedRoute.snapshot.queryParamMap.get('tag');
+  }
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,

@@ -4,37 +4,37 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+    match /deletedGoods/{deletedGoods} {
+      allow read: if false;
+      allow create: if request.auth.uid != null;
+    }
+    match /favoriteGoods/{favoriteGoods} {
+      allow read: if true;
+      allow create: if request.auth.uid != null;
+      allow delete: if request.auth.uid == request.resource.data.userId;
+    }
     match /fcmTokens/{fcmToken} {
       allow read, write: if request.auth.uid != null;
     }
     match /goods/{goods} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create: if request.auth.uid != null;
+      allow delete: if request.auth.uid == request.resource.data.userId;
     }
     match /goodsComments/{goodsComment} {
       allow read: if true;
       allow create: if request.auth.uid != null;
-      allow delete: if request.auth.uid != null;
-    }
-    match /goodsFavorites/{goodsFavorite} {
-      allow read: if true;
-      allow create: if request.auth.uid != null;
-      allow delete: if request.auth.uid != null;
+      allow delete: if request.auth.uid == request.resource.data.userId;
     }
     match /groups/{group} {
       allow read: if true;
       allow write: if false;
     }
-    match /notices/{notice} {
+    match /messages/{message} {
       allow read, write: if request.auth.uid != null;
     }
     match /profiles/{profile} {
-      allow read, write: if request.auth.uid != null;
-    }
-    match /userProfiles/{userProfile} {
-      allow read, write: if request.auth.uid != null;
-    }
-    match /userGroups/{userGroup} {
-      allow read, write: if request.auth.uid != null;
+      allow read, created: if request.auth.uid != null;
     }
   }
 }
