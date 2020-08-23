@@ -31,20 +31,25 @@ export class LongpressDirective implements OnInit, OnDestroy {
   }
 
   handleTouchDown(e) {
-    e.preventDefault();
+    // e.preventDefault();
     this.timerId = setTimeout(() => {
       this.longpress.emit();
     }, 600);
   }
 
   handleTouchMove(e) {
-    e.preventDefault();
+    // e.preventDefault();
     clearTimeout(this.timerId);
+    this.timerId = null;
+
   }
 
   handleTouchUp(e) {
-    e.preventDefault();
-    clearTimeout(this.timerId);
+    if (this.timerId) {
+      e.preventDefault();
+      clearTimeout(this.timerId);
+      this.timerId = null;
+    }
   }
 
 }
