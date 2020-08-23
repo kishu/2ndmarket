@@ -62,7 +62,7 @@
                     [routerLink]="['./']"
                     fragment="imageViewer"
                     [state]="{ selectedIdx: i }"
-                    (click)="$event.preventDefault()">
+                    (click)="test($event)">
                     <div class="attachImage"><img [src]="src" class="image" alt=""></div>
                   </a>
                 </li>
@@ -70,7 +70,7 @@
             </ul>
           </ng-container>
           <app-goods-image-viewer
-            *ngIf="(activatedRoute.fragment | async) === 'imageViewer'"
+            *ngIf="false && (activatedRoute.fragment | async) === 'imageViewer'"
             [images]="goods.images">
           </app-goods-image-viewer>
         </div>

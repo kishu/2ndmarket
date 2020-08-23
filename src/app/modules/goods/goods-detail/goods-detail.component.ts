@@ -221,4 +221,11 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     this.location.back();
   }
 
+  test(e: Event) {
+    console.log('e', e);
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    return false;
+  }
+
 }
