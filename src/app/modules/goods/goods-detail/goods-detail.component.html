@@ -58,21 +58,17 @@
             <ul class="goods-images">
               <ng-container *ngFor="let src of goods.images; index as i">
                 <li class="relative border border-white">
-                  <a
-                    [routerLink]="['./']"
-                    fragment="imageViewer"
-                    [state]="{ selectedIdx: i }"
-                    (click)="test($event)">
+                  <a routerLink="./images" (click)="test($event)">
                     <div class="attachImage"><img [src]="src" class="image" alt=""></div>
                   </a>
                 </li>
               </ng-container>
             </ul>
           </ng-container>
-          <app-goods-image-viewer
-            *ngIf="false && (activatedRoute.fragment | async) === 'imageViewer'"
-            [images]="goods.images">
-          </app-goods-image-viewer>
+<!--          <app-goods-image-viewer-->
+<!--            *ngIf="false && (activatedRoute.fragment | async) === 'imageViewer'"-->
+<!--            [images]="goods.images">-->
+<!--          </app-goods-image-viewer>-->
         </div>
       </div>
       <div class="px-safe border-t border-gray-300">
@@ -114,3 +110,5 @@
 <ng-container *ngIf="empty$ | async">
   <div>상품이 없습니다.</div>
 </ng-container>
+
+<router-outlet></router-outlet>
