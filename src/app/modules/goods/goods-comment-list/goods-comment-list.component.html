@@ -4,9 +4,9 @@
     <p class="text-blue-900 text-xs opacity-50" *ngSwitchCase="1">1명의 유저가 이 상품에 대한 이야기를 하고 있습니다.</p>
     <p class="text-blue-900 text-xs opacity-50" *ngSwitchCase="0">이 상품에 대한 이야기가 없습니다.</p>
   </ng-container>
-  <ul class="select-none">
+  <ul>
     <li
-      class="py-1"
+      class="select-none py-1"
       *ngFor="let comment of commentList trackBy:trackById">
       <div
         class="flex -mx-1"
