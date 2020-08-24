@@ -1,4 +1,5 @@
 import { map } from 'rxjs/operators';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@app/core/http';
@@ -17,6 +18,7 @@ export class PreferenceComponent implements OnInit {
   favoriteGoodsCount$ = this.persistenceService.favoritedGoods$.pipe(map(g => g.length));
   newMessagesCount$ = this.persistenceService.newMessageCount$;
   constructor(
+    private location: Location,
     private router: Router,
     private authService: AuthService,
     private persistenceService: PersistenceService,
@@ -33,6 +35,10 @@ export class PreferenceComponent implements OnInit {
 
   onClickSignOut() {
     this.authService.signOut().then(() => this.router.navigate(['/sign-in']));
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 
 }

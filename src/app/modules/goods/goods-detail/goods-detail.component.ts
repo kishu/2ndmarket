@@ -224,7 +224,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   test(e: Event) {
-    //e.preventDefault();
+    // e.preventDefault();
 
     // do something
 

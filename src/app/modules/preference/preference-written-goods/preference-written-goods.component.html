@@ -1,18 +1,18 @@
 <ng-container *ngIf="goodsList$ | async as goodsList">
   <div class="fixed left-0 header-top w-full z-30">
-    <div class="px-safe border-b border-green-700 bg-white bg-opacity-95 shadow">
+    <div class="px-safe border-b border-gray-300 bg-white bg-opacity-95">
       <div class="relative w-full mx-auto px-12">
         <div class="absolute inset-y-0 left-0 flex">
           <button type="button" class="p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z"/>
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <line x1="5" y1="12" x2="11" y2="18" />
-              <line x1="5" y1="12" x2="11" y2="6" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <g fill="none" fill-rule="evenodd" transform="translate(3 3)">
+                <path stroke="#4A5568" stroke-linecap="round" stroke-width="2" d="M7 17.167L0 9.016 6.916 0.833"/>
+                <rect width="19" height="1.867" y="8.067" fill="#4A5568" rx=".933"/>
+              </g>
             </svg>
           </button>
         </div>
-        <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
+        <h1 class="h-12 p-3 text-center font-bold text-lg text-gay-900 ellipsis">
           등록한 상품 {{goodsList.length}}개
         </h1>
       </div>
