@@ -1,6 +1,6 @@
 <ng-container *ngIf="goods$ | async as goods">
   <div class="fixed left-0 header-top w-full z-30">
-    <div class="px-safe border-b border-green-700 bg-white bg-opacity-95 shadow">
+    <div class="px-safe border-b border-gray-200 bg-white bg-opacity-95">
       <div class="relative w-full mx-auto px-12">
         <div class="absolute inset-y-0 left-0 flex">
           <button type="button" class="p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
@@ -105,7 +105,7 @@
       </ng-container>
       <div class="flex-grow min-h-50vh flex flex-col">
         <div app-goods-comment-list [goods]="goods" class="relative flex-grow px-safe bg-gray-400"></div>
-        <div app-goods-comment-form [goodsId]="goods.id" class="px-safe border-t border-gray-400 bg-white"></div>
+        <div app-goods-comment-form [goodsId]="goods.id" class="px-safe pb-safe border-t border-gray-400 bg-white"></div>
       </div>
     </ng-container>
   </div>

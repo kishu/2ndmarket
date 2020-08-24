@@ -1,26 +1,23 @@
 <div
   *ngIf="routePath === 'goods' || routePath === 'preference'"
   class="fixed left-0 header-top w-full z-30" >
-  <div class="px-safe border-b border-green-700 bg-white bg-opacity-95 shadow">
+  <div class="px-safe border-b border-gray-200 bg-white bg-opacity-95">
     <div class="relative w-full mx-auto px-12">
       <div class="absolute inset-y-0 left-0 flex">
         <a [routerLink]="['/preference']" class="block p-3" *ngIf="routePath === 'goods'">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-align-justified" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z"/>
-            <line x1="4" y1="6" x2="20" y2="6" />
-            <line x1="4" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="18" x2="20" y2="18" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="#575756" fill-rule="evenodd">
+              <path d="M0 0H16V1H0zM0 7H16V8H0zM0 14H16V15H0z" transform="translate(4 4)"/>
+            </g>
           </svg>
           <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600" *ngIf="(newMessagesCount$ | async) > 0"></span>
         </a>
-        <a [routerLink]="['/goods']" class="block p-3 bg-gray-300" *ngIf="routePath === 'preference'">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-align-justified" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z"/>
-            <line x1="4" y1="6" x2="20" y2="6" />
-            <line x1="4" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="18" x2="20" y2="18" />
+        <a [routerLink]="['/goods']" class="block p-3" *ngIf="routePath === 'preference'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd" stroke="#575756">
+              <path d="M0 0L14 14M14 0L0 14" transform="translate(5 5)"/>
+            </g>
           </svg>
-          <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600" *ngIf="(newMessagesCount$ | async) > 0"></span>
         </a>
       </div>
       <h1 class="h-12 p-3 text-center font-bold text-green-700 ellipsis">
@@ -29,10 +26,12 @@
       </h1>
       <div class="absolute inset-y-0 right-0 flex">
         <a [routerLink]="['/goods', 'new', 'edit']" class="p-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-color-picker" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2f855a" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z"/>
-            <line x1="11" y1="7" x2="17" y2="13" />
-            <path d="M5 19v-4l9.7 -9.7a1 1 0 0 1 1.4 0l2.6 2.6a1 1 0 0 1 0 1.4l-9.7 9.7h-4" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+              <path stroke="#575756" d="M12.359.5c.587 0 1.118.258 1.502.669.396.423.639 1.01.639 1.655 0 .568-.189 1.089-.504 1.494h0L3.518 15.5H.5v-3.296l10.506-11.18C11.373.7 11.844.5 12.36.5z" transform="translate(4 4)"/>
+              <path fill="#575756" d="M7 15H16V16H7z" transform="translate(4 4)"/>
+              <path stroke="#575756" d="M10 2L13 5" transform="translate(4 4)"/>
+            </g>
           </svg>
         </a>
       </div>
