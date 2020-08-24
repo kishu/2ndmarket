@@ -2,11 +2,11 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-goods-image-viewer',
-  templateUrl: './goods-image-viewer.component.html',
-  styleUrls: ['./goods-image-viewer.component.scss']
+  selector: 'app-goods-images',
+  templateUrl: './goods-images.component.html',
+  styleUrls: ['./goods-images.component.scss']
 })
-export class GoodsImageViewerComponent implements OnInit {
+export class GoodsImagesComponent implements OnInit {
   @Input() images: string/* image src url */[];
   @ViewChild('scrollEl', { static: true }) scrollElRef: ElementRef;
 

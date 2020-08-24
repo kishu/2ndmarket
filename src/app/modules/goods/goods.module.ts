@@ -5,17 +5,17 @@ import { DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
 import { GoodsRoutingModule } from './goods-routing.module';
-import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
-import { GoodsFormComponent } from './goods-form/goods-form.component';
-import { GoodsWriteComponent } from './goods-write/goods-write.component';
-import { GoodsEditComponent } from './goods-edit/goods-edit.component';
 import { GoodsCommentListComponent } from './goods-comment-list/goods-comment-list.component';
 import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-form.component';
-import { GoodsMoreComponent } from './goods-more/goods-more.component';
+import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
+import { GoodsEditComponent } from './goods-edit/goods-edit.component';
+import { GoodsFormComponent } from './goods-form/goods-form.component';
+import { GoodsImagesComponent } from './goods-images/goods-images.component';
 import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsListItemComponent } from './goods-list-item/goods-list-item.component';
-import { GoodsImageViewerComponent } from './goods-image-viewer/goods-image-viewer.component';
+import { GoodsMoreComponent } from './goods-more/goods-more.component';
 import { GoodsSearchFormComponent } from './goods-search-form/goods-search-form.component';
+import { GoodsWriteComponent } from './goods-write/goods-write.component';
 
 @NgModule({
   declarations: [
@@ -24,11 +24,11 @@ import { GoodsSearchFormComponent } from './goods-search-form/goods-search-form.
     GoodsDetailComponent,
     GoodsEditComponent,
     GoodsFormComponent,
-    GoodsImageViewerComponent,
+    GoodsImagesComponent,
     GoodsListComponent,
     GoodsListItemComponent,
-    GoodsSearchFormComponent,
     GoodsMoreComponent,
+    GoodsSearchFormComponent,
     GoodsWriteComponent
   ],
   imports: [

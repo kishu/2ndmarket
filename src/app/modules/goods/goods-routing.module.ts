@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { PermitGoodsGuard } from './permit-goods.guard';
-import { GoodsListComponent } from './goods-list/goods-list.component';
+import { CanActivateGoodsGuard } from './can-actuvate-goods-guard.service';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
-import { GoodsWriteComponent } from './goods-write/goods-write.component';
 import { GoodsEditComponent } from './goods-edit/goods-edit.component';
+import { GoodsImagesComponent } from './goods-images/goods-images.component';
+import { GoodsListComponent } from './goods-list/goods-list.component';
+import { GoodsWriteComponent } from './goods-write/goods-write.component';
 
 @NgModule({
   imports: [
@@ -14,11 +15,17 @@ import { GoodsEditComponent } from './goods-edit/goods-edit.component';
         component: GoodsWriteComponent,
       },
       { path: 'goods', component: GoodsListComponent },
-      { path: 'goods/:goodsId', component: GoodsDetailComponent },
+      {
+        path: 'goods/:goodsId',
+        component: GoodsDetailComponent,
+        children: [
+          { path: 'images', component: GoodsImagesComponent }
+        ]
+      },
       {
         path: 'goods/:goodsId/edit',
         component: GoodsEditComponent,
-        canActivate: [ PermitGoodsGuard ]
+        canActivate: [ CanActivateGoodsGuard ]
       }
     ])
   ],

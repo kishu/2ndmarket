@@ -10,21 +10,18 @@ service cloud.firestore {
     }
     match /favoriteGoods/{favoriteGoods} {
       allow read: if true;
-      allow create: if request.auth.uid != null;
-      allow delete: if request.auth.uid == request.resource.data.userId;
+      allow write: if request.auth.uid != null;
     }
     match /fcmTokens/{fcmToken} {
       allow read, write: if request.auth.uid != null;
     }
     match /goods/{goods} {
       allow read: if true;
-      allow create: if request.auth.uid != null;
-      allow delete: if request.auth.uid == request.resource.data.userId;
+      allow write: if request.auth.uid != null;
     }
     match /goodsComments/{goodsComment} {
       allow read: if true;
-      allow create: if request.auth.uid != null;
-      allow delete: if request.auth.uid == request.resource.data.userId;
+      allow write: if request.auth.uid != null;
     }
     match /groups/{group} {
       allow read: if true;

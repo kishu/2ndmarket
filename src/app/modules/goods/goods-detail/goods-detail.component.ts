@@ -34,7 +34,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   scrollY: number;
   intersected = false;
 
-  @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
+  @ViewChild('goodsNameRef', { static: true, read: ElementRef }) goodsNameRef: ElementRef;
   private intersectionObserver: IntersectionObserver;
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
   private destroy$ = new Subject<null>();
@@ -89,6 +89,8 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   ngOnInit(): void {
+    console.log('init');
+    this.router.events.subscribe(e => console.log('e', e));
   }
 
   onClickPermission() {
@@ -222,10 +224,14 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   test(e: Event) {
-    console.log('e', e);
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    return false;
+    //e.preventDefault();
+
+    // do something
+
+    e.stopPropagation();
+    this.router.navigate(['./images'], { relativeTo: this.activatedRoute });
+
+    return;
   }
 
 }
