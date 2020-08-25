@@ -35,21 +35,15 @@ export class GoodsSearchFormComponent implements OnInit {
     });
   }
 
-  onChangeKeyword() {
-    this.isSearchResults = false;
-  }
-
   onClickCancelSearch() {
     this.router.navigate(['/goods']);
   }
 
   onSubmit() {
-    if (this.keywordCtl.value?.trim()) {
-      this.router.navigate(
-        ['/goods'],
-        {queryParams: {tag: this.keywordCtl.value?.trim()}}
-      );
-    }
+    this.router.navigate(
+      ['/goods'],
+      {queryParams: {tag: this.keywordCtl.value}}
+    );
   }
 
 }

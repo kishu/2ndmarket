@@ -16,8 +16,10 @@
         </a>
       </div>
       <h1 class="h-12 p-3 text-center font-bold text-lg text-green-500 ellipsis">
-        <span>세컨드마켓</span>
-        <span *ngIf="profileExt$ | async as profileExt" class="uppercase">@{{ profileExt.group.name }}</span>
+        <a routerLink="./">
+          <span>세컨드마켓</span>
+          <span *ngIf="profileExt$ | async as profileExt" class="uppercase">@{{ profileExt.group.name }}</span>
+        </a>
       </h1>
       <div class="absolute inset-y-0 right-0 flex">
         <a [routerLink]="['/goods', 'new', 'edit']" class="p-3">
