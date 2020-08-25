@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { CanActivateGoodsGuard } from './can-actuvate-goods-guard.service';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsEditComponent } from './goods-edit/goods-edit.component';
-import { GoodsImagesComponent } from './goods-images/goods-images.component';
 import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
 
@@ -14,13 +13,13 @@ import { GoodsWriteComponent } from './goods-write/goods-write.component';
         path: 'goods/new/edit',
         component: GoodsWriteComponent,
       },
-      { path: 'goods', component: GoodsListComponent },
+      {
+        path: 'goods',
+        component: GoodsListComponent
+      },
       {
         path: 'goods/:goodsId',
-        component: GoodsDetailComponent,
-        children: [
-          { path: 'images', component: GoodsImagesComponent }
-        ]
+        component: GoodsDetailComponent
       },
       {
         path: 'goods/:goodsId/edit',

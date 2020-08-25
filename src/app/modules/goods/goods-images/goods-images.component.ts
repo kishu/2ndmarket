@@ -8,9 +8,9 @@ import { Location } from '@angular/common';
 })
 export class GoodsImagesComponent implements OnInit {
   @Input() images: string/* image src url */[];
+  @Input() selected: number;
   @ViewChild('scrollEl', { static: true }) scrollElRef: ElementRef;
 
-  selectedIdx = history.state.selectedIdx || 0;
   completed = false;
 
   constructor(

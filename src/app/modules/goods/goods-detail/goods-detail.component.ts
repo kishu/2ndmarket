@@ -71,6 +71,17 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   );
   showPermission = false;
 
+  // goodsImage$ = this.activatedRoute.queryParamMap.pipe(
+  //   map(m => parseInt(m.get('image'))),
+  //   tap(t => console.log('ttt', t)),
+  //   filter(i => i > -1),
+  //   tap(t => console.log('filter', t))
+  // );
+
+  goodsImage$ = this.activatedRoute.queryParamMap.pipe(
+    map(m => parseInt(m.get('image'), 10))
+  );
+
   private get goodsId() {
     return this.activatedRoute.snapshot.paramMap.get('goodsId');
   }
@@ -78,7 +89,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   constructor(
     private location: Location,
     private router: Router,
-    public activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private groupService: GroupsService,
     private profilesService: ProfilesService,
@@ -89,8 +100,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   ngOnInit(): void {
-    console.log('init');
-    this.router.events.subscribe(e => console.log('e', e));
   }
 
   onClickPermission() {
