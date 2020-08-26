@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host",
-    "build": "ng lint && ng build",
+    "build": "ng lint && ng build --configuration=dev",
     "build:prod": "ng lint && ng build --prod",
     "deploy:dev": "firebase deploy --only hosting --project=dev",
     "deploy:real": "firebase deploy --only hosting --project=real",
