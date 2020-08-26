@@ -1,6 +1,6 @@
 {
-  "name": "[d3]세컨드마켓",
-  "short_name": "[d4]세컨드마켓",
+  "name": "세컨드마켓",
+  "short_name": "세컨드마켓",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",

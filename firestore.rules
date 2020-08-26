@@ -31,7 +31,8 @@ service cloud.firestore {
       allow read, write: if request.auth.uid != null;
     }
     match /profiles/{profile} {
-      allow read, created: if request.auth.uid != null;
+      allow read, create, update: if request.auth.uid != null;
+      allow delete: if false;
     }
   }
 }

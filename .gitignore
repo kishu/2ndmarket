@@ -46,7 +46,6 @@ testem.log
 Thumbs.db
 
 # Custom
-.firebase/
 .runtimeconfig.json
+.firebase/
 environments/
-firebase-messaging-sw.js
