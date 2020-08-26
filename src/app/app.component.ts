@@ -1,7 +1,7 @@
 import { filter, first, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivationEnd, Router } from '@angular/router';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { NewFcmToken } from '@app/core/model';
 import { AuthService, FcmTokensService } from '@app/core/http';
@@ -13,6 +13,7 @@ import { AuthService, FcmTokensService } from '@app/core/http';
 })
 export class AppComponent implements OnInit {
   scrollY: number;
+  routePath: string;
   @ViewChild('wrapRef', {static: true}) wrapRef: ElementRef;
   constructor(
     private router: Router,
@@ -35,6 +36,12 @@ export class AppComponent implements OnInit {
     ).subscribe((token) => {
     }, err => {
       console.log(err);
+    });
+
+    this.router.events.pipe(
+      filter(e => e instanceof ActivationEnd)
+    ).subscribe((e: ActivationEnd) => {
+      this.routePath = e.snapshot.routeConfig.path;
     });
 
     // this.afMessaging.onMessage(payload => {

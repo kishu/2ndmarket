@@ -1,6 +1,6 @@
 <div #wrapRef class="wrap w-full">
   <div class="safe-top-area"></div>
   <app-header (openMenu)="onOpenMenu($event)" (closeMenu)="onCloseMenu($event)"></app-header>
-  <div class="h-safe-top"></div>
+  <div *ngIf="routePath !== 'preference'" class="h-safe-top"></div>
   <router-outlet></router-outlet>
 </div>
