@@ -1,6 +1,6 @@
 {
   "projects": {
     "dev": "c1d13c97",
-    "real": "f5e1f38a"
+    "prod": "f5e1f38a"
   }
 }
