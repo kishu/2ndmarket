@@ -1,0 +1,32 @@
+<div class="fixed left-0 header-top w-full z-30">
+  <div class="px-safe border-b border-gray-300 bg-white bg-opacity-95">
+    <div class="relative w-full mx-auto px-12">
+      <div class="absolute inset-y-0 left-0 flex">
+        <button type="button" class="p-3 border-0 flex items-center" (click)="onClickHistoryBack()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd" transform="translate(3 3)">
+              <path stroke="#4A5568" stroke-linecap="round" stroke-width="2" d="M7 17.167L0 9.016 6.916 0.833"/>
+              <rect width="19" height="1.867" y="8.067" fill="#4A5568" rx=".933"/>
+            </g>
+          </svg>
+        </button>
+      </div>
+      <h1 class="h-12 p-3 text-center font-bold text-lg text-gray-900 ellipsis">
+        검색 결과
+      </h1>
+    </div>
+  </div>
+</div>
+<div *ngIf="goods$ | async as goods">
+  <app-goods-search-form></app-goods-search-form>
+  <p *ngIf="tag && goods.length === 0" class="py-20 text-center text-gray-600">'{{ tag }}' 검색 결과가 없습니다.</p>
+  <ul class="bg-white sm:py-2 px-safe">
+    <ng-container *ngFor="let item of goods; trackBy: trackBy">
+      <li
+        class="relative overflow-hidden">
+        <app-goods-list-item [item]="item"></app-goods-list-item>
+      </li>
+    </ng-container>
+  </ul>
+  <app-goods-more *ngIf="more" (more)="onMoreGoods()"></app-goods-more>
+</div>

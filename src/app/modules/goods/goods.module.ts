@@ -15,6 +15,7 @@ import { GoodsListComponent } from './goods-list/goods-list.component';
 import { GoodsListItemComponent } from './goods-list-item/goods-list-item.component';
 import { GoodsMoreComponent } from './goods-more/goods-more.component';
 import { GoodsSearchFormComponent } from './goods-search-form/goods-search-form.component';
+import { GoodsSearchListComponent } from './goods-search-list/goods-search-list.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
 
 @NgModule({
@@ -29,7 +30,8 @@ import { GoodsWriteComponent } from './goods-write/goods-write.component';
     GoodsListItemComponent,
     GoodsMoreComponent,
     GoodsSearchFormComponent,
-    GoodsWriteComponent
+    GoodsSearchListComponent,
+    GoodsWriteComponent,
   ],
   imports: [
     CommonModule,

@@ -4,6 +4,7 @@ import { CanActivateGoodsGuard } from './can-actuvate-goods-guard.service';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsEditComponent } from './goods-edit/goods-edit.component';
 import { GoodsListComponent } from './goods-list/goods-list.component';
+import { GoodsSearchListComponent } from './goods-search-list/goods-search-list.component';
 import { GoodsWriteComponent } from './goods-write/goods-write.component';
 
 @NgModule({
@@ -16,6 +17,10 @@ import { GoodsWriteComponent } from './goods-write/goods-write.component';
       {
         path: 'goods',
         component: GoodsListComponent
+      },
+      {
+        path: 'goods/search',
+        component: GoodsSearchListComponent
       },
       {
         path: 'goods/:goodsId',

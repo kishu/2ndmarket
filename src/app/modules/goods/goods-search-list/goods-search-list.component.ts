@@ -1,22 +1,29 @@
 import { last } from 'lodash-es';
 import { forkJoin, ReplaySubject } from 'rxjs';
 import { first, map, switchMap, tap } from 'rxjs/operators';
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
 import { AuthService, GoodsService } from '@app/core/http';
-import { PersistenceService } from '@app/core/persistence';
+import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
 
 @Component({
-  selector: 'app-goods-list',
-  templateUrl: './goods-list.component.html',
-  styleUrls: ['./goods-list.component.scss']
+  selector: 'app-goods-search-list',
+  templateUrl: './goods-search-list.component.html',
+  styleUrls: ['./goods-search-list.component.scss']
 })
-export class GoodsListComponent implements OnInit, OnDestroy {
+export class GoodsSearchListComponent implements OnInit, OnDestroy {
   goods$ = new ReplaySubject<Goods[]>(1);
   more = false;
 
+  get tag() {
+    return this.activatedRoute.snapshot.queryParamMap.get('tag');
+  }
+
   constructor(
+    private location: Location,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private goodsService: GoodsService,
@@ -79,6 +86,10 @@ export class GoodsListComponent implements OnInit, OnDestroy {
         );
       })
     ).subscribe(g => this.goods$.next(g));
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 
 }
