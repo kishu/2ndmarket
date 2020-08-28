@@ -10,7 +10,7 @@
       <div class="absolute inset-0">
         <textarea
           #bodyRef
-          class="w-full h-full border border-gray-300 m-0 bg-gray-200 leading-tight rounded-xxlg"
+          class="w-full h-full px-3 border border-gray-300 m-0 bg-gray-200 leading-tight rounded-xxlg"
           formControlName="body"
           minlength="2"
           maxlength="200"
@@ -20,10 +20,10 @@
       </div>
     </div>
     <div
-      class="absolute right-0 top-0 w-9">
+      class="absolute right-0 top-0 w-9 h-9">
       <button
         type="submit"
-        class="w-full p-1 border-transparent leading-tight text-green-700 flex justify-center items-center"
+        class="w-full h-full p-1 border-transparent leading-tight text-green-700 flex justify-center items-center"
         [ngClass]="{'opacity-50': commentForm.invalid || submitting}"
         [disabled]="commentForm.invalid || submitting">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

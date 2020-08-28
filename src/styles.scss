@@ -67,8 +67,8 @@ body {
 input,
 select,
 textarea {
-  @apply block w-full py-2 px-3;
-  @apply border-b border-gray-400 rounded-none bg-transparent text-gray-700;
+  @apply block w-full py-2;
+  @apply border-b border-gray-500 rounded-none bg-transparent text-gray-700;
   @apply appearance-none outline-none;
 
   &.input-sm {
@@ -85,7 +85,7 @@ textarea {
 }
 
 .form-label {
-  @apply block px-3 pt-2 -mb-1 uppercase tracking-wide text-gray-600 text-xs;
+  @apply block pt-2 -mb-1 uppercase tracking-wide text-gray-600 text-xs;
 }
 
 .line-clamp-2 {
@@ -146,7 +146,7 @@ textarea {
     counter-increment: my-awesome-counter;
     &:before {
       @apply absolute left-0 top-0 z-10 pointer-events-none;
-      @apply px-2 py-1 bg-green-800 bg-opacity-75;
+      @apply px-2 py-1 bg-gray-800 bg-opacity-75;
       @apply font-mono text-xs text-white;
       content: counter(my-awesome-counter);
     }
@@ -431,6 +431,10 @@ textarea {
 
 .w-9 {
   width: 2.25rem;
+}
+
+.h-9 {
+  height: 2.25rem;
 }
 
 .pr-9 {

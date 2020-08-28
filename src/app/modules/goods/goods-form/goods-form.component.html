@@ -1,12 +1,12 @@
 <div class="px-safe pb-safe">
   <form
     *ngIf="goods"
-    class="p-2 pb-12 overflow-hidden"
+    class="p-2 px-4 pb-12 overflow-hidden"
     [formGroup]="goodsForm"
     (ngSubmit)="onSubmit()">
     <div class="form-row mb-2">
       <div class="form-col w-full">
-        <div class="bg-gray-200">
+        <div>
           <label class="form-label" for="name">
             상품명
           </label>
@@ -21,14 +21,14 @@
             maxlength="200"
             required>
         </div>
-        <div class="flex justify-between py-1 px-3" *ngIf="nameCtl.invalid && (nameCtl.dirty || nameCtl.touched)">
+        <div class="flex justify-between py-1" *ngIf="nameCtl.invalid && (nameCtl.dirty || nameCtl.touched)">
           <p class="text-red-600 text-xs leading-tight">상품명을 입력해 주세요.</p>
         </div>
       </div>
     </div>
     <div class="form-row mb-2">
       <div class="form-col w-1/2">
-        <div class="bg-gray-200">
+        <div>
           <label class="form-label" for="purchased">
             구매시기
           </label>
@@ -52,12 +52,12 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between py-1 px-3" *ngIf="purchasedCtl.invalid && (purchasedCtl.dirty || purchasedCtl.touched)">
+        <div class="flex justify-between py-1" *ngIf="purchasedCtl.invalid && (purchasedCtl.dirty || purchasedCtl.touched)">
           <p class="text-red-600 text-xs leading-tight">구매시기를 선택해 주세요.</p>
         </div>
       </div>
       <div class="form-col w-1/2">
-        <div class="bg-gray-200">
+        <div>
           <label class="form-label" for="condition">
             상태
           </label>
@@ -78,14 +78,14 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between py-1 px-3" *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)">
+        <div class="flex justify-between py-1" *ngIf="conditionCtl.invalid && (conditionCtl.dirty || conditionCtl.touched)">
           <p class="text-red-600 text-xs leading-tight">상품의 상태를 선택해 주세요.</p>
         </div>
       </div>
     </div>
     <div class="form-row mb-2">
       <div class="w-full px-1">
-        <div class="bg-gray-200">
+        <div>
           <label class="form-label" for="price">
             판매금액
           </label>
@@ -105,14 +105,14 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between py-1 px-3" *ngIf="priceCtl.invalid && (priceCtl.dirty || priceCtl.touched)">
+        <div class="flex justify-between py-1" *ngIf="priceCtl.invalid && (priceCtl.dirty || priceCtl.touched)">
           <p class="text-red-600 text-xs leading-tight">판매할 금액을 적어주세요.</p>
         </div>
       </div>
     </div>
     <div class="form-row mb-2">
       <div class="form-col w-full">
-        <div class="bg-gray-200">
+        <div>
           <label class="form-label" for="shipping">
             거래방법
           </label>
@@ -134,14 +134,14 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between py-1 px-3" *ngIf="shippingCtl.invalid && (shippingCtl.dirty || shippingCtl.touched)">
+        <div class="flex justify-between py-1" *ngIf="shippingCtl.invalid && (shippingCtl.dirty || shippingCtl.touched)">
           <p class="text-red-600 text-xs leading-tight">거래방법을 선택해 주세요.</p>
         </div>
       </div>
     </div>
     <div class="form-row mb-2">
       <div class="form-col w-full">
-        <div class="bg-gray-200">
+        <div>
           <p class="form-label">
             첨부 이미지
           </p>
@@ -151,7 +151,7 @@
     </div>
     <div class="form-row mb-2">
       <div class="form-col w-full">
-        <div class="bg-gray-200">
+        <div>
           <label class="form-label" for="contact">
             연락처
           </label>
@@ -166,14 +166,14 @@
             maxlength="200"
             required>
         </div>
-        <div class="flex justify-between py-1 px-3" *ngIf="contactCtl.invalid && (contactCtl.dirty || contactCtl.touched)">
+        <div class="flex justify-between py-1" *ngIf="contactCtl.invalid && (contactCtl.dirty || contactCtl.touched)">
           <p class="text-red-600 text-xs leading-tight">연락처를 적어주세요.</p>
         </div>
       </div>
     </div>
     <div class="form-row mb-2">
       <div class="form-col w-full">
-        <div class="bg-gray-200">
+        <div>
           <label class="form-label" for="memo">
             상품 설명
           </label>
@@ -187,7 +187,7 @@
                 id="memo"
                 name="memo"
                 formControlName="memo"
-                [placeholder]="'상품 설명을 적어주세요.\n해시태그 #을 쓰면 검색키워드로 만들 수 있어요.'"
+                [placeholder]="'상품 설명을 적어주세요.\n해시태그 #을 쓰면 검색 키워드로 만들 수 있어요.'"
                 rows="10"
                 minlength="2"
                 maxlength="2000"
@@ -195,7 +195,7 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between py-1 px-3" *ngIf="memoCtl.invalid && (memoCtl.dirty || memoCtl.touched)">
+        <div class="flex justify-between py-1" *ngIf="memoCtl.invalid && (memoCtl.dirty || memoCtl.touched)">
           <p class="text-red-600 text-xs leading-tight">상품 설명을 적어주세요.</p>
         </div>
       </div>
@@ -203,7 +203,7 @@
     <div class="fixed right-0 top-0 z-40 h-12 pr-safe">
       <button
         type="submit"
-        class="h-full p-3 border-0 text-green-700"
+        class="h-full p-3 border-0 text-green-700 text-lg"
         [ngClass]="{'opacity-50': goodsForm.invalid || submitting}"
         [disabled]="goodsForm.invalid || submitting">
         저장
