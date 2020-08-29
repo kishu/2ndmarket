@@ -22,10 +22,9 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     private goodsService: GoodsService,
     private persistenceService: PersistenceService,
   ) {
-    this.activatedRoute.queryParamMap.pipe(
-      map(m => m.get('tag')?.trim())
-    ).subscribe(keyword => {
-      keyword ? this.searchGoods(keyword) : this.initGoods();
+    this.persistenceService.goods$.pipe(first()).subscribe(g => {
+      this.more = g.length >= 5;
+      this.goods$.next(g);
     });
   }
 
@@ -40,23 +39,6 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  initGoods() {
-    this.persistenceService.goods$.pipe(first()).subscribe(g => {
-      this.more = g.length >= 5;
-      this.goods$.next(g);
-    });
-  }
-
-  searchGoods(keyword: string) {
-    this.authService.profileExt$.pipe(
-      first(),
-      switchMap(p => this.goodsService.getQueryByGroupIdAndTag(p.groupId, keyword, { limit: 5 }))
-    ).subscribe(g => {
-      this.more = g.length >= 5;
-      this.goods$.next(g);
-    });
-  }
-
   onMoreGoods() {
     if (!this.more) {
       return;
@@ -67,12 +49,8 @@ export class GoodsListComponent implements OnInit, OnDestroy {
       this.goods$.pipe(first())
     ]).pipe(
       switchMap(([p, g]) => {
-        const tag = this.activatedRoute.snapshot.queryParamMap.get('tag')?.trim();
         const options = {startAfter: last(g).updated, limit: 5};
-        const more$ = tag ?
-          this.goodsService.getQueryByGroupIdAndTag(p.groupId, tag, options) :
-          this.goodsService.getQueryByGroupId(p.groupId, options);
-        return more$.pipe(
+        return this.goodsService.getQueryByGroupId(p.groupId, options).pipe(
           first(),
           tap(moreGoods => this.more = moreGoods.length >= 5),
           map(moreGoods => g.concat(moreGoods))

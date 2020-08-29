@@ -1,5 +1,5 @@
 import { forkJoin, of, ReplaySubject, Subject } from 'rxjs';
-import { first, map, skip, switchMap, tap } from 'rxjs/operators';
+import { first, map, skip, switchMap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Goods, MessageExt, ProfileExt } from '@app/core/model';
 import { AuthService, FavoriteGoodsService, GoodsCommentsService, GoodsService, MessagesService } from '@app/core/http';
@@ -17,7 +17,11 @@ export class PersistenceService implements OnDestroy {
   reset$ = new Subject<ProfileExt>();
 
   protected goodsSubscription = this.reset$.pipe(
-    switchMap(p => this.goodsService.valueChangesQueryByGroupId(p.groupId, { limit: 5 })),
+    switchMap(p => {
+      return this.goodsService.getQueryByGroupId(p.groupId, { limit: 5 }).pipe(
+        switchMap(() => this.goodsService.valueChangesQueryByGroupId(p.groupId, { limit: 5 }))
+      );
+    }),
   ).subscribe(g => this.goods$.next(g));
 
   protected writtenGoodsSubscription = this.reset$.pipe(
