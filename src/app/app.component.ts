@@ -1,7 +1,7 @@
 import { filter, first, switchMap, withLatestFrom } from 'rxjs/operators';
-import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { NewFcmToken } from '@app/core/model';
 import { AuthService, FcmTokensService } from '@app/core/http';
@@ -12,16 +12,15 @@ import { AuthService, FcmTokensService } from '@app/core/http';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  scrollY: number;
-  routePath: string;
-  @ViewChild('wrapRef', {static: true}) wrapRef: ElementRef;
+  get path() {
+    return this.location.path();
+  }
   constructor(
     private router: Router,
     private location: Location,
     private afMessaging: AngularFireMessaging,
     private authService: AuthService,
-    private fcmTokensService: FcmTokensService,
-    private renderer: Renderer2,
+    private fcmTokensService: FcmTokensService
   ) {
     this.afMessaging.requestToken.pipe(
       withLatestFrom(this.authService.profileExt$.pipe(first(), filter(p => !!p))),
@@ -38,12 +37,6 @@ export class AppComponent implements OnInit {
       console.log(err);
     });
 
-    this.router.events.pipe(
-      filter(e => e instanceof ActivationEnd)
-    ).subscribe((e: ActivationEnd) => {
-      this.routePath = e.snapshot.routeConfig.path;
-    });
-
     // this.afMessaging.onMessage(payload => {
     //   const { body, title, click_action} = payload.notification;
     //   if (!this.location.isCurrentPathEqualTo('/preference/profile')) {
@@ -58,21 +51,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  onOpenMenu(event) {
-    if (event.phaseName === 'start') {
-      this.scrollY = window.scrollY;
-      this.renderer.addClass(this.wrapRef.nativeElement, 'fixed');
-      this.renderer.setStyle(this.wrapRef.nativeElement, 'top', `${0 - this.scrollY}px`);
+    // todo improve
+    // i'm not sure this is right way.
+    if (!document.referrer && this.location.path()) {
+      const pathname = window.location.pathname;
+      history.replaceState(null, null, '');
+      history.pushState(null, null, pathname);
     }
   }
 
-  onCloseMenu(event) {
-    if (event.phaseName === 'done') {
-      this.renderer.removeClass(this.wrapRef.nativeElement, 'fixed');
-      this.renderer.removeStyle(this.wrapRef.nativeElement, 'top');
-      window.scrollTo(0, this.scrollY);
-    }
-  }
 }

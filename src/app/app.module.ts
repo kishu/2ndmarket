@@ -76,7 +76,7 @@ export function appInitializer(router: Router, authService: AuthService) {
     { provide: REGION, useValue: 'asia-northeast1' },
     { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },
     { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true },
-    { provide: ErrorHandler, useClass: SentryErrorHandler }
+    // { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]
 })
