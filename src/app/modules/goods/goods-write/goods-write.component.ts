@@ -78,7 +78,7 @@ export class GoodsWriteComponent implements OnInit {
         images
       };
       this.goodsService.create(createdId, goods).then(
-        () => this.router.navigate(['../../', createdId], { replaceUrl: true, relativeTo: this.activatedRoute }),
+        () => this.router.navigate(['/goods', createdId, 'new'], { replaceUrl: true }),
         err => alert(err)
       );
     });

@@ -23,6 +23,10 @@ import { GoodsWriteComponent } from './goods-write/goods-write.component';
         component: GoodsSearchListComponent
       },
       {
+        path: 'goods/:goodsId/new',
+        component: GoodsDetailComponent
+      },
+      {
         path: 'goods/:goodsId',
         component: GoodsDetailComponent
       },
