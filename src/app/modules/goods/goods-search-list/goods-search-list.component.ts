@@ -58,7 +58,7 @@ export class GoodsSearchListComponent implements OnInit, OnDestroy {
       switchMap(([p, g]) => {
         const tag = this.activatedRoute.snapshot.queryParamMap.get('tag')?.trim();
         const options = {startAfter: last(g).updated, limit: 5};
-        this.goodsService.getQueryByGroupIdAndTag(p.groupId, tag, options).pipe(
+        return this.goodsService.getQueryByGroupIdAndTag(p.groupId, tag, options).pipe(
           first(),
           tap(moreGoods => this.more = moreGoods.length >= 5),
           map(moreGoods => g.concat(moreGoods))
