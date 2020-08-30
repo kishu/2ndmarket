@@ -22,7 +22,6 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
   shouldReuseRoute(before: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
     switch (this.getPath(curr)) {
       case 'goods':
-        console.log(before);
         this.allowRetrieveCache.goods = this.getPath(before) === 'goods/:goodsId';
         break;
       case 'preference/written-goods':
