@@ -48,19 +48,15 @@
     <div class="hidden sm:block mt-1">
       <p class="line-clamp-2 text-gray-700 leading-tight">{{ goods.memo }}</p>
     </div>
-    <div class="flex justify-between sm:flex-col mt-1 sm:mt-0">
-      <div class="text-sm text-green-900 opacity-50 sm:mt-2">
-        <ng-container *ngFor="let tag of goods.tags?.origin">
-          <span class="mr-1">#{{ tag }}</span>
-        </ng-container>
-        <span class="mr-1">#{{ goods.condition | goodsCondition }}</span>
-        <span class="mr-1">#{{ goods.purchased | goodsPurchased }}</span>
+    <div class="flex justify-between items-center sm:flex-col sm:items-baseline mt-1 sm:mt-0">
+      <div class="flex-auto text-sm text-blue-900 opacity-50 sm:mt-2 overflow-hidden">
+        <div class="ellipsis">
+          <ng-container *ngFor="let tag of goods.tags?.origin">
+            <span class="inline-block mr-1">#{{ tag }}</span>
+          </ng-container>
+        </div>
       </div>
-      <!-- <div class="text-sm text-green-900 opacity-50 sm:mt-1">
-        #{{ goods.condition }}
-        #{{ goods.purchased }}
-      </div> -->
-      <span class="text-sm leading-relaxed text-gray-500 flex items-center sm:mt-2">
+      <div class="flex-none text-sm leading-relaxed text-gray-500 flex items-center sm:mt-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message-circle mr-px" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z"/>
           <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" />
@@ -75,7 +71,7 @@
         </svg>
         <span class="ml-px">{{ goods.favoritesCnt }}</span>
         <!-- {{ goods.created | fsTimestamp | formatDistanceToNow }} 전 -->
-      </span>
+      </div>
     </div>
   </div>
 </a>
