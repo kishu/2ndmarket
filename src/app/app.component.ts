@@ -1,4 +1,5 @@
-import { filter, first, switchMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
@@ -22,21 +23,22 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private fcmTokensService: FcmTokensService
   ) {
-    console.log(this.afMessaging.requestToken);
-    this.afMessaging.requestToken.pipe(
-      withLatestFrom(this.authService.profileExt$.pipe(first(), filter(p => !!p))),
-      switchMap(([token, profile]) => {
+    combineLatest([
+      this.authService.profileExt$.pipe(first(), filter(p => !!p)),
+      this.afMessaging.requestToken.pipe(first())
+    ]).subscribe(
+      ([p, t]) => {
         const newToken = {
-          profileId: profile.id,
-          token,
+          profileId: p.id,
+          token: t,
           created: FcmTokensService.serverTimestamp()
         } as NewFcmToken;
         return this.fcmTokensService.changeToken(newToken);
-      })
-    ).subscribe((token) => {
-    }, err => {
-      console.log(err);
-    });
+      },
+      err => {
+        console.log(err);
+      }
+    );
 
     // this.afMessaging.onMessage(payload => {
     //   const { body, title, click_action} = payload.notification;

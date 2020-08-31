@@ -74,7 +74,7 @@
                   "maximumError": "10kb"
                 }
               ],
-              "serviceWorker": true,
+              "serviceWorker": false,
               "ngswConfigPath": "ngsw-config.json"
             },
             "production": {
@@ -82,6 +82,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/manifest.webmanifest",
+                  "with": "src/manifest.prod.webmanifest"
                 },
                 {
                   "replace": "src/firebase-messaging-sw.js",

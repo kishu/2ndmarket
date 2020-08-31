@@ -57,7 +57,7 @@ export function appInitializer(router: Router, authService: AuthService) {
      * "serviceWorker": true,
      * "ngswConfigPath": "ngsw-config.json"
      */
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireAuthGuardModule,

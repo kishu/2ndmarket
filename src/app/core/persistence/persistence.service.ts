@@ -17,6 +17,7 @@ export class PersistenceService implements OnDestroy {
   reset$ = new Subject<ProfileExt>();
 
   protected goodsSubscription = this.reset$.pipe(
+    // switchMap(p => this.goodsService.valueChangesQueryByGroupId(p.groupId, { limit: 5 }))
     switchMap(p => {
       return this.goodsService.getQueryByGroupId(p.groupId, { limit: 5 }).pipe(
         switchMap(() => this.goodsService.valueChangesQueryByGroupId(p.groupId, { limit: 5 }))
