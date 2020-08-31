@@ -24,8 +24,6 @@ import { AppComponent } from './app.component';
 import { SentryErrorHandler } from './sentry-error-handler';
 import { environment } from '@environments/environment';
 
-
-
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
     return new Promise(resolve => {
