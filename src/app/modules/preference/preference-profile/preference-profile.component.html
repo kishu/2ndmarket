@@ -25,38 +25,43 @@
       [formGroup]="profileForm"
       (ngSubmit)="onSubmit()">
       <div class="w-10/12 max-w-xs mx-auto py-20">
-        <div class="relative w-32 h-32 mx-auto overflow-hidden rounded-full">
-          <!-- <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt=""> -->
-          <img
-            *ngIf="draftImage"
-            [src]="(draftImage.isFile ? draftImage.file : (draftImage.src || 'https://via.placeholder.com/150')) | objectUrl | sanitizer: 'url'"
-            [style.transform]="'rotate(' + draftImage.rotate + 'deg)'"
-            class="w-full h-full object-cover" alt="">
-          <input
-            type="file"
-            accept="image/gif, image/jpeg, image/png"
-            (change)="onChangeFile($event)"
-            class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
-          <div
-            *ngIf="changingFile"
-            class="absolute inset-0">
-            <button
-              type="button"
-              class="flex w-full h-full justify-center items-center"
-              (click)="onClickRotateImage(90)">
-              <span class="w-12 h-12 p-2 rounded-full bg-black bg-opacity-25">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-clockwise-2" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z"/>
-                  <path d="M9 4.55a8 8 0 0 1 6 14.9m0 -4.45v5h5" />
-                  <path d="M11 19.95a8 8 0 0 1 -5.3 -12.8" stroke-dasharray=".001 4.13" />
-                </svg>
-              </span>
-            </button>
-            <!-- <button type="button" (click)="onCancelChangeFile($event)">취소</button> -->
+        <div class="relative w-32 h-32 mx-auto">
+          <div class="w-full h-full overflow-hidden rounded-full">
+            <!-- <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt=""> -->
+            <img
+              *ngIf="draftImage"
+              [src]="(draftImage.isFile ? draftImage.file : (draftImage.src || 'https://via.placeholder.com/150')) | objectUrl | sanitizer: 'url'"
+              [style.transform]="'rotate(' + draftImage.rotate + 'deg)'"
+              class="w-full h-full object-cover" alt="">
+            <input
+              type="file"
+              accept="image/gif, image/jpeg, image/png"
+              (change)="onChangeFile($event)"
+              class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
+            <div
+              *ngIf="changingFile"
+              class="absolute inset-0">
+              <button
+                type="button"
+                class="flex w-full h-full justify-center items-center"
+                (click)="onClickRotateImage(90)">
+                <span class="w-12 h-12 p-2 rounded-full bg-black bg-opacity-25">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-clockwise-2" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z"/>
+                    <path d="M9 4.55a8 8 0 0 1 6 14.9m0 -4.45v5h5" />
+                    <path d="M11 19.95a8 8 0 0 1 -5.3 -12.8" stroke-dasharray=".001 4.13" />
+                  </svg>
+                </span>
+              </button>
+              <!-- <button type="button" (click)="onCancelChangeFile($event)">취소</button> -->
+            </div>
+          </div>
+          <div class="absolute right-0 bottom-0 w-8 h-8 border border-white bg-green-600 rounded-full">
+            <div class="w-full h-full border border-white bg-green-600 rounded-full"></div>
           </div>
         </div>
         <div class="mt-4">
-          <label class="form-label" for="displayName">
+          <label class="block pt-2 -mb-1 uppercase tracking-wide text-gray-600 text-xs" for="displayName">
             닉네임
           </label>
           <input
@@ -73,7 +78,7 @@
         <div class="flex justify-between py-1 text-xs" *ngIf="displayNameCtl.invalid && (displayNameCtl.dirty || displayNameCtl.touched)">
           <p class="text-red-600 text-xs">변경할 닉네임을 입력해주세요.</p>
         </div>
-        <div class="mt-3">
+        <div class="mt-2">
           <button
             type="submit"
             [disabled]="profileForm.invalid || submitting"

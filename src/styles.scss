@@ -67,7 +67,7 @@ body {
 input,
 select,
 textarea {
-  @apply block w-full py-2;
+  @apply block w-full h-10 py-2;
   @apply border-b border-gray-500 rounded-none bg-transparent text-gray-700;
   @apply appearance-none outline-none;
 
@@ -84,18 +84,11 @@ textarea {
   }
 }
 
-.form-label {
-  @apply block pt-2 -mb-1 uppercase tracking-wide text-gray-600 text-xs;
-}
-
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2; /* 라인 수 */
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-.goodsDetail {
 }
 
 .talk {

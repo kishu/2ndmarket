@@ -54,6 +54,10 @@
           <ng-container *ngFor="let tag of goods.tags?.origin">
             <span class="inline-block mr-1">#{{ tag }}</span>
           </ng-container>
+          <ng-container *ngIf="goods.tags?.origin.length === 0">
+            <span class="inline-block mr-1">#{{ goods.condition | goodsCondition }}</span>
+            <span class="inline-block mr-1">#{{ goods.purchased | goodsPurchased }}</span>
+          </ng-container>
         </div>
       </div>
       <div class="flex-none text-sm leading-relaxed text-gray-500 flex items-center sm:mt-2">

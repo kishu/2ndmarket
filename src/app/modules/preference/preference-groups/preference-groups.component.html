@@ -29,19 +29,19 @@
           <div class="bg-gray-200">
             <div class="flex">
               <div class="w-4/12">
-                <label class="form-label" for="account">이메일</label>
+                <label class="block pt-2 px-3 -mb-1 uppercase tracking-wide text-gray-600 text-xs" for="account">이메일</label>
                 <div class="relative">
                   <input
                     id="account"
                     name="account"
                     type="text"
                     formControlName="account"
-                    class="text-sm"
+                    class="px-3 text-sm"
                     required>
                 </div>
               </div>
               <div class="w-8/12">
-                <label class="form-label opacity-0" for="domain">Domain</label>
+                <label class="block pt-2 px-3 -mb-1 uppercase tracking-wide text-gray-600 text-xs opacity-0" for="domain">Domain</label>
                 <div class="relative">
                   <select
                     id="domain"
@@ -63,10 +63,10 @@
           <p class="py-1 px-3 text-red-600 text-xs" *ngIf="accountCtl.valid && domainCtl.invalid && (domainCtl.dirty || domainCtl.touched)">이메일 도메인을 선택해 주세요.</p>
         </div>
       </div>
-      <div class="mt-1">
+      <div class="mt-2">
         <button
           type="submit"
-          class="btn btn-sm block w-full border-green-600 bg-green-600"
+          class="btn w-full h-12 border-green-600 bg-green-600 text-white flex justify-center items-center"
           [disabled]="!emailForm.valid">
           {{ submitting ? '보내는 중...' : '이메일 보내기' }}
         </button>
@@ -84,14 +84,14 @@
       <div class="form-row">
         <div class="form-col w-full">
           <div class="bg-gray-200">
-            <label class="form-label" for="account">이메일</label>
+            <label class="block pt-2 px-3 -mb-1 uppercase tracking-wide text-gray-600 text-xs" for="account">이메일</label>
             <div class="relative">
               <input
                 id="email"
                 name="email"
                 type="text"
                 formControlName="email"
-                class="text-sm">
+                class="px-3 text-sm">
               <button
                 class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 bg-transparent border-transparent"
                 (click)="onClickRetry()">
@@ -107,21 +107,18 @@
         </div>
       </div>
 
-      <div class="w-1/2 mx-auto h-px my-8 bg-gray-400"></div>
-
-      <h2 class="p-2 text-green-800">Step-2. 인증번호 입력</h2>
+      <h2 class="mt-4 p-2 text-green-800">Step-2. 인증번호 입력</h2>
       <div class="form-row">
         <div class="form-col w-full">
           <div class="bg-gray-200">
-            <label class="form-label" for="code">인증번호</label>
+            <label class="block pt-2 px-3 -mb-1 uppercase tracking-wide text-gray-600 text-xs" for="code">인증번호</label>
             <div class="relative">
               <input
-                class="pr-16"
                 id="code"
                 name="code"
                 type="tel"
                 formControlName="code"
-                class="text-sm"
+                class="pl-3 pr-16 text-sm"
                 [disabled]="verifyForm.errors?.timeover"
                 required>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 text-xs font-mono">
@@ -140,19 +137,23 @@
           </p>
         </div>
       </div>
-      <div class="flex justify-between mt-1">
-        <button
-          type="button"
-          class="btn btn-sm border-green-600 bg-white"
-          (click)="onEmailSubmit()">
-          <span class="text-green-600">인증번호 재전송</span>
-        </button>
-        <button
-          type="submit"
-          class="btn btn-sm border-green-600 bg-green-600"
-          [disabled]="!verifyForm.valid">
-          인증
-        </button>
+      <div class="flex justify-between mt-2 -mx-1">
+        <div class="w-1/2 px-1">
+          <button
+            type="button"
+            class="btn w-full h-12 border-green-600 bg-white flex justify-center items-center"
+            (click)="onEmailSubmit()">
+            <span class="text-green-600">인증번호 재전송</span>
+          </button>
+        </div>
+        <div class="w-1/2 px-1">
+          <button
+            type="submit"
+            class="btn w-full h-12 border-green-600 bg-green-600 text-white flex justify-center items-center"
+            [disabled]="!verifyForm.valid">
+            인증
+          </button>
+        </div>
       </div>
     </form>
   </ng-container>
