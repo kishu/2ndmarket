@@ -1,6 +1,5 @@
 <div class="wrap w-full">
-  <div class="safe-top-area"></div>
+  <div class="safe-top-area bg-green-600 opacity-95 z-40"></div>
   <app-header></app-header>
-  <div *ngIf="!['/preference', '/preference/profile'].includes(path)" class="h-safe-top"></div>
   <router-outlet></router-outlet>
 </div>

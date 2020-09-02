@@ -1,3 +1,5 @@
+<div class="h-safe-top"></div>
+<div class="h-header"></div>
 <ng-container *ngIf="goods$ | async as goods">
   <div class="fixed left-0 header-top w-full z-30">
     <div class="px-safe border-b border-gray-300 bg-white bg-opacity-95">
@@ -109,7 +111,7 @@
         </div>
       </div>
       <ng-container *ngIf="permission$ | async">
-        <div class="sticky safe-top z-20 px-safe border-b border-blue-900 border-opacity-50 bg-white text-white flex justify-between items-center">
+        <div class="px-safe border-b border-blue-900 border-opacity-50 bg-white text-white flex justify-between items-center">
           <div class="flex-grow px-4 py-2 bg-blue-800 opacity-50 text-sm leading-snug text-white flex justify-end items-center">
             <a [routerLink]="['edit']" [skipLocationChange]="true" class="whitespace-no-wrap">
               수정하기
