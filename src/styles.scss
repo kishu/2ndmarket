@@ -35,12 +35,6 @@ body {
   height: env(safe-area-inset-top);
 }
 
-.sign-wrap {
-  @apply fixed left-0 top-0 w-full h-full;
-  @apply flex flex-col justify-center items-center;
-  @apply bg-white;
-}
-
 .min-h-content {
   min-height: calc(100vh - constant(safe-area-inset-top) - 49px);
   min-height: calc(100vh - env(safe-area-inset-top) - 49px);

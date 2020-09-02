@@ -111,19 +111,21 @@
         </div>
       </div>
       <ng-container *ngIf="permission$ | async">
-        <div class="px-safe border-b border-blue-900 border-opacity-50 bg-white text-white flex justify-between items-center">
-          <div class="flex-grow px-4 py-2 bg-blue-800 opacity-50 text-sm leading-snug text-white flex justify-end items-center">
-            <a [routerLink]="['edit']" [skipLocationChange]="true" class="whitespace-no-wrap">
-              수정하기
-            </a>
-            &nbsp;&middot;&nbsp;
-            <button type="button" class="whitespace-no-wrap" (click)="onClickDelete(goods)">
-              삭제하기
-            </button>
-            &nbsp;&middot;&nbsp;
-            <button type="button" class="whitespace-no-wrap" (click)="onClickSoldOut()">
-              {{ goods.soldOut ? '거래중으로' : '거래완료로' }} 변경
-            </button>
+        <div class="sticky safe-top z-20 bg-white">
+          <div class="flex justify-between items-center px-safe bg-blue-800 bg-opacity-50">
+            <div class="flex-grow px-4 py-2 text-sm leading-snug text-white flex justify-end items-center">
+              <a [routerLink]="['edit']" [skipLocationChange]="true" class="whitespace-no-wrap">
+                수정하기
+              </a>
+              &nbsp;&middot;&nbsp;
+              <button type="button" class="whitespace-no-wrap" (click)="onClickDelete(goods)">
+                삭제하기
+              </button>
+              &nbsp;&middot;&nbsp;
+              <button type="button" class="whitespace-no-wrap" (click)="onClickSoldOut()">
+                {{ goods.soldOut ? '거래중으로' : '거래완료로' }} 변경
+              </button>
+            </div>
           </div>
         </div>
       </ng-container>
