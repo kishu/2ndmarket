@@ -51,6 +51,7 @@
     <div class="flex justify-between items-center sm:flex-col sm:items-baseline mt-1 sm:mt-0">
       <div class="flex-auto text-sm text-blue-900 opacity-50 sm:mt-2 overflow-hidden">
         <div class="ellipsis">
+          <span class="inline-block mr-1">{{ goods.created | fsTimestamp | formatDistanceToNow }} 전</span>
           <ng-container *ngFor="let tag of goods.tags?.origin">
             <span class="inline-block mr-1">#{{ tag }}</span>
           </ng-container>

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent, ImagesControlComponent, LimitTimerComponent, ProfileChangeComponent } from './components';
 import { LongpressDirective, SwipeDirective } from './directives';
 import { CloudinaryPipe, FormatDistanceToNowPipe, FromBytesPipe, FsDocumentPipe, FsTimestampPipe,
-         GoodsConditionPipe, GoodsPurchasedPipe, LinkkfyPipe, MsToMMSSPipe, ObjectUrlPipe, SanitizerPipe } from './pipes';
+         GoodsConditionPipe, GoodsPurchasedPipe, LinkifyPipe, MsToMMSSPipe, ObjectUrlPipe, SanitizerPipe } from './pipes';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,7 @@ import { CloudinaryPipe, FormatDistanceToNowPipe, FromBytesPipe, FsDocumentPipe,
     FsTimestampPipe,
     GoodsConditionPipe,
     GoodsPurchasedPipe,
-    LinkkfyPipe,
+    LinkifyPipe,
     MsToMMSSPipe,
     ObjectUrlPipe,
     SanitizerPipe
@@ -44,7 +44,7 @@ import { CloudinaryPipe, FormatDistanceToNowPipe, FromBytesPipe, FsDocumentPipe,
     FsTimestampPipe,
     GoodsConditionPipe,
     GoodsPurchasedPipe,
-    LinkkfyPipe,
+    LinkifyPipe,
     MsToMMSSPipe,
     ObjectUrlPipe,
     SanitizerPipe

@@ -37,8 +37,8 @@ export class GoodsEditComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    const originTags = uniq(findHashtags(goods.memo).filter(t => t.type === 'hashtag').map(t => t.value.replace('#', '')));
-    const lowercaseTags = originTags.map(t => t.lowercase());
+    const originTags = findHashtags(goods.memo);
+    const lowercaseTags = originTags.map(t => t.toLowerCase());
     draftImages = draftImages.map(img => ({ ...img, context: `type=goods|id=${goods.id}`}));
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload(draftImages);
     uploadProgress$.subscribe(e => this.uploadProgress = e); // { idx: 1, type: 1, loaded: 163840, total: 165310}

@@ -75,9 +75,15 @@
             <div class="text-lg"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
             <span class="text-sm text-gray-600">등록일 {{ goods.created | fsTimestamp | date:'yyyy.MM.dd HH:mm' }}</span>
           </div>
-          <p class="mt-3 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkkfy"></p>
+          <p class="mt-3 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkify"></p>
+          <ul class="mt-3 text-sm leading-tight text-gray-700">
+            <li>- 제품상태: {{ goods.condition | goodsCondition }}</li>
+            <li>- 구매시기: {{ goods.purchased | goodsPurchased }}</li>
+          </ul>
           <div class="my-3 text-sm">
-            <span class="text-gray-600">#{{ goods.condition | goodsCondition }} #{{ goods.purchased | goodsPurchased }}</span>
+            <ng-container *ngFor="let tag of goods.tags?.origin">
+              <a [routerLink]="['/', 'goods', 'search']" [queryParams]="{tag:tag}" class="inline-block text-gray-600 mr-1">#{{ tag }}</a>
+            </ng-container>
           </div>
           <ng-container *ngIf="goods.images.length > 1">
             <ul class="goods-images">
