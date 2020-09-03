@@ -69,13 +69,13 @@
     </div>
     <ng-container *ngIf="heroImageLoaded$ | async">
       <div class="px-safe">
-        <div class="p-4">
+        <div class="p-3">
           <h2 class="text-lg leading-tight break-words" #goodsNameRef>{{ goods.name }}</h2>
           <div class="mt-2 flex justify-between items-end">
             <div class="text-lg"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
             <span class="text-sm text-gray-600">등록일 {{ goods.created | fsTimestamp | date:'yyyy.MM.dd HH:mm' }}</span>
           </div>
-          <p class="mt-4 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkkfy"></p>
+          <p class="mt-3 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkkfy"></p>
           <div class="my-3 text-sm">
             <span class="text-gray-600">#{{ goods.condition | goodsCondition }} #{{ goods.purchased | goodsPurchased }}</span>
           </div>
@@ -101,7 +101,7 @@
       </div>
       <div class="px-safe border-t border-gray-300">
         <div
-          class="flex items-center px-4 py-3"
+          class="flex items-center p-3"
           *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
           <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
           <div>
@@ -113,7 +113,7 @@
       <ng-container *ngIf="permission$ | async">
         <div class="sticky safe-top z-20 bg-white">
           <div class="flex justify-between items-center px-safe bg-blue-800 bg-opacity-50">
-            <div class="flex-grow px-4 py-2 text-sm leading-snug text-white flex justify-end items-center">
+            <div class="flex-grow px-3 py-2 text-sm leading-snug text-white flex justify-end items-center">
               <a [routerLink]="['edit']" [skipLocationChange]="true" class="whitespace-no-wrap">
                 수정하기
               </a>

@@ -1,7 +1,7 @@
 <a
   *ngIf="goods"
-  [routerLink]="[goods.id]"
-  class="flex flex-col sm:flex-row w-full sm:h-48 p-4 sm:py-2"
+  [routerLink]="['/goods', goods.id]"
+  class="flex flex-col sm:flex-row w-full sm:h-48 p-3 sm:pt-0 sm:pb-3"
   [ngClass]="{'pointer-events-none': !exists}"
   (click)="onClickGoods($event, goods)">
   <div

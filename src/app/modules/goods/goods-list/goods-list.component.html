@@ -2,7 +2,7 @@
 <div class="h-header"></div>
 <div *ngIf="goods$ | async as goods">
   <app-goods-search-form></app-goods-search-form>
-  <ul class="bg-white sm:py-2 px-safe">
+  <ul class="bg-white sm:py-3 px-safe">
     <ng-container *ngFor="let item of goods; trackBy: trackBy">
       <li
         class="relative overflow-hidden">

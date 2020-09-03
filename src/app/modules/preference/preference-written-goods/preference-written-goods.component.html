@@ -27,7 +27,7 @@
     <div *ngIf="goodsList.length === 0">
       등록한 상품이 없습니다.
     </div>
-    <ul *ngIf="goodsList.length > 0" class="grid grid-cols-3 md:grid-cols-4 gap-px p-4">
+    <ul *ngIf="goodsList.length > 0" class="grid grid-cols-3 md:grid-cols-4 gap-px p-3">
       <li *ngFor="let goods of goodsList">
         <div class="relative square">
           <a

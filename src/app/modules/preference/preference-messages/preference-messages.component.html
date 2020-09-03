@@ -33,7 +33,7 @@
           class="relative border-b border-gray-300"
           *ngFor="let message of messages trackBy:trackById; first as isFirst" [id]="message.id">
           <a
-            class="flex justify-between items-start px-4 py-3"
+            class="flex justify-between items-start p-3"
             [ngClass]="{'bg-gray-200': message.read}"
             [routerLink]="['/goods', message.goodsId]"
             [fragment]="'goodsComments/' + message.goodsCommentId"
