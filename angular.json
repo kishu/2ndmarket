@@ -84,10 +84,6 @@
                   "with": "src/environments/environment.prod.ts"
                 },
                 {
-                  "replace": "src/manifest.webmanifest",
-                  "with": "src/manifest.prod.webmanifest"
-                },
-                {
                   "replace": "src/firebase-messaging-sw.js",
                   "with": "src/firebase-messaging-sw.prod.js"
                 }
