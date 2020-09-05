@@ -49,5 +49,3 @@ Thumbs.db
 .runtimeconfig.json
 .firebase/
 environments/
-/src/firebase-messaging-sw.js
-/src/firebase-messaging-sw.prod.js
