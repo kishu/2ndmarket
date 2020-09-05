@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreferenceGroupsComponent } from './preference-groups.component';
 
@@ -6,7 +6,7 @@ describe('PreferenceGroupsComponent', () => {
   let component: PreferenceGroupsComponent;
   let fixture: ComponentFixture<PreferenceGroupsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PreferenceGroupsComponent ]
     })

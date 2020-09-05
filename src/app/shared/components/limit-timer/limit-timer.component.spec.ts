@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LimitTimerComponent } from './limit-timer.component';
 
@@ -6,7 +6,7 @@ describe('LimitTimerComponent', () => {
   let component: LimitTimerComponent;
   let fixture: ComponentFixture<LimitTimerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LimitTimerComponent ]
     })
