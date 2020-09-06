@@ -121,7 +121,6 @@
                 type="tel"
                 formControlName="code"
                 class="pl-3 pr-16 text-lg"
-                [disabled]="verifyForm.errors?.timeover"
                 required>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 text-xs font-mono">
                 <app-limit-timer [time]="1000 * 60 * 3" (timeover)="onTimeoverLimitTimer()"></app-limit-timer>

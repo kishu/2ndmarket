@@ -1,15 +1,16 @@
-import { Injectable, OnDestroy } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileSelectService implements OnDestroy {
-  profileId$ = new ReplaySubject<string>(1);
+  profileId$ = new ReplaySubject<string | null>(1);
 
   constructor() {
     const id = localStorage.getItem('profileId');
     this.profileId$.next(id);
+    console.log('profileId$.next', id);
   }
 
   ngOnDestroy() {
@@ -20,6 +21,7 @@ export class ProfileSelectService implements OnDestroy {
     localStorage.setItem('profileId', id);
     if (next) {
       this.profileId$.next(id);
+      console.log('profileId$.next', id);
     }
   }
 

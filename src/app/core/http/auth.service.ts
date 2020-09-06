@@ -1,6 +1,6 @@
 import { auth } from 'firebase/app';
-import { combineLatest, forkJoin, Observable, ReplaySubject } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { combineLatest, forkJoin, Observable, of, ReplaySubject } from 'rxjs';
+import { filter, map, publish, publishLast, refCount, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileExt, User } from '@app/core/model';
@@ -20,45 +20,42 @@ enum AuthProvider {
 })
 export class AuthService implements OnDestroy {
   user$: Observable<User | null> = this.afAuth.user.pipe(
-    map(user => {
-      if (user) {
-        return {
-          id: user.uid,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          email: user.email
-        } as User;
-      } else {
-        return null;
-      }
-    })
+    map(user => user ?
+      {
+        id: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        email: user.email
+      } as User :
+      null
+    ),
+    tap(u => console.log('u', u)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  profileSubscription = combineLatest([
-    this.user$,
-    this.selectProfileService.profileId$
+  profileExt$: Observable<ProfileExt | null> = combineLatest([
+    this.user$.pipe(tap(t => console.log(1, t))),
+    this.selectProfileService.profileId$.pipe(tap(t => console.log(2, t)))
   ]).pipe(
-    filter(([user, profileId]) => !!user && !!profileId),
+    tap(t => console.log('profileExt$', t)),
     switchMap(([user, profileId]) => {
-      return this.profilesService.getQueryByUserId(user.id).pipe(
-        switchMap(profiles => {
-          return forkJoin(
-            profiles.map(profile => this.groupsService.get(profile.groupId))
-          ).pipe(
-            map(groups => profiles.map((profile, i) => ({ ...profile, group: groups[i] } as ProfileExt)))
-          );
-        }),
-        tap(profileExts => {
-          const selectedProfileExt = profileExts.find(p => p.id === profileId);
-          this.profileExts$.next(profileExts);
-          this.profileExt$.next(selectedProfileExt);
-        })
-      );
-    })
-  ).subscribe();
-
-  profileExt$ = new ReplaySubject<ProfileExt>(1);
-  profileExts$ = new ReplaySubject<ProfileExt[]>(1);
+      if (user === null || profileId === null) {
+        return of(null);
+      } else {
+        return this.profilesService.getQueryByUserId(user.id).pipe(
+          switchMap(profiles => {
+            return forkJoin(
+              profiles.map(profile => this.groupsService.get(profile.groupId))
+            ).pipe(
+              map(groups => profiles.map((profile, i) => ({...profile, group: groups[i]} as ProfileExt)))
+            );
+          }),
+          map(profileExts => profileExts.find(p => p.id === profileId))
+        );
+      }
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -69,9 +66,9 @@ export class AuthService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.profileSubscription.unsubscribe();
-    this.profileExt$.complete();
-    this.profileExts$.complete();
+    // this.profileSubscription.unsubscribe();
+    // this.profileExt$.complete();
+    // this.profileExts$.complete();
   }
 
   signInWithRedirect(provider: string) {

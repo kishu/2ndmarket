@@ -25,8 +25,9 @@ export class PreferenceGroupsComponent implements OnInit {
   submitting = false;
   emailForm: FormGroup;
   verifyForm: FormGroup;
+
   step$ = new BehaviorSubject<GroupAddStep>(GroupAddStep.email);
-  groups$ = this.groupsService.getAll().pipe(shareReplay(1));
+  groups$ = this.groupsService.getAll().pipe(shareReplay({ refCount: true, bufferSize: 1}));
   domains$ = this.groups$.pipe(map(groups => groups.reduce((acc, group) => acc.concat(group.domains), []).sort()));
 
   get accountCtl() { return this.emailForm.get('account'); }
@@ -72,7 +73,7 @@ export class PreferenceGroupsComponent implements OnInit {
     const code = random(1000, 9999);
     console.log(code);
     const callable = this.fns.httpsCallable('sendVerificationEmail');
-    callable({to, code}).pipe(first()).subscribe(() => {
+    // callable({to, code}).pipe(first()).subscribe(() => {
       // i don't know why this subscribe function run outside of ngzone.
       // this is just tricky code.
       this.ngZone.run(() => {
@@ -80,7 +81,7 @@ export class PreferenceGroupsComponent implements OnInit {
         this.submitting = false;
         this.step$.next(GroupAddStep.verify);
       });
-    });
+    // });
   }
 
   onTimeoverLimitTimer() {
@@ -93,8 +94,10 @@ export class PreferenceGroupsComponent implements OnInit {
   }
 
   onVerifySubmit() {
+    this.verifyForm.disable();
     if (this.code !== parseInt(this.codeCtl.value, 10)) {
       return this.verifyForm.setErrors({ incorrect: true });
+      this.verifyForm.enable();
     }
     const domain = this.domainCtl.value;
     const addNewProfile = (groupId, email, userId) => {
@@ -108,7 +111,7 @@ export class PreferenceGroupsComponent implements OnInit {
       } as NewProfile);
     };
     const updateAddUserIdToProfile = (profileId, userId) => {
-      return this.profilesService.updateAddUserId(profileId, userId);
+      return this.profilesService.updateUserIdAdd(profileId, userId);
     };
     forkJoin([
       this.groups$.pipe(first(), map(groups => groups.find(g => g.domains.some(d => d === domain)))),
@@ -120,11 +123,12 @@ export class PreferenceGroupsComponent implements OnInit {
             return profiles.length === 0 ?
               addNewProfile(group.id, this.email, user.id).then(profile => this.profileSelectService.select(profile.id)) :
               updateAddUserIdToProfile(profiles[0].id, user.id).then(() => this.profileSelectService.select(profiles[0].id));
-          }),
-          switchMap(() => this.router.navigate(['/goods']))
+          })
         );
       })
-    ).subscribe(() => {}, err => alert(err));
+    ).subscribe(() => {
+      this.router.navigate(['/goods']);
+    }, err => alert(err));
   }
 
   onClickHistoryBack() {

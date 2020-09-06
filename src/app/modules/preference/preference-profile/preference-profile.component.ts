@@ -1,5 +1,6 @@
 import { forkJoin } from 'rxjs';
 import { filter, first, switchMap, tap } from 'rxjs/operators';
+import { fromPromise } from 'rxjs/internal-compatibility';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -121,14 +122,19 @@ export class PreferenceProfileComponent implements OnInit {
       this.authService.profileExt$.pipe(first(), filter(p => !!p))
     ]).pipe(
       switchMap(([u, p]) => {
-        this.profilesService.updateRemoveUserId(p.id, u.id);
-        return this.profilesService.getQueryByUserId(u.id);
+        return fromPromise(this.profilesService.updateUserIdRemove(p.id, u.id)).pipe(
+          switchMap(() => this.profilesService.getQueryByUserId(u.id))
+        );
       })
     ).subscribe(profiles => {
       const [profile] = profiles;
-      profile ?
-        this.profileSelectService.select(profile.id) :
+      if (profile) {
+        this.profileSelectService.select(profile.id);
+        this.router.navigate(['/preference']);
+      } else {
+        this.profileSelectService.select(null);
         this.router.navigate(['/preference', 'groups']);
+      }
     });
   }
 

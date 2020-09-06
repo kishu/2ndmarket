@@ -43,13 +43,13 @@ export class ProfilesService extends FirestoreService<Profile> {
     });
   }
 
-  updateAddUserId(profileId: string, userId: string) {
+  updateUserIdAdd(profileId: string, userId: string) {
     return super.update(profileId, {
       userIds: firestore.FieldValue.arrayUnion(userId)
     });
   }
 
-  updateRemoveUserId(profileId: string, userId: string) {
+  updateUserIdRemove(profileId: string, userId: string) {
     return super.update(profileId, {
       userIds: firestore.FieldValue.arrayRemove(userId)
     });

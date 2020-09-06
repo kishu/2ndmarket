@@ -23,15 +23,22 @@ import { AppComponent } from './app.component';
 
 import { SentryErrorHandler } from './sentry-error-handler';
 import { environment } from '@environments/environment';
+import { forkJoin } from 'rxjs';
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
     return new Promise(resolve => {
-      authService.user$.pipe(first()).subscribe(user => {
-        console.log('appInitializer', user);
-        if (!user) {
+      forkJoin([
+        authService.user$.pipe(first()),
+        authService.profileExt$.pipe(first())
+      ]).subscribe(([u, p]) => {
+        console.log('appInitializer', u, p);
+        if (!u) {
           alert('로그인해 주세요!');
           router.navigate(['/sign-in']);
+        } else if (!p) {
+          alert('프로필을 설정해 주세요!');
+          router.navigate(['/preference', 'groups']);
         }
         resolve();
       });
