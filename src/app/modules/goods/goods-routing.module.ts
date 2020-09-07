@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CanActivateGoodsGuard } from './can-actuvate-goods-guard.service';
+import { CanActivateGoodsGuard } from './can-activate-goods.guard';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
 import { GoodsEditComponent } from './goods-edit/goods-edit.component';
 import { GoodsListComponent } from './goods-list/goods-list.component';

@@ -130,7 +130,7 @@ export class PreferenceProfileComponent implements OnInit {
       const [profile] = profiles;
       if (profile) {
         this.profileSelectService.select(profile.id);
-        this.router.navigate(['/preference']);
+        this.router.navigate(['/goods']);
       } else {
         this.profileSelectService.select(null);
         this.router.navigate(['/preference', 'groups']);

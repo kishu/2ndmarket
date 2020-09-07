@@ -1,7 +1,8 @@
 import { auth } from 'firebase/app';
-import { combineLatest, forkJoin, Observable, of, ReplaySubject } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, ReplaySubject, Subscription } from 'rxjs';
 import { filter, map, publish, publishLast, refCount, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileExt, User } from '@app/core/model';
 import { GroupsService } from '@app/core/http/groups.service';
@@ -19,7 +20,10 @@ enum AuthProvider {
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
-  user$: Observable<User | null> = this.afAuth.user.pipe(
+  user$ = new ReplaySubject<User>(1);
+  profileExt$ = new ReplaySubject<ProfileExt>(1);
+
+  userSubscription = this.afAuth.user.pipe(
     map(user => user ?
       {
         id: user.uid,
@@ -28,47 +32,66 @@ export class AuthService implements OnDestroy {
         email: user.email
       } as User :
       null
-    ),
-    tap(u => console.log('u', u)),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
+    )
+  ).subscribe(user => {
+    this.user$.next(user);
+  });
 
-  profileExt$: Observable<ProfileExt | null> = combineLatest([
-    this.user$.pipe(tap(t => console.log(1, t))),
-    this.selectProfileService.profileId$.pipe(tap(t => console.log(2, t)))
+  profileExtSubscription = combineLatest([
+    this.user$.pipe(filter(u => u !== null)),
+    this.selectProfileService.profileId$.pipe(tap(t => console.log(2, t, typeof t)))
   ]).pipe(
-    tap(t => console.log('profileExt$', t)),
     switchMap(([user, profileId]) => {
-      if (user === null || profileId === null) {
+      if (!profileId) {
         return of(null);
       } else {
-        return this.profilesService.getQueryByUserId(user.id).pipe(
-          switchMap(profiles => {
-            return forkJoin(
-              profiles.map(profile => this.groupsService.get(profile.groupId))
-            ).pipe(
-              map(groups => profiles.map((profile, i) => ({...profile, group: groups[i]} as ProfileExt)))
-            );
-          }),
-          map(profileExts => profileExts.find(p => p.id === profileId))
+        return this.profilesService.get(profileId).pipe(
+          switchMap(profile => this.groupsService.get(profile.groupId).pipe(
+            map(group => ({...profile, group }))
+          )),
+          tap(t => console.log('234234234', t)),
+          map(profileExt => profileExt.userIds.includes(user.id) ? profileExt : null)
         );
       }
-    }),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
+    })
+  ).subscribe(profileExt => {
+    this.profileExt$.next(profileExt);
+  });
+
+    // tap(t => console.log('profileExt$', t)),
+    // switchMap(([user, profileId]) => {
+    //   if (user === null || profileId === null) {
+    //     return of(null);
+    //   } else {
+    //     return this.profilesService.getQueryByUserId(user.id).pipe(
+    //       switchMap(profiles => {
+    //         return forkJoin(
+    //           profiles.map(profile => this.groupsService.get(profile.groupId))
+    //         ).pipe(
+    //           map(groups => profiles.map((profile, i) => ({...profile, group: groups[i]} as ProfileExt)))
+    //         );
+    //       }),
+    //       map(profileExts => profileExts.find(p => p.id === profileId))
+    //     );
+    //   }
+    // }),
+    // shareReplay({ bufferSize: 1, refCount: true })
 
   constructor(
+    private router: Router,
     private afAuth: AngularFireAuth,
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
     private selectProfileService: ProfileSelectService,
   ) {
+    console.log('auth service');
   }
 
   ngOnDestroy() {
-    // this.profileSubscription.unsubscribe();
-    // this.profileExt$.complete();
-    // this.profileExts$.complete();
+    this.profileExt$.complete();
+    this.user$.complete();
+    this.profileExtSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 
   signInWithRedirect(provider: string) {
