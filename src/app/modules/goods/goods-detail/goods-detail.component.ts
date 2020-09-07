@@ -201,7 +201,7 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   onClickDelete(goods: Goods) {
     if (confirm('삭제 할까요?')) {
       this.router
-        .navigate(['../'], { replaceUrl: true, relativeTo: this.activatedRoute })
+        .navigate(['/', 'goods'], { replaceUrl: true, relativeTo: this.activatedRoute })
         .then(() => {
           return this.goodsService.moveToTrash(goods);
         })
