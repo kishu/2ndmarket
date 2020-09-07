@@ -45,11 +45,11 @@
         <div class="ellipsis">
           <span class="inline-block mr-1">{{ goods.created | fsTimestamp | formatDistanceToNow }} 전</span>
           <ng-container *ngFor="let tag of goods.tags?.origin">
-            <span class="inline-block mr-1">#{{ tag }}</span>
+            <span class="inline-block mr-1">&middot; {{ tag }}</span>
           </ng-container>
           <ng-container *ngIf="goods.tags?.origin.length === 0">
-            <span class="inline-block mr-1">#{{ goods.condition | goodsCondition }}</span>
-            <span class="inline-block mr-1">#{{ goods.purchased | goodsPurchased }}</span>
+            <span class="inline-block mr-1">&middot; {{ goods.condition | goodsCondition }}</span>
+            <span class="inline-block mr-1">&middot; {{ goods.purchased | goodsPurchased }}</span>
           </ng-container>
         </div>
       </div>
