@@ -69,10 +69,10 @@
     </div>
     <ng-container *ngIf="heroImageLoaded$ | async">
       <div class="px-safe">
-        <div class="p-3">
+        <div class="p-4">
           <h2 class="text-xl leading-tight break-words" #goodsNameRef>{{ goods.name }}</h2>
           <div class="mt-2">
-            <div class="text-lg leading-tight text-right"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
+            <div class="text-xl text-right"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
             <div class="text-xs leading-tight text-gray-500 text-right">등록일 {{ goods.created | fsTimestamp | date:'yyyy.MM.dd HH:mm' }}</div>
           </div>
           <div class="h-px bg-gray-300 mt-3"></div>

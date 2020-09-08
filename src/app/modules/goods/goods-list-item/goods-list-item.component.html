@@ -41,11 +41,11 @@
       <p class="line-clamp-2 text-gray-700 leading-tight">{{ goods.memo }}</p>
     </div>
     <div class="flex justify-between items-center sm:flex-col sm:items-baseline mt-1 sm:mt-0">
-      <div class="flex-auto text-sm text-blue-900 opacity-50 sm:mt-2 overflow-hidden">
+      <div class="flex-auto text-sm text-gray-500 sm:mt-2 overflow-hidden">
         <div class="ellipsis">
           <span class="inline-block mr-1">{{ goods.created | fsTimestamp | formatDistanceToNow }} 전</span>
           <ng-container *ngFor="let tag of goods.tags?.origin">
-            <span class="inline-block mr-1">&middot; {{ tag }}</span>
+            <span class="inline-block mr-1">&middot; <span [ngClass]="{'font-bold text-red-500': keyword === tag}">{{ tag }}</span></span>
           </ng-container>
           <ng-container *ngIf="goods.tags?.origin.length === 0">
             <span class="inline-block mr-1">&middot; {{ goods.condition | goodsCondition }}</span>
