@@ -25,4 +25,9 @@ export class ProfileSelectService implements OnDestroy {
     }
   }
 
+  remove() {
+    localStorage.removeItem('profileId');
+    this.profileId$.next(null);
+  }
+
 }

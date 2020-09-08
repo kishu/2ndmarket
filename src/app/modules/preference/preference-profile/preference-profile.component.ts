@@ -132,7 +132,7 @@ export class PreferenceProfileComponent implements OnInit {
         this.profileSelectService.select(profile.id);
         this.router.navigate(['/goods']);
       } else {
-        this.profileSelectService.select(null);
+        this.profileSelectService.remove();
         this.router.navigate(['/preference', 'groups']);
       }
     });

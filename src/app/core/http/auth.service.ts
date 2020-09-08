@@ -1,5 +1,5 @@
 import { auth } from 'firebase/app';
-import { combineLatest, forkJoin, Observable, of, ReplaySubject, Subscription } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { filter, map, publish, publishLast, refCount, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
@@ -22,6 +22,7 @@ enum AuthProvider {
 export class AuthService implements OnDestroy {
   user$ = new ReplaySubject<User>(1);
   profileExt$ = new ReplaySubject<ProfileExt>(1);
+  profileSelected$ = new Subject<ProfileExt>();
 
   userSubscription = this.afAuth.user.pipe(
     map(user => user ?
@@ -56,6 +57,7 @@ export class AuthService implements OnDestroy {
     })
   ).subscribe(profileExt => {
     this.profileExt$.next(profileExt);
+    this.profileSelected$.next(profileExt);
   });
 
     // tap(t => console.log('profileExt$', t)),
@@ -88,6 +90,7 @@ export class AuthService implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this.profileSelected$.complete();
     this.profileExt$.complete();
     this.user$.complete();
     this.profileExtSubscription.unsubscribe();

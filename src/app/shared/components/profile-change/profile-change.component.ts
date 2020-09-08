@@ -22,7 +22,7 @@ export class ProfileChangeComponent implements OnInit {
 
   ngOnInit(): void {
     const profileId = this.activatedRoute.snapshot.paramMap.get('profileId');
-    this.authService.profileExt$.pipe(skip(1), first()).subscribe(p => {
+    this.authService.profileChanged$.pipe(first()).subscribe(p => {
       this.persistenceService.reset(p).then(() => {
         this.router.navigate(['/goods']);
       });

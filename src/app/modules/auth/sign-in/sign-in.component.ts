@@ -34,26 +34,37 @@ export class SignInComponent implements OnInit {
           return;
         }
 
-        this.profileSelectService.profileId$.pipe(
-          first(),
-          filter(p => !p),
-          switchMap(() => this.profilesService.getQueryByUserId(c.user.uid)),
-          map(p => p[0])
-        ).subscribe(profile => {
-          if (profile) {
-            this.profileSelectService.select(profile.id);
-            this.router.navigate(['']);
-          } else {
+        this.authService.profileExt$.pipe(
+          first()
+        ).subscribe(p => {
+          p ?
+            this.router.navigate(['']) :
             this.router.navigate(['preference/groups']);
-          }
         });
+      });
 
-        this.profileSelectService.profileId$.pipe(
-          first(),
-          filter(p => !!p)
-        ).subscribe(() => this.router.navigate(['']));
-      })
-      .catch(err => alert(err));
+
+
+      //   this.profileSelectService.profileId$.pipe(
+      //     first(),
+      //     filter(p => !p),
+      //     switchMap(() => this.profilesService.getQueryByUserId(c.user.uid)),
+      //     map(p => p[0])
+      //   ).subscribe(profile => {
+      //     if (profile) {
+      //       this.profileSelectService.select(profile.id);
+      //       this.router.navigate(['']);
+      //     } else {
+      //       this.router.navigate(['preference/groups']);
+      //     }
+      //   });
+      //
+      //   this.profileSelectService.profileId$.pipe(
+      //     first(),
+      //     filter(p => !!p)
+      //   ).subscribe(() => this.router.navigate(['']));
+      // })
+      // .catch(err => alert(err));
   }
 
   onClickSignIn(e: Event, provider: string) {

@@ -1,6 +1,6 @@
 import { random } from 'lodash-es';
 import { BehaviorSubject, forkJoin, of } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, shareReplay, skip, switchMap, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Component, NgZone, OnInit } from '@angular/core';
@@ -95,10 +95,13 @@ export class PreferenceGroupsComponent implements OnInit {
 
   onVerifySubmit() {
     this.verifyForm.disable();
+
     if (this.code !== parseInt(this.codeCtl.value, 10)) {
-      return this.verifyForm.setErrors({ incorrect: true });
+      this.verifyForm.setErrors({ incorrect: true });
       this.verifyForm.enable();
+      return;
     }
+
     const domain = this.domainCtl.value;
     const addNewProfile = (groupId, email, userId) => {
       return this.profilesService.add({
@@ -110,9 +113,11 @@ export class PreferenceGroupsComponent implements OnInit {
         created: ProfilesService.serverTimestamp()
       } as NewProfile);
     };
+
     const updateAddUserIdToProfile = (profileId, userId) => {
       return this.profilesService.updateUserIdAdd(profileId, userId);
     };
+
     forkJoin([
       this.groups$.pipe(first(), map(groups => groups.find(g => g.domains.some(d => d === domain)))),
       this.authService.user$.pipe(first(), filter(u => !!u))
@@ -127,8 +132,12 @@ export class PreferenceGroupsComponent implements OnInit {
         );
       })
     ).subscribe(() => {
-      this.router.navigate(['/goods']);
-    }, err => alert(err));
+      this.authService.profileExt$.pipe(skip(1), first()).subscribe(p => {
+        this.persistenceService.reset(p).then(() => {
+          this.router.navigate(['/goods']);
+        });
+      });
+    });
   }
 
   onClickHistoryBack() {
