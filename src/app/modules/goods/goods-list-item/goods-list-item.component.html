@@ -36,7 +36,12 @@
     </div>
   </div>
   <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0" [ngClass]="{'opacity-50': goods.soldOut || !exists}">
-    <h3 class="text-xl tracking-tight leading-tight break-all ellipsis">{{ goods.name }}</h3>
+    <div class="sm:hidden">
+      <h3 class="text-xl tracking-tight leading-tight break-all ellipsis">{{ goods.name }}</h3>
+    </div>
+    <div class="hidden sm:block">
+      <h3 class="text-xl tracking-tight leading-tight break-all line-clamp-2">{{ goods.name }}</h3>
+    </div>
     <div class="hidden sm:block mt-1">
       <p class="line-clamp-2 text-gray-700 leading-tight break-all">{{ goods.memo }}</p>
     </div>
