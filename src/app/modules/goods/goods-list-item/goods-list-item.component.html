@@ -35,10 +35,10 @@
       </div>
     </div>
   </div>
-  <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0 sm:pb-16" [ngClass]="{'opacity-50': goods.soldOut || !exists}">
-    <h3 class="text-xl tracking-tight leading-tight">{{ goods.name }}</h3>
+  <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0" [ngClass]="{'opacity-50': goods.soldOut || !exists}">
+    <h3 class="text-xl tracking-tight leading-tight break-all ellipsis">{{ goods.name }}</h3>
     <div class="hidden sm:block mt-1">
-      <p class="line-clamp-2 text-gray-700 leading-tight">{{ goods.memo }}</p>
+      <p class="line-clamp-2 text-gray-700 leading-tight break-all">{{ goods.memo }}</p>
     </div>
     <div class="flex justify-between items-center sm:flex-col sm:items-baseline mt-1 sm:mt-0">
       <div class="flex-auto text-sm text-gray-500 sm:mt-2 overflow-hidden">
