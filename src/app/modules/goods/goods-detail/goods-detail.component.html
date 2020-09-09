@@ -76,7 +76,7 @@
             <div class="text-xs leading-tight text-gray-500 text-right">등록일 {{ goods.created | fsTimestamp | date:'yyyy.MM.dd HH:mm' }}</div>
           </div>
           <div class="h-px bg-gray-300 mt-3"></div>
-          <p class="mt-3 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkify"></p>
+          <p class="mt-3 leading-tight whitespace-pre-wrap break-words text-gray-700" [innerHTML]="goods.memo | linkify"></p>
           <ul class="mt-3 leading-tight text-gray-700">
             <li>- 제품상태: {{ goods.condition | goodsCondition }}</li>
             <li>- 구매시기: {{ goods.purchased | goodsPurchased }}</li>
@@ -112,8 +112,8 @@
           *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
           <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
           <div class="leading-tight">
-            <div class="">{{ profile.displayName }}</div>
-            <div class="text-sm text-gray-500">{{ goods.contact }}</div>
+            <div class="break-words">{{ profile.displayName }}</div>
+            <div class="text-sm text-gray-500 break-all">{{ goods.contact }}</div>
           </div>
         </div>
       </div>
