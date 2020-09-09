@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-limit-timer',
@@ -6,9 +7,23 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
   styleUrls: ['./limit-timer.component.scss']
 })
 export class LimitTimerComponent implements OnInit, OnDestroy {
-  @Input() time: number;
+  @Input() readonly time: number;
+  @Input() set reset$(reset$) {
+    if (this.resetSubscription) {
+      return;
+    }
+    this.resetSubscription = reset$.subscribe(reset => {
+      if (reset) {
+        this.clearTimer(false);
+        this.startTimer();
+      }
+    });
+  }
   @Output() timeover = new EventEmitter<null>();
+
+  remainTime: number;
   private timerId: number;
+  private resetSubscription: Subscription;
 
   constructor() { }
 
@@ -17,14 +32,19 @@ export class LimitTimerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.resetSubscription.unsubscribe();
     this.clearTimer(false);
   }
 
   startTimer() {
+    if (this.timerId) {
+      return;
+    }
+    this.remainTime = this.time;
     this.timerId = setInterval(() => {
-      this.time = this.time - 1000;
+      this.remainTime = this.remainTime - 1000;
       if ( this.time <= 0 ) {
-        this.time = 0;
+        this.remainTime = 0;
         this.clearTimer(true);
       }
     }, 1000);
@@ -32,6 +52,7 @@ export class LimitTimerComponent implements OnInit, OnDestroy {
 
   clearTimer(emit: boolean) {
     clearInterval(this.timerId);
+    this.timerId = undefined;
     if (emit) {
       this.timeover.emit();
     }

@@ -7,7 +7,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileExt, User } from '@app/core/model';
 import { GroupsService } from '@app/core/http/groups.service';
 import { ProfilesService } from '@app/core/http/profiles.service';
-import { ProfileSelectService } from '@app/core/util';
+// import { ProfileSelectService } from '@app/core/util';
 
 enum AuthProvider {
   google = 'google',
@@ -40,7 +40,8 @@ export class AuthService implements OnDestroy {
 
   profileExtSubscription = combineLatest([
     this.user$.pipe(filter(u => u !== null)),
-    this.selectProfileService.profileId$.pipe(tap(t => console.log(2, t, typeof t)))
+    of(null),
+    // this.selectProfileService.profileId$.pipe(tap(t => console.log(2, t, typeof t)))
   ]).pipe(
     switchMap(([user, profileId]) => {
       if (!profileId) {
@@ -84,7 +85,7 @@ export class AuthService implements OnDestroy {
     private afAuth: AngularFireAuth,
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
-    private selectProfileService: ProfileSelectService,
+    // private selectProfileService: ProfileSelectService,
   ) {
     console.log('auth service');
   }

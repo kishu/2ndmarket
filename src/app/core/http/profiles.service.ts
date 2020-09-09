@@ -26,6 +26,14 @@ export class ProfilesService extends FirestoreService<Profile> {
     });
   }
 
+  getQueryByEmail(email: string) {
+    return super.getQuery({
+      where: [
+        ['email', '==', email]
+      ]
+    });
+  }
+
   valueChangesQueryByUserId(userId: string) {
     return super.valueChangesQuery({
       where: [
