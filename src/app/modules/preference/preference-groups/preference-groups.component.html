@@ -50,7 +50,7 @@
                     formControlName="domain"
                     class="text-sm"
                     required>
-                    <option  value="">도메인 선택</option>
+                    <option value="">도메인 선택</option>
                     <ng-container *ngFor="let group of (groups$ | async)">
                       <option disabled>{{ group.name }}</option>
                       <option *ngFor="let domain of group.domains" [value]="domain">&nbsp;&nbsp;@ {{ domain }}</option>

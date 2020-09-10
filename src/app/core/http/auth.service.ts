@@ -20,6 +20,7 @@ enum AuthProvider {
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
+  user: User;
   user$ = new ReplaySubject<User>(1);
   profileExt$ = new ReplaySubject<ProfileExt>(1);
   profileSelected$ = new Subject<ProfileExt>();
@@ -36,6 +37,7 @@ export class AuthService implements OnDestroy {
     )
   ).subscribe(user => {
     this.user$.next(user);
+    this.user = user;
   });
 
   profileExtSubscription = combineLatest([
