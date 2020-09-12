@@ -1,7 +1,7 @@
 import { forkJoin } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, /* ErrorHandler, */ NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { Router, RouteReuseStrategy, RouterModule } from '@angular/router';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -24,10 +24,6 @@ import { ProfileSelectService } from '@app/core/business';
 
 import { environment } from '@environments/environment';
 import { AppComponent } from './app.component';
-// import { SentryErrorHandler } from './sentry-error-handler';
-
-// import * as firebase from 'firebase/app';
-// firebase.firestore.setLogLevel('debug');
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
@@ -85,7 +81,6 @@ export function appInitializer(router: Router, authService: AuthService) {
     { provide: REGION, useValue: 'asia-northeast1' },
     { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },
     { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService, ProfileSelectService], multi: true },
-    // { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]
 })
