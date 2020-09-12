@@ -1,5 +1,6 @@
 import { Subscription } from 'rxjs';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { GoodsService } from '@app/core/http';
 import { GoodsCacheService } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
@@ -17,7 +18,12 @@ export class GoodsListItemComponent implements OnInit, OnDestroy {
     this.goods = goods;
   }
 
+  get keyword() {
+    return this.activatedRoute.snapshot.queryParamMap.get('tag');
+  }
+
   constructor(
+    private activatedRoute: ActivatedRoute,
     private goodsService: GoodsService,
     private goodsCacheService: GoodsCacheService,
   ) { }

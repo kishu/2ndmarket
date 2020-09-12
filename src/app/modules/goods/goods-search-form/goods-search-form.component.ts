@@ -36,10 +36,12 @@ export class GoodsSearchFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.router.navigate(
-      ['/goods/search'],
-      {queryParams: {tag: this.keywordCtl.value?.trim()}}
-    );
+    if (this.keywordCtl.value?.trim()) {
+      this.router.navigate(
+        ['/goods/search'],
+        {queryParams: {tag: this.keywordCtl.value?.trim()}}
+      );
+    }
   }
 
 }
