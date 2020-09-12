@@ -1,15 +1,14 @@
 {
   "hooks": {
     "after:init": ["ng lint"],
-    "after:git:push": ["ng build --prod", "firebase deploy --only hosting --project=prod"]
+    "before:git:release": ["ng build --prod", "firebase deploy --only hosting --project=prod"]
   },
   "git": {
     "commitMessage": "chore: release prod ${version}",
     "tagName": "v${version}"
   },
   "npm": {
-    "publish": false,
-    "ignoreVersion": true,
+    "publish": false
   },
   "plugins": {
     "@release-it/bumper": {

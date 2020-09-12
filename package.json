@@ -6,7 +6,7 @@
     "start": "ng serve --host",
     "lint:fix": "ng lint --fix",
     "build": "ng build",
-    "release:dev": "release-it --config=.release-it.json",
+    "release:dev": "release-it --preRelease=rc --config=.release-it.json",
     "release:prod": "release-it --config=.release-it.prod.json",
     "test": "ng test",
     "e2e": "ng e2e"
