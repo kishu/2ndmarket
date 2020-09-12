@@ -8,7 +8,8 @@
     "tagName": "v${version}"
   },
   "npm": {
-    "publish": false
+    "publish": false,
+    "skipChecks": true
   },
   "plugins": {
     "@release-it/bumper": {
