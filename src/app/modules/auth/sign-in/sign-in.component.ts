@@ -45,7 +45,7 @@ export class SignInComponent implements OnInit {
   onClickSignIn(e: Event, provider: string) {
     e.preventDefault();
     this.authService
-      .signInWithRedirect(provider)
+      .signInWithRedirect(provider);
   }
 
 }
