@@ -25,9 +25,7 @@
             <button
               type="button"
               class="p-3 border-0 flex items-center text-gray-500"
-              [ngClass]="{'text-red-500': favorited$ | async}"
               (click)="onClickFavorite()">
-              <!-- <span class="mr-px text-sm text-gray-600" [ngClass]="{'text-red-600': favorited$ | async}">{{ favoriteCount$ | async }}</span> -->
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24" *ngIf="(favorited$ | async) === false">
                 <defs>
                   <path id="0lqd88v8na" d="M0 0L24 0 24 21 0 21z"/>
@@ -39,7 +37,7 @@
                     <mask id="4pmlque69c" fill="#fff">
                       <use xlink:href="#ves3yzqagb"/>
                     </mask>
-                    <path fill="#4A5568" d="M17.222 0c-1.562 0-2.977.52-4.24 1.558-.353.288-.674.614-1.022.935-.03-.03-.057-.061-.084-.093C10.468.808 8.78.005 6.813.005c-.463 0-.942.045-1.436.134C4.13.365 3.054.946 2.132 1.812 1.06 2.817.382 4.046.116 5.481c-.307 1.66.02 3.242.69 4.763.757 1.729 1.871 3.218 3.154 4.587 2.245 2.391 4.841 4.347 7.644 6.042.14.085.27.127.4.127s.258-.042.397-.126c1.494-.895 2.923-1.884 4.284-2.968 2.09-1.663 4-3.499 5.47-5.745.95-1.45 1.648-3.002 1.811-4.75.201-2.168-.485-4.026-2.039-5.552C20.91.86 19.673.271 18.253.072 17.903.024 17.56 0 17.223 0m0 2c.243 0 .5.018.755.054 1.012.14 1.845.544 2.548 1.232 1.134 1.113 1.594 2.365 1.448 3.941-.115 1.24-.59 2.46-1.493 3.839-1.176 1.797-2.779 3.474-5.04 5.276-1.093.868-2.245 1.683-3.436 2.429-2.619-1.643-4.779-3.384-6.586-5.308-1.304-1.391-2.188-2.669-2.783-4.025-.577-1.31-.758-2.485-.554-3.591.188-1.015.652-1.858 1.42-2.577.672-.632 1.402-1.013 2.231-1.163.374-.068.738-.102 1.08-.102 1.394 0 2.527.547 3.555 1.709.05.058.101.115.156.172l1.357 1.399 1.434-1.321c.12-.11.235-.22.35-.329.206-.196.4-.381.585-.532C15.154 2.36 16.126 2 17.222 2" mask="url(#4pmlque69c)"/>
+                    <path fill="#f56565" d="M17.222 0c-1.562 0-2.977.52-4.24 1.558-.353.288-.674.614-1.022.935-.03-.03-.057-.061-.084-.093C10.468.808 8.78.005 6.813.005c-.463 0-.942.045-1.436.134C4.13.365 3.054.946 2.132 1.812 1.06 2.817.382 4.046.116 5.481c-.307 1.66.02 3.242.69 4.763.757 1.729 1.871 3.218 3.154 4.587 2.245 2.391 4.841 4.347 7.644 6.042.14.085.27.127.4.127s.258-.042.397-.126c1.494-.895 2.923-1.884 4.284-2.968 2.09-1.663 4-3.499 5.47-5.745.95-1.45 1.648-3.002 1.811-4.75.201-2.168-.485-4.026-2.039-5.552C20.91.86 19.673.271 18.253.072 17.903.024 17.56 0 17.223 0m0 2c.243 0 .5.018.755.054 1.012.14 1.845.544 2.548 1.232 1.134 1.113 1.594 2.365 1.448 3.941-.115 1.24-.59 2.46-1.493 3.839-1.176 1.797-2.779 3.474-5.04 5.276-1.093.868-2.245 1.683-3.436 2.429-2.619-1.643-4.779-3.384-6.586-5.308-1.304-1.391-2.188-2.669-2.783-4.025-.577-1.31-.758-2.485-.554-3.591.188-1.015.652-1.858 1.42-2.577.672-.632 1.402-1.013 2.231-1.163.374-.068.738-.102 1.08-.102 1.394 0 2.527.547 3.555 1.709.05.058.101.115.156.172l1.357 1.399 1.434-1.321c.12-.11.235-.22.35-.329.206-.196.4-.381.585-.532C15.154 2.36 16.126 2 17.222 2" mask="url(#4pmlque69c)"/>
                   </g>
                 </g>
               </svg>
@@ -51,7 +49,7 @@
                   <mask id="63gmi2jtyb" fill="#fff">
                     <use xlink:href="#kbg53e50ja"/>
                   </mask>
-                  <path fill="#E53E3E" d="M21.927 1.86C20.909.86 19.674.27 18.254.071 16.278-.2 14.518.295 12.98 1.557c-.352.288-.672.614-1.021.936-.03-.03-.056-.062-.084-.093C10.136.432 7.968-.33 5.376.138 4.13.365 3.055.946 2.133 1.812 1.06 2.817.382 4.046.116 5.482c-.306 1.658.019 3.24.69 4.762.758 1.728 1.87 3.218 3.154 4.587 2.246 2.39 4.842 4.346 7.645 6.042.28.17.518.17.797.001 1.494-.896 2.922-1.884 4.283-2.968 2.09-1.663 3.999-3.499 5.47-5.745.95-1.45 1.648-3.002 1.81-4.75.202-2.168-.483-4.027-2.038-5.552" mask="url(#63gmi2jtyb)"/>
+                  <path fill="#f56565" d="M21.927 1.86C20.909.86 19.674.27 18.254.071 16.278-.2 14.518.295 12.98 1.557c-.352.288-.672.614-1.021.936-.03-.03-.056-.062-.084-.093C10.136.432 7.968-.33 5.376.138 4.13.365 3.055.946 2.133 1.812 1.06 2.817.382 4.046.116 5.482c-.306 1.658.019 3.24.69 4.762.758 1.728 1.87 3.218 3.154 4.587 2.246 2.39 4.842 4.346 7.645 6.042.28.17.518.17.797.001 1.494-.896 2.922-1.884 4.283-2.968 2.09-1.663 3.999-3.499 5.47-5.745.95-1.45 1.648-3.002 1.81-4.75.202-2.168-.483-4.027-2.038-5.552" mask="url(#63gmi2jtyb)"/>
                 </g>
               </svg>
             </button>
@@ -69,24 +67,25 @@
     </div>
     <ng-container *ngIf="heroImageLoaded$ | async">
       <div class="px-safe">
-        <div class="p-3">
-          <h2 class="text-lg leading-tight break-words" #goodsNameRef>{{ goods.name }}</h2>
-          <div class="mt-2 flex justify-between items-end">
-            <div class="text-lg"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
-            <span class="text-sm text-gray-600">등록일 {{ goods.created | fsTimestamp | date:'yyyy.MM.dd HH:mm' }}</span>
+        <div class="p-4">
+          <h2 class="text-xl leading-tight break-words" #goodsNameRef>{{ goods.name }}</h2>
+          <div class="mt-2">
+            <div class="text-xl text-right"><strong class="font-bold">{{ goods.price | number:'1.0-0' }}</strong>원</div>
+            <div class="text-xs leading-tight text-gray-500 text-right">등록일 {{ goods.created | fsTimestamp | date:'yyyy.MM.dd HH:mm' }}</div>
           </div>
-          <p class="mt-3 leading-tight whitespace-pre-wrap text-gray-700" [innerHTML]="goods.memo | linkify"></p>
-          <ul class="mt-3 text-sm leading-tight text-gray-700">
+          <div class="h-px bg-gray-300 mt-3"></div>
+          <p class="mt-3 leading-tight whitespace-pre-wrap break-words text-gray-700" [innerHTML]="goods.memo | linkify"></p>
+          <ul class="mt-3 leading-tight text-gray-700">
             <li>- 제품상태: {{ goods.condition | goodsCondition }}</li>
             <li>- 구매시기: {{ goods.purchased | goodsPurchased }}</li>
           </ul>
-          <div class="my-3 text-sm">
+          <div class="mt-3 leading-tight">
             <ng-container *ngFor="let tag of goods.tags?.origin">
               <a [routerLink]="['/', 'goods', 'search']" [queryParams]="{tag:tag}" class="inline-block text-gray-600 mr-1">#{{ tag }}</a>
             </ng-container>
           </div>
           <ng-container *ngIf="goods.images.length > 1">
-            <ul class="goods-images">
+            <ul class="goods-images mt-3">
               <ng-container *ngFor="let src of goods.images; index as i">
                 <li class="relative border border-white">
                   <a
@@ -110,9 +109,9 @@
           class="flex items-center p-3"
           *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
           <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
-          <div>
-            <div class="text-sm">{{ profile.displayName }}</div>
-            <div class="text-xs text-gray-500">{{ goods.contact }}</div>
+          <div class="leading-tight">
+            <div class="break-words">{{ profile.displayName }}</div>
+            <div class="text-sm text-gray-500 break-all">{{ goods.contact }}</div>
           </div>
         </div>
       </div>
@@ -120,7 +119,7 @@
         <div class="sticky safe-top z-20 bg-white">
           <div class="flex justify-between items-center px-safe bg-blue-800 bg-opacity-50">
             <div class="flex-grow px-3 py-2 text-sm leading-snug text-white flex justify-end items-center">
-              <a [routerLink]="['/goods', goods.id, 'edit']" [skipLocationChange]="true" class="whitespace-no-wrap">
+              <a [routerLink]="['/', 'goods', goods.id ,'edit']" class="whitespace-no-wrap">
                 수정하기
               </a>
               &nbsp;&middot;&nbsp;

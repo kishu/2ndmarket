@@ -9,7 +9,7 @@
     <div class="relative w-full h-full">
       <div
         class="image-list h-full rounded-lg"
-        [ngClass]="{'opacity-50': goods.soldOut}">
+        [ngClass]="{'opacity-50': goods.soldOut || !exists}">
         <ng-container *ngFor="let src of goods.images">
           <div class="flex relative image-item min-w-full h-full">
             <img [src]="src" class="w-full object-cover" alt="">
@@ -30,34 +30,31 @@
       <div class="absolute left-0 top-0 m-2 bg-black bg-opacity-75 rounded-md text-xs text-white px-2 py-1 pointer-events-none" *ngIf="exists && goods.soldOut">
         거래완료
       </div>
-    </div>
-    <div class="absolute left-0 right-0 top-0 bottom-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" *ngIf="!exists">
-      <span>삭제</span>
-      <div class="w-16 h-16 p-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock" width="48" height="48" viewBox="0 0 24 24" stroke-width="1" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" />
-          <path d="M8 11v-4a4 4 0 0 1 8 0v4" fill="rgba(26, 32, 44, 0.9" />
-          <rect x="5" y="11" width="14" height="10" rx="2" fill="rgba(26, 32, 44, 0.75)" />
-          <circle cx="12" cy="16" r="1" />
-        </svg>
+      <div class="absolute left-0 top-0 m-2 bg-black bg-opacity-75 rounded-md text-xs text-white px-2 py-1 pointer-events-none" *ngIf="!exists">
+        삭제한 상품
       </div>
     </div>
   </div>
-  <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0 sm:pb-16" [ngClass]="{'opacity-50': goods.soldOut}">
-    <h3 class="text-lg tracking-tight leading-tight">{{ goods.name }}</h3>
+  <div class="relative sm:flex-grow px-1 sm:px-4 pt-2 sm:pt-0" [ngClass]="{'opacity-50': goods.soldOut || !exists}">
+    <div class="sm:hidden">
+      <h3 class="text-xl tracking-tight leading-tight break-all ellipsis">{{ goods.name }}</h3>
+    </div>
+    <div class="hidden sm:block">
+      <h3 class="text-xl tracking-tight leading-tight break-all line-clamp-2">{{ goods.name }}</h3>
+    </div>
     <div class="hidden sm:block mt-1">
-      <p class="line-clamp-2 text-gray-700 leading-tight">{{ goods.memo }}</p>
+      <p class="line-clamp-2 text-gray-700 leading-tight break-all">{{ goods.memo }}</p>
     </div>
     <div class="flex justify-between items-center sm:flex-col sm:items-baseline mt-1 sm:mt-0">
-      <div class="flex-auto text-sm text-blue-900 opacity-50 sm:mt-2 overflow-hidden">
+      <div class="flex-auto text-sm text-gray-500 sm:mt-2 overflow-hidden">
         <div class="ellipsis">
           <span class="inline-block mr-1">{{ goods.created | fsTimestamp | formatDistanceToNow }} 전</span>
           <ng-container *ngFor="let tag of goods.tags?.origin">
-            <span class="inline-block mr-1">#{{ tag }}</span>
+            <span class="inline-block mr-1">&middot; <span [ngClass]="{'font-bold text-red-500': keyword === tag}">{{ tag }}</span></span>
           </ng-container>
           <ng-container *ngIf="goods.tags?.origin.length === 0">
-            <span class="inline-block mr-1">#{{ goods.condition | goodsCondition }}</span>
-            <span class="inline-block mr-1">#{{ goods.purchased | goodsPurchased }}</span>
+            <span class="inline-block mr-1">&middot; {{ goods.condition | goodsCondition }}</span>
+            <span class="inline-block mr-1">&middot; {{ goods.purchased | goodsPurchased }}</span>
           </ng-container>
         </div>
       </div>
