@@ -54,6 +54,12 @@
           },
           "configurations": {
             "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/firebase-messaging-sw.js",
+                  "with": "src/firebase-messaging-sw.prod.js"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -82,6 +88,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/firebase-messaging-sw.js",
+                  "with": "src/firebase-messaging-sw.prod.js"
                 }
               ],
               "optimization": true,

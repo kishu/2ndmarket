@@ -71,13 +71,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   );
   showPermission = false;
 
-  // goodsImage$ = this.activatedRoute.queryParamMap.pipe(
-  //   map(m => parseInt(m.get('image'))),
-  //   tap(t => console.log('ttt', t)),
-  //   filter(i => i > -1),
-  //   tap(t => console.log('filter', t))
-  // );
-
   goodsImage$ = this.activatedRoute.queryParamMap.pipe(
     map(m => parseInt(m.get('image'), 10))
   );

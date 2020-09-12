@@ -36,7 +36,6 @@ export function appInitializer(router: Router, authService: AuthService) {
         authService.user$.pipe(first()),
         authService.profileExt$.pipe(first())
       ]).subscribe(([u, p]) => {
-        console.log('appInitializer', u, p);
         if (!u) {
           alert('로그인 해주세요!');
           router.navigate(['/auth/sign-in']);

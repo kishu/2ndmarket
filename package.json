@@ -4,10 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host",
-    "build:dev": "ng lint && ng build --configuration=dev",
-    "build:prod": "ng lint && ng build --prod",
-    "deploy:dev": "firebase deploy --only hosting --project=dev",
-    "deploy:prod": "firebase deploy --only hosting --project=prod",
+    "build": "ng build",
+    "deploy:dev": "ng lint && nb build --configuration=dev && firebase deploy --only hosting --project=dev",
+    "deploy:prod": "ng lint && ng build --prod && firebase deploy --only hosting --project=prod",
     "test": "ng test",
     "lint": "ng lint --fix",
     "e2e": "ng e2e"

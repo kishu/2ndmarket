@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
         return this.fcmTokensService.changeToken(newToken);
       },
       err => {
-        console.log(err);
+        // err;
       }
     );
 
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
     //   }
     // });
 
-    // this.afMessaging.messages.subscribe((message) => { console.log(message); });
+    // this.afMessaging.messages.subscribe((message) => { message });
   }
 
   ngOnInit() {

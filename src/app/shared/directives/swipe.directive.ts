@@ -44,17 +44,15 @@ export class SwipeDirective implements OnInit, OnDestroy {
 
     if (rX > rY) {
       if (dX >= 0) {
-        // console.log('swiperight');
+        // swiperight;
       } else {
-        // console.log('swipeleft');
+        // swipeleft;
       }
     } else {
       if (dY >= 0) {
-        // console.log('swipedown');
         this.swipedown.emit();
       } else {
         this.swipeup.emit();
-        // console.log('swipeup');
       }
     }
   }

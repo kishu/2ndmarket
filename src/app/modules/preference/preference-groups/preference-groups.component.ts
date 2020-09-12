@@ -91,7 +91,7 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
   sendMail() {
     const to = this.email;
     const code = random(1000, 9999);
-    console.log(code);
+    // console.log(code);
 
     const callable = this.fns.httpsCallable('sendVerificationEmail');
     callable({to, code}).pipe(first()).subscribe(() => {
