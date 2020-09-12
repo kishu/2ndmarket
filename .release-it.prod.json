@@ -11,8 +11,9 @@
     "publish": false
   },
   "plugins": {
-    "@csmith/release-it-calver-plugin": {
-      "format": "YY.0M.MICRO"
+    "@release-it/bumper": {
+      "in": "package.json",
+      "out": "composer.json"
     }
   }
 }
