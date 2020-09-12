@@ -13,7 +13,7 @@
   "plugins": {
     "@release-it/bumper": {
       "in": "package.json",
-      "out": "composer.json"
+      "out": "package.json"
     }
   }
 }
