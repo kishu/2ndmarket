@@ -1,5 +1,5 @@
 import { forkJoin, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, first, map, skip, switchMap } from 'rxjs/operators';
+import { filter, first, map, mapTo, skip, switchMap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Goods, MessageExt, ProfileExt } from '@app/core/model';
 import { AuthService, FavoriteGoodsService, GoodsCommentsService, GoodsService, MessagesService } from '@app/core/http';
@@ -14,7 +14,7 @@ export class PersistenceService implements OnDestroy {
   messageExts$ = new ReplaySubject<MessageExt[]>(1);
   newMessageCount$ = new ReplaySubject<number>(1);
 
-  reset$ = new Subject<ProfileExt>();
+  private reset$ = new Subject<ProfileExt>();
 
   protected goodsSubscription = this.reset$.pipe(
     // switchMap(p => this.goodsService.valueChangesQueryByGroupId(p.groupId, { limit: 5 }))
@@ -67,16 +67,24 @@ export class PersistenceService implements OnDestroy {
   }
 
   reset(profileExt: ProfileExt) {
-    return new Promise((resolve, reject) => {
-      forkJoin([
-        this.goods$.pipe(skip(1), first()),
-        this.writtenGoods$.pipe(skip(1), first()),
-        this.favoritedGoods$.pipe(skip(1), first()),
-        this.messageExts$.pipe(skip(1), first()),
-        this.newMessageCount$.pipe(skip(1), first())
-      ]).subscribe(() => resolve());
-      this.reset$.next(profileExt);
-    });
+    console.log('reset2', profileExt);
+    this.goods$.next([]);
+    this.writtenGoods$.next([]);
+    this.favoritedGoods$.next([]);
+    this.messageExts$.next([]);
+    this.newMessageCount$.next(0);
+
+    this.reset$.next(profileExt);
+
+    return forkJoin([
+      this.goods$.pipe(skip(1), first()),
+      this.writtenGoods$.pipe(skip(1), first()),
+      this.favoritedGoods$.pipe(skip(1), first()),
+      this.messageExts$.pipe(skip(1), first()),
+      this.newMessageCount$.pipe(skip(1), first())
+    ]).pipe(
+      mapTo(profileExt)
+    );
   }
 
   ngOnDestroy() {
@@ -93,6 +101,7 @@ export class PersistenceService implements OnDestroy {
       this.favoritedGoodsSubscription,
       this.messageExtsSubscription
     ].forEach(o => o.unsubscribe());
+    this.reset$.complete();
   }
 
 }

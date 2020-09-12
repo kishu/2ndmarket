@@ -1,17 +1,17 @@
+import { forkJoin } from 'rxjs';
 import { first } from 'rxjs/operators';
-
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, /* ErrorHandler, */ NgModule } from '@angular/core';
 import { Router, RouteReuseStrategy, RouterModule } from '@angular/router';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { CacheRouteReuseStrategy } from '@app/./cache-route-reuse.strategy';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
@@ -19,11 +19,11 @@ import { GoodsModule } from '@app/modules/goods/goods.module';
 import { PreferenceModule } from '@app/modules/preference/preference.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { AuthService } from '@app/core/http';
-import { AppComponent } from './app.component';
+import { ProfileSelectService } from '@app/core/business';
 
-import { SentryErrorHandler } from './sentry-error-handler';
 import { environment } from '@environments/environment';
-import { forkJoin } from 'rxjs';
+import { AppComponent } from './app.component';
+// import { SentryErrorHandler } from './sentry-error-handler';
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
@@ -80,7 +80,7 @@ export function appInitializer(router: Router, authService: AuthService) {
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },
     { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },
-    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService], multi: true },
+    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [Router, AuthService, ProfileSelectService], multi: true },
     // { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]

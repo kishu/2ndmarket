@@ -1,13 +1,10 @@
 import { auth } from 'firebase/app';
-import { combineLatest, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { filter, map, publish, publishLast, refCount, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { Injectable, OnDestroy } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileExt, User } from '@app/core/model';
-import { GroupsService } from '@app/core/http/groups.service';
-import { ProfilesService } from '@app/core/http/profiles.service';
-// import { ProfileSelectService } from '@app/core/util';
 
 enum AuthProvider {
   google = 'google',
@@ -19,13 +16,21 @@ enum AuthProvider {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements OnDestroy {
-  user: User;
-  user$ = new ReplaySubject<User>(1);
-  profileExt$ = new ReplaySubject<ProfileExt>(1);
-  profileSelected$ = new Subject<ProfileExt>();
+export class AuthService  {
+  private _user: User;
+  get user() { return this._user; }
 
-  userSubscription = this.afAuth.user.pipe(
+  private _profile: ProfileExt;
+  get profile() { return this._profile; }
+
+  profileExt$ = new ReplaySubject<ProfileExt>(1);
+  set selectedProfile(profileExt: ProfileExt) {
+    console.log('set selectedProfile', profileExt);
+    this._profile = profileExt;
+    this.profileExt$.next(profileExt);
+  }
+
+  user$ = this.afAuth.user.pipe(
     map(user => user ?
       {
         id: user.uid,
@@ -34,70 +39,14 @@ export class AuthService implements OnDestroy {
         email: user.email
       } as User :
       null
-    )
-  ).subscribe(user => {
-    this.user$.next(user);
-    this.user = user;
-  });
-
-  profileExtSubscription = combineLatest([
-    this.user$.pipe(filter(u => u !== null)),
-    of(null),
-    // this.selectProfileService.profileId$.pipe(tap(t => console.log(2, t, typeof t)))
-  ]).pipe(
-    switchMap(([user, profileId]) => {
-      if (!profileId) {
-        return of(null);
-      } else {
-        return this.profilesService.get(profileId).pipe(
-          switchMap(profile => this.groupsService.get(profile.groupId).pipe(
-            map(group => ({...profile, group }))
-          )),
-          tap(t => console.log('234234234', t)),
-          map(profileExt => profileExt.userIds.includes(user.id) ? profileExt : null)
-        );
-      }
-    })
-  ).subscribe(profileExt => {
-    this.profileExt$.next(profileExt);
-    this.profileSelected$.next(profileExt);
-  });
-
-    // tap(t => console.log('profileExt$', t)),
-    // switchMap(([user, profileId]) => {
-    //   if (user === null || profileId === null) {
-    //     return of(null);
-    //   } else {
-    //     return this.profilesService.getQueryByUserId(user.id).pipe(
-    //       switchMap(profiles => {
-    //         return forkJoin(
-    //           profiles.map(profile => this.groupsService.get(profile.groupId))
-    //         ).pipe(
-    //           map(groups => profiles.map((profile, i) => ({...profile, group: groups[i]} as ProfileExt)))
-    //         );
-    //       }),
-    //       map(profileExts => profileExts.find(p => p.id === profileId))
-    //     );
-    //   }
-    // }),
-    // shareReplay({ bufferSize: 1, refCount: true })
+    ),
+    tap(u => this._user = u)
+  );
 
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
-    private groupsService: GroupsService,
-    private profilesService: ProfilesService,
-    // private selectProfileService: ProfileSelectService,
   ) {
-    console.log('auth service');
-  }
-
-  ngOnDestroy() {
-    this.profileSelected$.complete();
-    this.profileExt$.complete();
-    this.user$.complete();
-    this.profileExtSubscription.unsubscribe();
-    this.userSubscription.unsubscribe();
   }
 
   signInWithRedirect(provider: string) {

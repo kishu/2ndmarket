@@ -1,15 +1,15 @@
 import { head, isEmpty, random } from 'lodash-es';
-import { BehaviorSubject, forkJoin, Subject } from 'rxjs';
-import { filter, first, map, share, shareReplay, skip, switchMap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, merge } from 'rxjs';
+import { fromPromise } from 'rxjs/internal-compatibility';
+import { filter, first, map, share, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
-import { Group, NewProfile } from '@app/core/model';
-import { ProfileSelectService } from '@app/core/util';
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { ProfileSelectService } from '@app/core/business';
+import { Group, NewProfile, Profile } from '@app/core/model';
 
 @Component({
   selector: 'app-preference-groups',
@@ -41,22 +41,6 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
   get codeCtl() { return this.verifyForm.get('code'); }
   get email() { return `${this.accountCtl.value.trim()}@${this.domainCtl.value}`; }
 
-
-  // step1$ = this.step$.pipe(
-  //   filter(step => step === 1)
-  // ).subscribe(() => {
-  //
-  // });
-  //
-  // step2$ = this.step$.pipe(
-  //   filter(step => step === 2)
-  // ).subscribe(() => {
-  //   // this.resetLimitTimer$.next(true);
-  //   this.emailForm.disable();
-  // });
-
-
-
   constructor(
     private ngZone: NgZone,
     private location: Location,
@@ -79,9 +63,6 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.step1$.unsubscribe();
-    // this.step2$.unsubscribe();
-    //
     this.step$.complete();
     this.resetLimitTimer$.complete();
   }
@@ -97,13 +78,13 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     console.log(code);
 
     const callable = this.fns.httpsCallable('sendVerificationEmail');
-    // callable({to, code}).pipe(first()).subscribe(() => {
-    // i don't know why this subscribe function run outside of ngzone.
-    // this is just tricky code.
-    this.ngZone.run(() => {
-      this.code = code;
+    callable({to, code}).pipe(first()).subscribe(() => {
+      // i don't know why this subscribe function run outside of ngzone.
+      // this is just tricky code.
+      this.ngZone.run(() => {
+        this.code = code;
+      });
     });
-    // });
   }
 
   onTimeoverLimitTimer() {
@@ -119,6 +100,10 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
   onClickRetryCode() {
     this.sendMail();
     this.resetLimitTimer$.next(true);
+  }
+
+  onClickHistoryBack() {
+    this.location.back();
   }
 
   onVerifySubmit() {
@@ -140,44 +125,43 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
       .pipe(first(), share());
 
     // no profile contains email given email, add new profile
-    profiles$
-      .pipe(
-        first(),
-        filter(p => isEmpty(p)),
-        switchMap(() => {
-          return this.profilesService.add({
-            groupId: selectedGroup.id,
-            displayName: email.split('@')[0],
-            email,
-            photoURL: '',
-            userIds: [ user.id ],
-            created: ProfilesService.serverTimestamp()
-          } as NewProfile);
-        })
-      ).subscribe(newProfile => {
-        this.profileSelectService.select(newProfile.id);
-      });
+    const create$ = profiles$.pipe(
+      first(),
+      filter(profiles => isEmpty(profiles)),
+      switchMap(() => {
+        return this.profilesService.add({
+          groupId: selectedGroup.id,
+          displayName: email.split('@')[0],
+          email,
+          photoURL: '',
+          userIds: [ user.id ],
+          created: ProfilesService.serverTimestamp()
+        } as NewProfile);
+      }),
+      map(ref => ref.id)
+    );
 
     // profile contains given email, add user id to profile.users
-    profiles$
-      .pipe(
-        first(),
-        filter(p => !isEmpty(p)),
-        map(profiles => head(profiles)),
-        switchMap(profile => {
-          return fromPromise(
-            this.profilesService.updateUserIdAdd(profile.id, user.id)
-          ).pipe(
-            map(x => profile)
-          );
-        })
-      ).subscribe(profile => {
-        this.profileSelectService.select(profile.id);
-      });
-  }
+    const update$ = profiles$.pipe(
+      first(),
+      filter(profiles => !isEmpty(profiles)),
+      map(profiles => head(profiles) as Profile),
+      switchMap(profile => {
+        return fromPromise(
+          this.profilesService.updateUserIdAdd(profile.id, user.id)
+        ).pipe(
+          map(() => profile)
+        );
+      }),
+      map(profile => profile.id)
+    );
 
-  onClickHistoryBack() {
-    this.location.back();
+    merge(create$, update$).pipe(
+      first(),
+      switchMap(profileId => this.profileSelectService.select(profileId))
+    ).subscribe(() => {
+      this.router.navigate(['/goods']);
+    });
   }
 
 }

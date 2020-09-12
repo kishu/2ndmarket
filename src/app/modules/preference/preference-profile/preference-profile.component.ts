@@ -1,13 +1,13 @@
-import { forkJoin } from 'rxjs';
-import { filter, first, switchMap, tap } from 'rxjs/operators';
+import { isEmpty, head } from 'lodash-es';
+import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { DraftImage } from '@app/core/model';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
 import { AuthService, CloudinaryUploadService, ProfilesService } from '@app/core/http';
-import { ProfileSelectService } from '@app/core/util';
+import { ProfileSelectService } from '@app/core/business';
+import { DraftImage } from '@app/core/model';
 
 @Component({
   selector: 'app-preference-profile, [app-preference-profile]',
@@ -117,32 +117,30 @@ export class PreferenceProfileComponent implements OnInit {
     if (!confirm('프로필 연결을 해제하시겠습니까?\n등록하신 상품과 댓글을 지워지지 않습니다.\n(메일 재인증을 통해 언제든 프로필을 다시 연결할 수 있습니다.)')) {
       return;
     }
-    forkJoin([
-      this.authService.user$.pipe(first(), filter(u => !!u)),
-      this.authService.profileExt$.pipe(first(), filter(p => !!p))
-    ]).pipe(
-      switchMap(([u, p]) => {
-        return fromPromise(this.profilesService.updateUserIdRemove(p.id, u.id)).pipe(
-          switchMap(() => this.profilesService.getQueryByUserId(u.id))
-        );
-      })
-    ).subscribe(profiles => {
-      const [profile] = profiles;
-      if (profile) {
-        this.profileSelectService.select(profile.id);
-        this.router.navigate(['/goods']);
-      } else {
-        this.profileSelectService.remove();
-        this.router.navigate(['/preference', 'groups']);
-      }
+
+    const { user, profile } = this.authService;
+    const profiles$ = fromPromise(this.profilesService.updateUserIdRemove(profile.id, user.id)).pipe(
+      switchMap(() => this.profilesService.getQueryByUserId(user.id)),
+      share()
+    );
+
+    profiles$.pipe(
+      first(),
+      filter(profiles => !isEmpty(profiles)),
+      map(p => head(p)),
+      switchMap(p => this.profileSelectService.select(p.id))
+    ).subscribe(() => {
+      this.router.navigate(['/goods']);
+    });
+
+    profiles$.pipe(
+      first(),
+      filter(profiles => isEmpty(profiles)),
+      tap(() => this.profileSelectService.remove())
+    ).subscribe(() => {
+      this.router.navigate(['/preference', 'groups']);
     });
   }
-
-  // onClickSignOut(e: Event) {
-  //   e.preventDefault();
-  //   this.authService.signOut();
-  //   this.router.navigate(['/sign-in']);
-  // }
 
   onClickHistoryBack() {
     this.location.back();

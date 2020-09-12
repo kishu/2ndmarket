@@ -111,7 +111,7 @@
                   class="relative border-gray-300"
                   [ngClass]="{'border-t': !isFirst}">
                   <button
-                    (click)="onClickSelectProfile(selectedProfileExt, profileExt)"
+                    (click)="onClickProfileSelect(selectedProfileExt, profileExt)"
                     class="flex justify-between items-center w-full h-12 p-0 border-0 bg-transparent text-gray-800">
                     <span class="flex-shrink-0 w-8 h-8 mr-2 relative">
                       <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">

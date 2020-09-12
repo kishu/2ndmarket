@@ -1,9 +1,8 @@
-import { first, skip } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/core/http';
+import { ProfileSelectService } from '@app/core/business';
 import { PersistenceService } from '@app/core/persistence';
-import { ProfileSelectService } from '@app/core/util';
 
 @Component({
   selector: 'app-profile-change',
@@ -21,14 +20,8 @@ export class ProfileChangeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const profileId = this.activatedRoute.snapshot.paramMap.get('profileId');
-    // this.authService.profileChanged$.pipe(first()).subscribe(p => {
-    //   this.persistenceService.reset(p).then(() => {
-    //     this.router.navigate(['/goods']);
-    //   });
-    // });
-
-    this.profileSelectService.select(profileId);
+    // const profileId = this.activatedRoute.snapshot.paramMap.get('profileId');
+    // this.profileSelectService.select(profileId);
   }
 
 }

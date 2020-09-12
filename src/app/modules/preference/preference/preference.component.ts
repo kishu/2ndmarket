@@ -1,11 +1,12 @@
-import { filter, first, map, switchMap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
+import { ProfileSelectService } from '@app/core/business';
 import { ProfileExt } from '@app/core/model';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-preference',
@@ -14,10 +15,7 @@ import { forkJoin } from 'rxjs';
 })
 export class PreferenceComponent implements OnInit {
   profileExt$ = this.authService.profileExt$;
-  profileExts$ = this.authService.user$.pipe(
-    filter(u => u !== null),
-    first(),
-    switchMap(u => this.profilesService.getQueryByUserId(u.id)),
+  profileExts$ = this.profilesService.getQueryByUserId(this.authService.user.id).pipe(
     switchMap(profiles => {
       return forkJoin(
         profiles.map(profile => this.groupsService.get(profile.groupId))
@@ -34,16 +32,19 @@ export class PreferenceComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private groupsService: GroupsService,
-    private profilesService: ProfilesService,
     private persistenceService: PersistenceService,
+    private profilesService: ProfilesService,
+    private profileSelectService: ProfileSelectService
   ) { }
 
   ngOnInit(): void {
   }
 
-  onClickSelectProfile(curr: ProfileExt, target: ProfileExt) {
+  onClickProfileSelect(curr: ProfileExt, target: ProfileExt) {
     if (curr.id !== target.id) {
-      this.router.navigate(['/profile-change', target.id], { skipLocationChange: true });
+      this.profileSelectService.select(target.id).subscribe(() => {
+        this.router.navigate(['/goods']);
+      });
     }
   }
 
