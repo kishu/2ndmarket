@@ -1,11 +1,11 @@
 {
   "hooks": {
     "after:init": ["ng lint"],
-    "after:git:push": ["ng build --configuration=dev", "firebase deploy --only hosting --project=dev"]
+    "after:git:push": ["ng build --prod", "firebase deploy --only hosting --project=prod"]
   },
   "git": {
-    "commitMessage": "chore: release dev ${version}",
-    "tag": false
+    "commitMessage": "chore: release prod ${version}",
+    "tagName": "v${version}"
   },
   "npm": {
     "publish": false

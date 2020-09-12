@@ -4,11 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host",
+    "lint:fix": "ng lint --fix",
     "build": "ng build",
-    "deploy:dev": "ng lint && nb build --configuration=dev && firebase deploy --only hosting --project=dev",
-    "deploy:prod": "ng lint && ng build --prod && firebase deploy --only hosting --project=prod",
+    "release:dev": "release-it --config=.release-it.json",
+    "release:prod": "release-it --config=.release-it.prod.json",
     "test": "ng test",
-    "lint": "ng lint --fix",
     "e2e": "ng e2e"
   },
   "husky": {
@@ -44,6 +44,7 @@
     "@angular-devkit/build-angular": "^0.1001.1",
     "@angular/cli": "^10.1.1",
     "@angular/compiler-cli": "~10.1.1",
+    "@csmith/release-it-calver-plugin": "^1.0.0",
     "@release-it/bumper": "^2.0.0",
     "@types/jasmine": "^3.5.14",
     "@types/jasminewd2": "~2.0.3",
