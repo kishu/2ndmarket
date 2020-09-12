@@ -1,6 +1,6 @@
 {
   "name": "2ndmarket",
-  "version": "1.0.0-0",
+  "version": "2020.07",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host",
