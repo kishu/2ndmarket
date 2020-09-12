@@ -1,5 +1,6 @@
 import { isEmpty, head } from 'lodash-es';
-import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
+import { merge } from 'rxjs';
+import { filter, first, map, mapTo, share, switchMap, tap } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
@@ -7,6 +8,7 @@ import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { AuthService, CloudinaryUploadService, ProfilesService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/business';
+import { CoverService } from '@app/modules/components/services';
 import { DraftImage } from '@app/core/model';
 
 @Component({
@@ -42,6 +44,7 @@ export class PreferenceProfileComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
+    private coverService: CoverService,
     private profilesService: ProfilesService,
     private profileSelectService: ProfileSelectService,
     private cloudinaryUploadService: CloudinaryUploadService
@@ -118,27 +121,34 @@ export class PreferenceProfileComponent implements OnInit {
       return;
     }
 
+    this.coverService.show('프로필을 재설정하고 있습니다.');
+
     const { user, profile } = this.authService;
     const profiles$ = fromPromise(this.profilesService.updateUserIdRemove(profile.id, user.id)).pipe(
       switchMap(() => this.profilesService.getQueryByUserId(user.id)),
       share()
     );
 
-    profiles$.pipe(
+    const select$ = profiles$.pipe(
       first(),
       filter(profiles => !isEmpty(profiles)),
       map(p => head(p)),
-      switchMap(p => this.profileSelectService.select(p.id))
-    ).subscribe(() => {
-      this.router.navigate(['/goods']);
-    });
+      switchMap(p => this.profileSelectService.select(p.id)),
+      mapTo(true)
+    );
 
-    profiles$.pipe(
+    const remove$ = profiles$.pipe(
       first(),
       filter(profiles => isEmpty(profiles)),
-      tap(() => this.profileSelectService.remove())
-    ).subscribe(() => {
-      this.router.navigate(['/preference', 'groups']);
+      tap(() => this.profileSelectService.remove()),
+      mapTo(false)
+    );
+
+    merge(select$, remove$).pipe(
+      first()
+    ).subscribe((selected) => {
+      this.coverService.hide();
+      this.router.navigate(selected ? ['/goods'] : ['/preference', 'goods']);
     });
   }
 

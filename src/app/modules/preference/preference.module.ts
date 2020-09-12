@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ComponentsModule } from '@app/modules/components/components.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { PreferenceComponent } from './preference/preference.component';
 import { PreferenceRoutingModule } from './preference-routing.module';
@@ -21,10 +22,11 @@ import { PreferenceFavoritedGoodsComponent } from './preference-favorited-goods/
   ],
   imports: [
     CommonModule,
-    SharedModule,
     FormsModule,
     ReactiveFormsModule,
-    PreferenceRoutingModule
+    PreferenceRoutingModule,
+    ComponentsModule,
+    SharedModule,
   ]
 })
 export class PreferenceModule { }

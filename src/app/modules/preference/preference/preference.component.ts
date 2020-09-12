@@ -7,6 +7,7 @@ import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
 import { ProfileSelectService } from '@app/core/business';
 import { ProfileExt } from '@app/core/model';
+import { CoverService } from '@app/modules/components/services';
 
 @Component({
   selector: 'app-preference',
@@ -34,7 +35,8 @@ export class PreferenceComponent implements OnInit {
     private groupsService: GroupsService,
     private persistenceService: PersistenceService,
     private profilesService: ProfilesService,
-    private profileSelectService: ProfileSelectService
+    private profileSelectService: ProfileSelectService,
+    private coverService: CoverService
   ) { }
 
   ngOnInit(): void {
@@ -42,7 +44,9 @@ export class PreferenceComponent implements OnInit {
 
   onClickProfileSelect(curr: ProfileExt, target: ProfileExt) {
     if (curr.id !== target.id) {
+      this.coverService.show('프로필을 변경하고 있습니다.');
       this.profileSelectService.select(target.id).subscribe(() => {
+        this.coverService.hide();
         this.router.navigate(['/goods']);
       });
     }

@@ -17,6 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { GoodsModule } from '@app/modules/goods/goods.module';
 import { PreferenceModule } from '@app/modules/preference/preference.module';
+import { ComponentsModule } from '@app/modules/components/components.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { AuthService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/business';
@@ -24,6 +25,9 @@ import { ProfileSelectService } from '@app/core/business';
 import { environment } from '@environments/environment';
 import { AppComponent } from './app.component';
 // import { SentryErrorHandler } from './sentry-error-handler';
+
+// import * as firebase from 'firebase/app';
+// firebase.firestore.setLogLevel('debug');
 
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
@@ -34,8 +38,8 @@ export function appInitializer(router: Router, authService: AuthService) {
       ]).subscribe(([u, p]) => {
         console.log('appInitializer', u, p);
         if (!u) {
-          alert('로그인해 주세요!');
-          router.navigate(['/sign-in']);
+          alert('로그인 해주세요!');
+          router.navigate(['/auth/sign-in']);
         } else if (!p) {
           alert('프로필을 설정해 주세요!');
           router.navigate(['/preference', 'groups']);
@@ -58,6 +62,7 @@ export function appInitializer(router: Router, authService: AuthService) {
     AuthModule,
     GoodsModule,
     PreferenceModule,
+    ComponentsModule,
     SharedModule,
     /*
      * angular.json configuration

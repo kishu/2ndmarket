@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { NewFcmToken } from '@app/core/model';
 import { AuthService, FcmTokensService } from '@app/core/http';
+import { CoverService } from '@app/modules/components/services';
 
 @Component({
   selector: 'app-root',
@@ -16,12 +17,18 @@ export class AppComponent implements OnInit {
   get path() {
     return this.location.path();
   }
+
+  get cover$() {
+    return this.coverService.cover$;
+  }
+
   constructor(
     private router: Router,
     private location: Location,
     private afMessaging: AngularFireMessaging,
     private authService: AuthService,
-    private fcmTokensService: FcmTokensService
+    private fcmTokensService: FcmTokensService,
+    private coverService: CoverService
   ) {
     combineLatest([
       this.authService.profileExt$.pipe(first(), filter(p => !!p)),

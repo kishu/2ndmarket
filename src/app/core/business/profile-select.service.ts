@@ -1,5 +1,5 @@
 import { of, ReplaySubject } from 'rxjs';
-import { first, map, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ProfileExt } from '@app/core/model/profile';
 import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
@@ -17,7 +17,11 @@ export class ProfileSelectService {
     private profileService: ProfilesService,
     private persistenceService: PersistenceService
   ) {
-    this.select(localStorage.getItem('profileId')).pipe(first()).subscribe();
+    this.authService.user$.pipe(
+      first(),
+      map(u => u ? localStorage.getItem('profileId') : null),
+      switchMap(profileId => this.select(profileId).pipe(first()))
+    ).subscribe();
   }
 
   select(id: string) {

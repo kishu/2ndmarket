@@ -9,6 +9,7 @@ import { FormBuilder } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/business';
+import { CoverService } from '@app/modules/components/services';
 import { Group, NewProfile, Profile } from '@app/core/model';
 
 @Component({
@@ -48,13 +49,28 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private fns: AngularFireFunctions,
     private authService: AuthService,
+    private coverService: CoverService,
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
-    private profileSelectService: ProfileSelectService
+    private profileSelectService: ProfileSelectService,
   ) {
   }
 
   ngOnInit(): void {
+    this.step$.pipe(
+      filter(s => s === 1)
+    ).subscribe(() => {
+      this.emailForm.reset();
+      this.domainCtl.setValue('');
+    });
+
+    this.step$.pipe(
+      filter(s => s === 2)
+    ).subscribe(() => {
+      this.verifyForm.reset();
+      this.emailCtl.setValue(this.email);
+    });
+
     this.emailForm.get('domain').valueChanges.pipe(
       withLatestFrom(this.groups$)
     ).subscribe(([domain, groups]) => {
@@ -92,13 +108,14 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
   }
 
   onClickRetryStep1() {
-    this.emailForm.reset();
     this.verifyForm.reset();
     this.step$.next(1);
   }
 
   onClickRetryCode() {
     this.sendMail();
+    this.step$.next(2);
+    alert('인증번호를 재전송했습니다.');
     this.resetLimitTimer$.next(true);
   }
 
@@ -110,10 +127,12 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     this.verifyForm.disable();
 
     if (this.code !== parseInt(this.codeCtl.value, 10)) {
-      this.verifyForm.setErrors({ incorrect: true });
       this.verifyForm.enable();
+      this.verifyForm.setErrors({ incorrect: true });
       return;
     }
+
+    this.coverService.show('프로필을 설정하고 있습니다.');
 
     const email = this.email;
     const user = this.authService.user;
@@ -160,6 +179,7 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
       first(),
       switchMap(profileId => this.profileSelectService.select(profileId))
     ).subscribe(() => {
+      this.coverService.hide();
       this.router.navigate(['/goods']);
     });
   }

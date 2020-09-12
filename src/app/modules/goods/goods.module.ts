@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '@app/shared/shared.module';
 import { GoodsRoutingModule } from './goods-routing.module';
+import { ComponentsModule } from '@app/modules/components/components.module';
+import { SharedModule } from '@app/shared/shared.module';
 import { GoodsCommentListComponent } from './goods-comment-list/goods-comment-list.component';
 import { GoodsCommentFormComponent } from './goods-comment-form/goods-comment-form.component';
 import { GoodsDetailComponent } from './goods-detail/goods-detail.component';
@@ -38,8 +39,9 @@ import { GoodsWriteComponent } from './goods-write/goods-write.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule,
-    GoodsRoutingModule
+    GoodsRoutingModule,
+    ComponentsModule,
+    SharedModule
   ],
   providers: [
     DecimalPipe

@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { DecimalPipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { Goods, NewGoods, DraftImage } from '@app/core/model';
-import { ImagesControlComponent } from '@app/shared/components/images-control/images-control.component';
+import { ImagesControlComponent } from '@app/modules/components';
 
 @Component({
   selector: 'app-goods-form',
