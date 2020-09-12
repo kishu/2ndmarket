@@ -12,7 +12,7 @@
   },
   "plugins": {
     "@csmith/release-it-calver-plugin": {
-      "format": "YYYY.0M.0D.MICRO"
+      "format": "YYYY.0M.MICRO"
     }
   }
 }
