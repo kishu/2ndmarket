@@ -67,7 +67,6 @@ export class PersistenceService implements OnDestroy {
   }
 
   reset(profileExt: ProfileExt) {
-    console.log('reset2', profileExt);
     this.goods$.next([]);
     this.writtenGoods$.next([]);
     this.favoritedGoods$.next([]);

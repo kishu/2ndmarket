@@ -25,7 +25,6 @@ export class AuthService  {
 
   profileExt$ = new ReplaySubject<ProfileExt>(1);
   set selectedProfile(profileExt: ProfileExt) {
-    console.log('set selectedProfile', profileExt);
     this._profile = profileExt;
     this.profileExt$.next(profileExt);
   }
