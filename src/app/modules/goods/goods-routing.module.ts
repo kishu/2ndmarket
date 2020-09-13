@@ -14,33 +14,33 @@ const redirectUnauthorizedToSignIn = () => redirectUnauthorizedTo(['/auth/sign-i
     RouterModule.forChild([
       {
         path: 'goods',
-        ...canActivate(redirectUnauthorizedToSignIn),
-        children: [
-          {
-            path: '',
-            component: GoodsListComponent,
-          },
-          {
-            path: 'new/edit',
-            component: GoodsWriteComponent,
-          },
-          {
-            path: 'search',
-            component: GoodsSearchListComponent,
-          },
-          {
-            path: ':goodsId/new',
-            component: GoodsDetailComponent,
-          },
-          {
-            path: ':goodsId',
-            component: GoodsDetailComponent
-          },
-          {
-            path: ':goodsId/edit',
-            component: GoodsEditComponent
-          }
-        ]
+        component: GoodsListComponent,
+        ...canActivate(redirectUnauthorizedToSignIn)
+      },
+      {
+        path: 'goods/new/edit',
+        component: GoodsWriteComponent,
+        ...canActivate(redirectUnauthorizedToSignIn)
+      },
+      {
+        path: 'goods/search',
+        component: GoodsSearchListComponent,
+        ...canActivate(redirectUnauthorizedToSignIn)
+      },
+      {
+        path: 'goods/:goodsId/new',
+        component: GoodsDetailComponent,
+        ...canActivate(redirectUnauthorizedToSignIn)
+      },
+      {
+        path: 'goods/:goodsId',
+        component: GoodsDetailComponent,
+        ...canActivate(redirectUnauthorizedToSignIn)
+      },
+      {
+        path: 'goods/:goodsId/edit',
+        component: GoodsEditComponent,
+        ...canActivate(redirectUnauthorizedToSignIn)
       }
     ])
   ],
