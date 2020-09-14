@@ -1,7 +1,6 @@
 import { merge, of } from 'rxjs';
 import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ProfileExt } from '@app/core/model/profile';
 import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
 
