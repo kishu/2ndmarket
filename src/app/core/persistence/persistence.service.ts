@@ -77,10 +77,10 @@ export class PersistenceService implements OnDestroy {
 
     return forkJoin([
       this.goods$.pipe(skip(1), first()),
-      this.writtenGoods$.pipe(skip(1), first()),
-      this.favoritedGoods$.pipe(skip(1), first()),
-      this.messageExts$.pipe(skip(1), first()),
-      this.newMessageCount$.pipe(skip(1), first())
+      // this.writtenGoods$.pipe(skip(1), first()),
+      // this.favoritedGoods$.pipe(skip(1), first()),
+      // this.messageExts$.pipe(skip(1), first()),
+      // this.newMessageCount$.pipe(skip(1), first())
     ]).pipe(
       mapTo(profileExt)
     );

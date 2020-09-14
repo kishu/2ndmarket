@@ -1,5 +1,5 @@
-import { of, ReplaySubject } from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { merge, of } from 'rxjs';
+import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ProfileExt } from '@app/core/model/profile';
 import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
@@ -9,8 +9,6 @@ import { PersistenceService } from '@app/core/persistence';
   providedIn: 'root'
 })
 export class ProfileSelectService {
-  selectedProfileExt$ = new ReplaySubject<ProfileExt | null>(1);
-
   constructor(
     private authService: AuthService,
     private groupsService: GroupsService,
@@ -19,27 +17,43 @@ export class ProfileSelectService {
   ) {
     this.authService.user$.pipe(
       first(),
-      map(u => u ? localStorage.getItem('profileId') : null),
-      switchMap(profileId => this.select(profileId).pipe(first()))
+      switchMap(user => {
+        const profileId = localStorage.getItem('profileId');
+        if (user && profileId) {
+          return this.select(profileId);
+        } else {
+          this.authService.selectedProfile = null;
+          return of(null);
+        }
+      })
     ).subscribe();
   }
 
   select(id: string) {
-    if (!id) {
-      this.remove();
-      return of(null);
-    }
-
-    return this.profileService.get(id).pipe(
+    const profileExt$ = this.profileService.get(id).pipe(
       switchMap(profile => {
         return this.groupsService.get(profile.groupId).pipe(
           map(group => ({ ...profile, group })),
         );
       }),
+      share()
+    );
+
+    const exist$ = profileExt$.pipe(
+      first(),
+      filter(profileExt => profileExt !== null),
       switchMap(profileExt => this.persistenceService.reset(profileExt)),
       tap(profileExt => localStorage.setItem('profileId', profileExt.id)),
       tap(profileExt => this.authService.selectedProfile = profileExt)
     );
+
+    const empty$ = profileExt$.pipe(
+      first(),
+      filter(profileExt => !profileExt),
+      tap(() => this.remove())
+    );
+
+    return merge(exist$, empty$);
   }
 
   remove() {

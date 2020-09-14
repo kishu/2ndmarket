@@ -53,7 +53,7 @@ export class PreferenceComponent implements OnInit {
   }
 
   onClickSignOut() {
-    this.authService.signOut();
+    this.authService.signOut().then(() => this.router.navigate(['/auth/sign-in']));
   }
 
   onClickHistoryBack() {
