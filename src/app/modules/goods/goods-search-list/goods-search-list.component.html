@@ -19,7 +19,7 @@
     </div>
   </div>
 </div>
-<div *ngIf="goods$ | async as goods">
+<div *ngIf="goods$ | async as goods" class="p-safe-bottom">
   <app-goods-search-form></app-goods-search-form>
   <p *ngIf="tag && goods.length === 0" class="py-20 text-center text-gray-600">'{{ tag }}' 검색 결과가 없습니다.</p>
   <ul class="bg-white sm:py-3 px-safe">
