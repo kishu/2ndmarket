@@ -149,6 +149,9 @@ export class PreferenceProfileComponent implements OnInit {
     ).subscribe((selected) => {
       this.coverService.hide();
       this.router.navigate(selected ? ['/goods'] : ['/preference', 'goods']);
+    }, err => {
+      alert(err);
+      this.coverService.hide();
     });
   }
 

@@ -181,6 +181,9 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.coverService.hide();
       this.router.navigate(['/goods']);
+    }, err => {
+      alert(err);
+      this.coverService.hide();
     });
   }
 

@@ -1,7 +1,7 @@
 import { countBy } from 'lodash-es';
-import { Observable } from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { first, map, takeUntil, tap } from 'rxjs/operators';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GoodsComment, Goods } from '@app/core/model';
 import { AuthService, GoodsCommentsService, GoodsService } from '@app/core/http';
@@ -16,8 +16,9 @@ export interface GoodsCommentExtend extends GoodsComment {
   templateUrl: './goods-comment-list.component.html',
   styleUrls: ['./goods-comment-list.component.scss']
 })
-export class GoodsCommentListComponent implements OnInit, AfterViewInit {
+export class GoodsCommentListComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() goods: Goods;
+  protected destroy$ = new Subject();
   commentList$: Observable<GoodsComment[]>;
   commentUserCount: number;
 
@@ -32,43 +33,43 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
   ngAfterViewInit() {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
+    const profileId = this.authService.profile.id;
 
-    this.commentList$ = this.authService.profileExt$.pipe(
-      first(),
-      filter(p => !!p),
-      switchMap(profile => {
-        return this.commentsService.valueChangesQueryByGoodsId(goodsId).pipe(
-          tap(comments => {
-            this.commentUserCount = Object.keys(
-              countBy(comments, 'profileId')
-            ).length;
-          }),
-          map(comments => {
-            return comments.map(c => {
-              return {
-                ...c,
-                seller: this.goods.profileId === c.profileId,
-                permission: c.profileId === profile.id
-              } as GoodsCommentExtend;
-            });
-          }),
-          map(comments => {
-            return comments.reduce((a, c) => {
-              if (a.length === 0) {
-                return [[c]];
-              }
-              const p = a[a.length - 1];
-              if (p[0].profileId === c.profileId) {
-                p.push(c);
-              } else {
-                a.push([c]);
-              }
-              return a;
-            }, []);
-          })
-        );
+    this.commentList$ = this.commentsService.valueChangesQueryByGoodsId(goodsId).pipe(
+      takeUntil(this.destroy$),
+      tap(comments => {
+        this.commentUserCount = Object.keys(
+          countBy(comments, 'profileId')
+        ).length;
+      }),
+      map(comments => {
+        return comments.map(c => {
+          return {
+            ...c,
+            seller: this.goods.profileId === c.profileId,
+            permission: c.profileId === profileId
+          } as GoodsCommentExtend;
+        });
+      }),
+      map(comments => {
+        return comments.reduce((a, c) => {
+          if (a.length === 0) {
+            return [[c]];
+          }
+          const p = a[a.length - 1];
+          if (p[0].profileId === c.profileId) {
+            p.push(c);
+          } else {
+            a.push([c]);
+          }
+          return a;
+        }, []);
       })
     );
   }

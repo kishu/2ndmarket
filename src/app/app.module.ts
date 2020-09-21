@@ -25,6 +25,9 @@ import { ProfileSelectService } from '@app/core/business';
 import { environment } from '@environments/environment';
 import { AppComponent } from './app.component';
 
+// import { firestore } from 'firebase/app';
+// firestore.setLogLevel('debug');
+
 export function appInitializer(router: Router, authService: AuthService) {
   return () => {
     return new Promise(resolve => {
@@ -69,7 +72,9 @@ export function appInitializer(router: Router, authService: AuthService) {
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
     // AngularFirestoreModule,
-    AngularFirestoreModule.enablePersistence({ synchronizeTabs: false }),
+    // AngularFirestoreModule.enablePersistence(),
+    AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
+    // AngularFirestoreModule.enablePersistence({ synchronizeTabs: false }),
     AngularFireFunctionsModule,
     /*
      * angular.json options

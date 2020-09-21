@@ -1,5 +1,5 @@
 import { forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { first, map, switchMap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -37,7 +37,8 @@ export class PreferenceComponent implements OnInit {
     private profilesService: ProfilesService,
     private profileSelectService: ProfileSelectService,
     private coverService: CoverService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -45,9 +46,12 @@ export class PreferenceComponent implements OnInit {
   onClickProfileSelect(curr: ProfileExt, target: ProfileExt) {
     if (curr.id !== target.id) {
       this.coverService.show('프로필을 변경하고 있습니다.');
-      this.profileSelectService.select(target.id).subscribe(() => {
+      this.profileSelectService.select(target.id).pipe(first()).subscribe(() => {
         this.coverService.hide();
         this.router.navigate(['/goods']);
+      }, err => {
+        alert(err);
+        this.coverService.hide();
       });
     }
   }
