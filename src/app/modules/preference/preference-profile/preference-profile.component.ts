@@ -17,8 +17,6 @@ import { DraftImage } from '@app/core/model';
   styleUrls: ['./preference-profile.component.scss']
 })
 export class PreferenceProfileComponent implements OnInit {
-  submitting = false;
-  changingFile = false;
   draftImage: DraftImage;
   profileForm = this.fb.group({
     displayName: [],
@@ -55,7 +53,6 @@ export class PreferenceProfileComponent implements OnInit {
   }
 
   onChangeFile(e: Event) {
-    this.changingFile = true;
     const target = e.target as HTMLInputElement;
     this.draftImage = {
       isFile: true,
@@ -73,46 +70,38 @@ export class PreferenceProfileComponent implements OnInit {
   }
 
   onCancelChangeFile(e: Event) {
-    this.changingFile = false;
-    this.authService.profileExt$.pipe(
-      first(),
-      filter(p => !!p)
-    ).subscribe(profile => {
-      this.draftImage = {
-        isFile: false,
-        src: profile.photoURL,
-        rotate: 0
-      };
-    });
+    this.draftImage = {
+      isFile: false,
+      src: this.authService.profile.photoURL,
+      rotate: 0
+    };
   }
 
   onSubmit() {
-    if (this.submitting) {
-      return;
-    }
-    this.submitting = true;
-    this.authService.profileExt$.pipe(
-      first(),
-      filter(p => !!p)
-    ).subscribe(p => {
-      this.draftImage = {
-        ...this.draftImage,
-        context: `type=profile|id=${p.id}`
-      };
-      const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload([this.draftImage]);
-      uploadComplete$.subscribe(/* uploaded urls*/urls => {
-        this.profilesService.update(p.id, {
+    this.coverService.show('프로필을 변경하고 있습니다.');
+    this.profileForm.disable();
+    const profile = this.authService.profile;
+    this.draftImage = {
+      ...this.draftImage,
+      context: `type=profile|id=${profile.id}`
+    };
+    const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload([this.draftImage]);
+    uploadComplete$.pipe(
+      switchMap(urls => {
+        return this.profilesService.update(profile.id, {
           photoURL: urls[0],
           displayName: this.displayNameCtl.value
-        }).then(() => {
-          this.profileSelectService.select(p.id);
-          alert('프로필을 변경했습니다!');
-          this.submitting = false;
-          this.changingFile = false;
-        }, err => {
-          alert(err);
         });
-      });
+      }),
+      switchMap(() => this.profileSelectService.update(profile.id))
+    ).subscribe(() => {
+      alert('프로필을 변경했습니다!');
+      this.profileForm.enable();
+      this.coverService.hide();
+    }, err => {
+      alert(err);
+      this.profileForm.enable();
+      this.coverService.hide();
     });
   }
 

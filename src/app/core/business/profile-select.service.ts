@@ -28,6 +28,17 @@ export class ProfileSelectService {
     ).subscribe();
   }
 
+  update(id: string) {
+    return this.profileService.get(id).pipe(
+      switchMap(profile => {
+        return this.groupsService.get(profile.groupId).pipe(
+          map(group => ({ ...profile, group })),
+        );
+      }),
+      tap(profileExt => this.authService.selectedProfile = profileExt)
+    );
+  }
+
   select(id: string) {
     const profileExt$ = this.profileService.get(id).pipe(
       switchMap(profile => {
