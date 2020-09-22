@@ -102,7 +102,7 @@
               </a>
             </li>
           </ul>
-          <ng-container *ngIf="profileExt$ | async as selectedProfileExt">
+          <ng-container *ngIf="useProfile && profileExt$ | async as selectedProfileExt">
             <div class="px-3">
               <h2 class="mt-4 py-2 text-green-800">프로필 전환</h2>
               <ul class="border-t border-b border-gray-300" *ngIf="profileExts$ | async as profileExts">
@@ -136,7 +136,7 @@
       </div>
     </div>
   </div>
-  <div class="px-safe mt-20 p-safe-bottom">
+  <div *ngIf="useProfile" class="px-safe mt-20 p-safe-bottom">
     <div class="p-3">
       <button (click)="onClickSignOut()" class="flex justify-center items-center w-full h-12 bg-gray-500 text-white">로그아웃테스트</button>
     </div>

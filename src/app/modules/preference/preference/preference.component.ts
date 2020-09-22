@@ -8,6 +8,7 @@ import { PersistenceService } from '@app/core/persistence';
 import { ProfileSelectService } from '@app/core/business';
 import { ProfileExt } from '@app/core/model';
 import { CoverService } from '@app/modules/components/services';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-preference',
@@ -15,6 +16,7 @@ import { CoverService } from '@app/modules/components/services';
   styleUrls: ['./preference.component.scss']
 })
 export class PreferenceComponent implements OnInit {
+  useProfile = environment.useProfile;
   profileExt$ = this.authService.profileExt$;
   profileExts$ = this.profilesService.getQueryByUserId(this.authService.user.id).pipe(
     switchMap(profiles => {
