@@ -13,28 +13,12 @@ import { Goods, NewFavoriteGoods } from '@app/core/model';
   selector: 'app-goods-detail, [app-goods-detail]',
   templateUrl: './goods-detail.component.html',
   styleUrls: ['./goods-detail.component.scss'],
-  animations: [
-    trigger('openClose', [
-      state('open', style({
-        display: 'block',
-      })),
-      state('closed', style({
-        display: 'none',
-      })),
-      transition('open => closed', [
-        animate('0.1s')
-      ]),
-      transition('closed => open', [
-        animate('0s')
-      ]),
-    ]),
-  ]
 })
 export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
   scrollY: number;
   intersected = false;
 
-  @ViewChild('goodsNameRef', { static: true, read: ElementRef }) goodsNameRef: ElementRef;
+  @ViewChild('goodsNameRef', { read: ElementRef }) goodsNameRef: ElementRef;
   private intersectionObserver: IntersectionObserver;
   private initIntersectionObserverOnce = once(this.initIntersectionObserver);
   private destroy$ = new Subject<null>();
@@ -69,7 +53,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     map(f => f.length > 0),
     shareReplay({ bufferSize: 1, refCount: true })
   );
-  showPermission = false;
 
   goodsImage$ = this.activatedRoute.queryParamMap.pipe(
     map(m => parseInt(m.get('image'), 10))
@@ -93,10 +76,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   ngOnInit(): void {
-  }
-
-  onClickPermission() {
-    this.showPermission = !this.showPermission;
   }
 
   onLoadHeroImage() {
@@ -147,7 +126,6 @@ export class GoodsDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       () => {},
       err => alert(err)
     );
-    this.showPermission = false;
   }
 
   onClickFavorite() {

@@ -21,7 +21,7 @@
             class="flex flex-col"
             [ngClass]="{'items-end': talk.permission}"
             style="max-width: 75%;">
-            <span class="mx-1 text-xs text-white" *ngIf="isFirst">{{ profile.displayName }}</span>
+            <span class="mx-1 text-xs text-white" *ngIf="isFirst">{{ profile.displayName }}{{ talk.seller && !talk.permission ? '(판매자)' : '' }}</span>
             <div
               class="flex mb-1"
               [ngClass]="{'flex-row-reverse': talk.permission}">

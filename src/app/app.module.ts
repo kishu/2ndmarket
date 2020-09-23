@@ -36,7 +36,6 @@ export function appInitializer(router: Router, authService: AuthService) {
         authService.profileExt$.pipe(first())
       ]).subscribe(([u, p]) => {
         if (!u) {
-          alert('로그인 해주세요!');
           router.navigate(['/auth/sign-in']);
         } else if (!p) {
           alert('프로필을 설정해 주세요!');

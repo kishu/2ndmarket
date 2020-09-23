@@ -11,10 +11,10 @@ export class GoodsConditionPipe implements PipeTransform {
         condition = '미개봉';
         break;
       case GoodsCondition.almostNew:
-        condition = '민트급';
+        condition = '거의 새 상품';
         break;
       case GoodsCondition.used:
-        condition = '사용감있음';
+        condition = '사용감 있음';
         break;
     }
     return condition;

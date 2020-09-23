@@ -9,22 +9,22 @@ export class GoodsPurchasedPipe implements PipeTransform {
   transform(purchased: GoodsPurchased | string): string {
     switch (purchased) {
       case GoodsPurchased.unknown:
-        purchased = '구매시기모름';
+        purchased = '모름';
         break;
       case GoodsPurchased.week:
-        purchased = '일주일미만사용';
+        purchased = '일주일 이내';
         break;
       case GoodsPurchased.month:
-        purchased = '한달미만사용';
+        purchased = '한 달 이내';
         break;
       case GoodsPurchased.threeMonth:
-        purchased = '3개월사용';
+        purchased = '3 개월 이내';
         break;
       case GoodsPurchased.year:
-        purchased = '1년사용';
+        purchased = '1 년 이내';
         break;
       case GoodsPurchased.longAgo:
-        purchased = '언제샀는지기억도안남';
+        purchased = '오래전';
         break;
     }
     return purchased;
