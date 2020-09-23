@@ -35,6 +35,7 @@ export function appInitializer(router: Router, authService: AuthService) {
         authService.user$.pipe(first()),
         authService.profileExt$.pipe(first())
       ]).subscribe(([u, p]) => {
+        console.log('u', u, 'p', p);
         if (!u) {
           router.navigate(['/auth/sign-in']);
         } else if (!p) {

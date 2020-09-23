@@ -4,3 +4,8 @@ export interface User {
   displayName: string;
   photoURL: string;
 }
+
+export interface UserInfo {
+  id: string; // userId
+  profileId: string;
+}
