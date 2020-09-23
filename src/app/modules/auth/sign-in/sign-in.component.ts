@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService, ProfilesService } from '@app/core/http';
+import { AuthService, UserInfosService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/business';
 
 @Component({
@@ -15,7 +15,9 @@ export class SignInComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private profileSelectService: ProfileSelectService,
+    private userInfosService: UserInfosService
   ) { }
 
   ngOnInit(): void {
@@ -27,25 +29,30 @@ export class SignInComponent implements OnInit {
           return;
         }
 
+        console.log('c', c);
+
         if (c.user && c.additionalUserInfo?.isNewUser) {
-          this.router.navigate(['preference/groups']);
+          this.userInfosService
+          .create(c.user.uid, { profileId: null })
+          .then(() => this.router.navigate(['preference/groups']));
           return;
         }
 
-        this.authService.profileExt$.pipe(
-          first()
-        ).subscribe(p => {
-          p ?
-            this.router.navigate(['']) :
+        this.userInfosService.get(c.user.uid).subscribe(userInfo => {
+          if (userInfo.profileId) {
+            this.profileSelectService.select(userInfo.profileId).subscribe(() => {
+              this.router.navigate(['/goods']);
+            });
+          } else {
             this.router.navigate(['preference/groups']);
+          }
         });
       });
   }
 
   onClickSignIn(e: Event, provider: string) {
     e.preventDefault();
-    this.authService
-      .signInWithRedirect(provider);
+    this.authService.signInWithRedirect(provider);
   }
 
 }
