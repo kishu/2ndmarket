@@ -34,5 +34,8 @@ service cloud.firestore {
       allow read, create, update: if request.auth.uid != null;
       allow delete: if false;
     }
+    match /userInfos/{userInfo} {
+      allow read, write: if request.auth.uid != null;
+    }
   }
 }

@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
+import { AuthService, GroupsService, ProfilesService, UserInfosService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/business';
 import { CoverService } from '@app/modules/components/services';
 import { Group, NewProfile, Profile } from '@app/core/model';
@@ -53,6 +53,7 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
     private profileSelectService: ProfileSelectService,
+    private userInfosService: UserInfosService
   ) {
   }
 
@@ -157,7 +158,12 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
           created: ProfilesService.serverTimestamp()
         } as NewProfile);
       }),
-      map(ref => ref.id)
+      switchMap(ref => {
+        return this.userInfosService.create(
+          this.authService.user.id,
+          { profileId: ref.id }
+        );
+      })
     );
 
     // profile contains given email, add user id to profile.users
@@ -175,16 +181,48 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
       map(profile => profile.id)
     );
 
-    merge(create$, update$).pipe(
-      first(),
-      switchMap(profileId => this.profileSelectService.select(profileId))
-    ).subscribe(() => {
-      this.coverService.hide();
-      this.router.navigate(['/goods']);
-    }, err => {
-      alert(err);
-      this.coverService.hide();
-    });
+    // no profile contains email given email, add new profile
+    // const create$ = profiles$.pipe(
+    //   first(),
+    //   filter(profiles => isEmpty(profiles)),
+    //   switchMap(() => {
+    //     return this.profilesService.add({
+    //       groupId: selectedGroup.id,
+    //       displayName: email.split('@')[0],
+    //       email,
+    //       photoURL: '',
+    //       userIds: [ user.id ],
+    //       created: ProfilesService.serverTimestamp()
+    //     } as NewProfile);
+    //   }),
+    //   map(ref => ref.id)
+    // );
+
+    // profile contains given email, add user id to profile.users
+    // const update$ = profiles$.pipe(
+    //   first(),
+    //   filter(profiles => !isEmpty(profiles)),
+    //   map(profiles => head(profiles) as Profile),
+    //   switchMap(profile => {
+    //     return fromPromise(
+    //       this.profilesService.updateUserIdAdd(profile.id, user.id)
+    //     ).pipe(
+    //       map(() => profile)
+    //     );
+    //   }),
+    //   map(profile => profile.id)
+    // );
+
+    // merge(create$, update$).pipe(
+    //   first(),
+    //   switchMap(profileId => this.profileSelectService.select(profileId))
+    // ).subscribe(() => {
+    //   this.coverService.hide();
+    //   this.router.navigate(['/goods']);
+    // }, err => {
+    //   alert(err);
+    //   this.coverService.hide();
+    // });
   }
 
 }

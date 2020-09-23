@@ -44,7 +44,7 @@ export abstract class FirestoreService<T> {
     return this.collection.doc(id).ref;
   }
 
-  protected create(id: string, doc: unknown) {
+  public create(id: string, doc: unknown) {
     return this.collection.doc(id).set(doc);
   }
 

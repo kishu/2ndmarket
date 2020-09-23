@@ -1,7 +1,7 @@
 import { merge, of } from 'rxjs';
 import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
+import { AuthService, GroupsService, ProfilesService, UserInfosService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
 
 @Injectable({
@@ -12,20 +12,35 @@ export class ProfileSelectService {
     private authService: AuthService,
     private groupsService: GroupsService,
     private profileService: ProfilesService,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private userInfosService: UserInfosService
   ) {
-    this.authService.user$.pipe(
+    const user$ = this.authService.user$.pipe(
       first(),
-      switchMap(user => {
-        const profileId = localStorage.getItem('profileId');
-        if (user && profileId) {
-          return this.select(profileId);
+      share()
+    );
+
+    const exist$ = user$.pipe(
+      first(),
+      filter(u => !!u),
+      switchMap(u => this.userInfosService.get(u.id)),
+      switchMap(userInfo => {
+        if (userInfo?.profileId) {
+          return this.select(userInfo.profileId);
         } else {
           this.authService.selectedProfile = null;
           return of(null);
         }
       })
-    ).subscribe();
+    );
+
+    const empty$ = user$.pipe(
+      first(),
+      filter(u => !u),
+      switchMap(() => of(null))
+    );
+
+    merge(exist$, empty$).subscribe();
   }
 
   update(id: string) {
