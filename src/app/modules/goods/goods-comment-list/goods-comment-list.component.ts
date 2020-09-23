@@ -19,6 +19,7 @@ export interface GoodsCommentExtend extends GoodsComment {
 export class GoodsCommentListComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() goods: Goods;
   protected destroy$ = new Subject();
+  profileExt$ = this.authService.profileExt$;
   commentList$: Observable<GoodsComment[]>;
   commentUserCount: number;
 

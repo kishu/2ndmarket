@@ -1,6 +1,6 @@
 <div class="h-safe-top"></div>
 <div class="h-header"></div>
-<div *ngIf="goods$ | async as goods">
+<div *ngIf="goods$ | async as goods" class="p-safe-bottom">
   <app-goods-search-form></app-goods-search-form>
   <ul class="bg-white sm:py-3 px-safe">
     <ng-container *ngFor="let item of goods; trackBy: trackBy">

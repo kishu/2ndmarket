@@ -45,8 +45,44 @@
         </ng-container>
       </div>
     </li>
+    <li
+      class="select-none py-1"
+      *ngIf="goods.soldOut">
+      <ng-container *ngIf="profileExt$ | async as profile">
+        <ng-container *ngIf="goods.profileId | fsDocument:'profiles' | async as seller">
+          <div
+          class="flex -mx-1"
+          [ngClass]="{'flex-row-reverse': seller.id === profile.id}">
+            <div
+              class="w-8 h-8 m-1 bg-white rounded-full flex items-center justify-center text-sm font-bold uppercase"
+              [ngClass]="{'bg-yellow-400': seller.id !== profile.id}"
+              *ngIf="seller.id !== profile.id">{{ seller.displayName.slice(0, 1) }}</div>
+            <div
+              class="flex flex-col"
+              [ngClass]="{'items-end': seller.id === profile.id}"
+              style="max-width: 75%;">
+              <span class="mx-1 text-xs text-white">{{ seller.displayName }}{{ seller.id !== profile.id ? '(판매자)' : '' }}</span>
+              <div
+                class="flex mb-1"
+                [ngClass]="{'flex-row-reverse': seller.id === profile.id}">
+                <p
+                  class="talk mx-1 shadow max-w-sm break-all whitespace-pre-wrap rounded-xxlg"
+                  [ngClass]="{
+                    'rounded-tl-none': seller.id !== profile.id,
+                    'rounded-bl-none': seller.id !== profile.id,
+                    'rounded-bl-xlg': seller.id !== profile.id,
+                    'rounded-tr-none': seller.id === profile.id,
+                    'rounded-br-none': seller.id === profile.id,
+                    'rounded-br-xlg': seller.id === profile.id
+                  }">팔렸어요.</p>
+                <div class="flex flex-shrink-0 items-end">
+                  <!-- <span class="text-xs flex-shrink-0 text-gray-500" *ngIf="isLast">{{ goods.soldOut | fsTimestamp | date:'HH:mm' }}</span> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </li>
   </ul>
-</div>
-<div class="flex justify-center mb-6" *ngIf="goods.soldOut">
-  <p class="px-3 bg-gray-500 text-sm text-gray-200">상품이 팔렸습니다.</p>
 </div>
