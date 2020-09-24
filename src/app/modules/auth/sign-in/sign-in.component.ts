@@ -32,9 +32,7 @@ export class SignInComponent implements OnInit {
         console.log('c', c);
 
         if (c.user && c.additionalUserInfo?.isNewUser) {
-          this.userInfosService
-          .create(c.user.uid, { profileId: null })
-          .then(() => this.router.navigate(['preference/groups']));
+          this.router.navigate(['preference/groups']);
           return;
         }
 

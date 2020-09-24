@@ -77,7 +77,7 @@ export class GoodsWriteComponent implements OnInit {
         price: parseInt(goods.price.replace(/,/g, ''), 10),
         images
       };
-      this.goodsService.create(createdId, goods).then(
+      this.goodsService.set(createdId, goods).then(
         () => this.router.navigate(['/goods', createdId, 'new'], { replaceUrl: true }),
         err => alert(err)
       );

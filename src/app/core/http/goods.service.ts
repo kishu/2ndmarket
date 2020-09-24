@@ -16,8 +16,8 @@ export class GoodsService extends FirestoreService<Goods> {
     return super.add(newGoods);
   }
 
-  create(goodsId: string, newGoods: NewGoods) {
-    return super.create(goodsId, newGoods);
+  set(goodsId: string, newGoods: NewGoods) {
+    return super.set(goodsId, newGoods);
   }
 
   update(goodsId: string, goods: Partial<Goods>) {
