@@ -3,6 +3,7 @@ import { filter, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AuthService, GroupsService, ProfilesService, UserInfosService } from '@app/core/http';
 import { PersistenceService } from '@app/core/persistence';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,7 @@ export class ProfileSelectService {
     const empty$ = user$.pipe(
       first(),
       filter(u => !u),
+      tap(() => this.authService.selectedProfile = null),
       switchMap(() => of(null))
     );
 
@@ -55,35 +57,30 @@ export class ProfileSelectService {
   }
 
   select(id: string) {
-    const profileExt$ = this.profileService.get(id).pipe(
+    const userInfo$ = this.userInfosService.set(
+      this.authService.user.id,
+      { profileId: id }
+    );
+
+    return fromPromise(userInfo$).pipe(
+      switchMap(() => this.profileService.get(id)),
       switchMap(profile => {
         return this.groupsService.get(profile.groupId).pipe(
           map(group => ({ ...profile, group })),
         );
       }),
-      share()
-    );
-
-    const exist$ = profileExt$.pipe(
-      first(),
-      filter(profileExt => profileExt !== null),
       switchMap(profileExt => this.persistenceService.reset(profileExt)),
-      tap(profileExt => localStorage.setItem('profileId', profileExt.id)),
       tap(profileExt => this.authService.selectedProfile = profileExt)
     );
-
-    const empty$ = profileExt$.pipe(
-      first(),
-      filter(profileExt => !profileExt),
-      tap(() => this.remove())
-    );
-
-    return merge(exist$, empty$);
   }
 
   remove() {
-    localStorage.removeItem('profileId');
-    this.authService.selectedProfile = null;
+    this.userInfosService.update(
+      this.authService.user.id,
+      { profileId: null }
+    ).then(() => {
+      this.authService.selectedProfile = null;
+    });
   }
 
 }

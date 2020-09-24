@@ -1,7 +1,7 @@
 import { head, isEmpty, random } from 'lodash-es';
 import { BehaviorSubject, merge } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { filter, first, map, share, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, first, map, share, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
@@ -53,7 +53,6 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     private groupsService: GroupsService,
     private profilesService: ProfilesService,
     private profileSelectService: ProfileSelectService,
-    private userInfosService: UserInfosService
   ) {
   }
 
@@ -142,12 +141,16 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     const profiles$ =
       this.profilesService
       .getQueryByEmailAndGroupId(email, selectedGroup.id)
-      .pipe(first(), share());
+      .pipe(
+        first(),
+        tap(t => console.log(0, t)),
+        share());
 
     // no profile contains email given email, add new profile
     const create$ = profiles$.pipe(
       first(),
       filter(profiles => isEmpty(profiles)),
+      tap(t => console.log(1, t)),
       switchMap(() => {
         return this.profilesService.add({
           groupId: selectedGroup.id,
@@ -158,18 +161,14 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
           created: ProfilesService.serverTimestamp()
         } as NewProfile);
       }),
-      switchMap(ref => {
-        return this.userInfosService.create(
-          this.authService.user.id,
-          { profileId: ref.id }
-        );
-      })
+      map(docRef => docRef.id)
     );
 
     // profile contains given email, add user id to profile.users
     const update$ = profiles$.pipe(
       first(),
       filter(profiles => !isEmpty(profiles)),
+      tap(t => console.log(2, t)),
       map(profiles => head(profiles) as Profile),
       switchMap(profile => {
         return fromPromise(
@@ -181,48 +180,16 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
       map(profile => profile.id)
     );
 
-    // no profile contains email given email, add new profile
-    // const create$ = profiles$.pipe(
-    //   first(),
-    //   filter(profiles => isEmpty(profiles)),
-    //   switchMap(() => {
-    //     return this.profilesService.add({
-    //       groupId: selectedGroup.id,
-    //       displayName: email.split('@')[0],
-    //       email,
-    //       photoURL: '',
-    //       userIds: [ user.id ],
-    //       created: ProfilesService.serverTimestamp()
-    //     } as NewProfile);
-    //   }),
-    //   map(ref => ref.id)
-    // );
-
-    // profile contains given email, add user id to profile.users
-    // const update$ = profiles$.pipe(
-    //   first(),
-    //   filter(profiles => !isEmpty(profiles)),
-    //   map(profiles => head(profiles) as Profile),
-    //   switchMap(profile => {
-    //     return fromPromise(
-    //       this.profilesService.updateUserIdAdd(profile.id, user.id)
-    //     ).pipe(
-    //       map(() => profile)
-    //     );
-    //   }),
-    //   map(profile => profile.id)
-    // );
-
-    // merge(create$, update$).pipe(
-    //   first(),
-    //   switchMap(profileId => this.profileSelectService.select(profileId))
-    // ).subscribe(() => {
-    //   this.coverService.hide();
-    //   this.router.navigate(['/goods']);
-    // }, err => {
-    //   alert(err);
-    //   this.coverService.hide();
-    // });
+    merge(create$, update$).pipe(
+      first(),
+      switchMap(profileId => this.profileSelectService.select(profileId)),
+    ).subscribe(() => {
+      this.coverService.hide();
+      this.router.navigate(['/goods']);
+    }, err => {
+      alert(err);
+      this.coverService.hide();
+    });
   }
 
 }

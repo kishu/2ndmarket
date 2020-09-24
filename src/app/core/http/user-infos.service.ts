@@ -11,4 +11,13 @@ export class UserInfosService extends FirestoreService<UserInfo> {
   constructor(protected afs: AngularFirestore) {
     super(afs, 'userInfos');
   }
+
+  set(id: string, doc: Partial<UserInfo>) {
+    return super.set(id, doc);
+  }
+
+  update(id: string, doc: Partial<UserInfo>) {
+    return super.update(id, doc);
+  }
+
 }
