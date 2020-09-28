@@ -24,7 +24,7 @@
     <!-- <h2 class="sticky safe-top z-20 border-b border-gray-300 bg-white flex items-center">
       <span class="p-2 text-gray-700">등록한 상품</span>
     </h2> -->
-    <div *ngIf="goodsList.length === 0">
+    <div *ngIf="goodsList.length === 0" class="relative px-4 py-12 text-center text-gray-500 text-sm">
       등록한 상품이 없습니다.
     </div>
     <ul *ngIf="goodsList.length > 0" class="grid grid-cols-3 md:grid-cols-4 gap-px p-3">

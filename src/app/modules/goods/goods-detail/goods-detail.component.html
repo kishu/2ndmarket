@@ -93,10 +93,13 @@
         <div
           class="flex items-center p-3"
           *ngIf="goods.profileId | fsDocument:'profiles' | async as profile">
-          <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
+          <div class="w-12 h-12 mr-2 bg-gray-300 text-gray-700 rounded-full flex items-center justify-center font-bold">
+            <img [src]="profile.photoURL" class="w-full h-full rounded-full object-cover" *ngIf="profile.photoURL">
+            <span *ngIf="!profile.photoURL">{{ profile.displayName.slice(0, 1) }}</span>
+          </div>
           <div class="leading-tight">
             <div class="break-words">{{ profile.displayName }}</div>
-            <div class="text-sm text-gray-500 break-all">{{ goods.contact }}</div>
+            <div class="mt-px text-sm text-gray-500 break-all">{{ goods.contact }}</div>
           </div>
         </div>
       </div>
