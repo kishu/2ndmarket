@@ -22,16 +22,14 @@
   </div>
   <div class="pb-safe">
     <div class="sticky-wrap px-safe">
+      <div *ngIf="messages.length === 0" class="px-4 py-12 text-center text-gray-500 text-sm">
+        새로운 알림이 없습니다.
+      </div>
       <ul class="-mt-px border-t border-gray-300">
-        <li
-          class="relative px-4 py-12 text-center text-gray-500 text-sm"
-          *ngIf="messages.length === 0">
-          새로운 알림이 없습니다.
-        </li>
         <li
           #messageEl
           class="relative border-b border-gray-300"
-          *ngFor="let message of messages trackBy:trackById; first as isFirst" [id]="message.id">
+          *ngFor="let message of messages trackBy: trackById; first as isFirst" [id]="message.id">
           <a
             class="flex justify-between items-start p-3"
             [ngClass]="{'bg-gray-200': message.read}"
