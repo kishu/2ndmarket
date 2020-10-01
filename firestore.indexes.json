@@ -1,6 +1,14 @@
 {
   "indexes": [
     {
+      "collectionGroup": "accounts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "activated", "order": "DESCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "favoriteGoods",
       "queryScope": "COLLECTION",
       "fields": [

@@ -1,5 +1,5 @@
 import { auth } from 'firebase/app';
-import { of, ReplaySubject, Subject } from 'rxjs';
+import { merge, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
@@ -33,8 +33,8 @@ export class AuthService implements OnDestroy {
     // this.profileExt$.next(profileExt);
   }
 
-  user$ = new Subject<User | null>();
-  userSubscription = this.afAuth.user.pipe(
+  user$ = new ReplaySubject<User | null>(1);
+  private userSubscription = this.afAuth.user.pipe(
     map(user =>  user ?
       {
         id: user.uid,
@@ -45,18 +45,19 @@ export class AuthService implements OnDestroy {
       null
     ),
   ).subscribe(user => {
-    console.log('user', user);
+    console.log('AuthService User', user);
     this._user = user;
     this.user$.next(user);
   });
 
-  account$ = new Subject<AccountExt | null>();
-  accountSubscription = this.user$.pipe(
-    switchMap(user => user ? this.accountService.getQueryByUserId(user.id) : of(null))
+  account$ = new ReplaySubject<AccountExt | null>(1);
+  resetAccount$ = new Subject<null>();
+  private accountSubscription = merge(
+    this.user$.pipe(switchMap(user => user ? this.accountService.getActivatedByUserId(user.id) : of(null))),
+    this.resetAccount$.pipe(switchMap(() => this.user ? this.accountService.getActivatedByUserId(this.user.id) : of(null)))
   ).subscribe(account => {
-    console.log('subsubsub');
+    console.log('AuthService Account', account);
     this._account = account;
-    console.log('account', account);
     this.account$.next(account);
   });
 
@@ -96,6 +97,12 @@ export class AuthService implements OnDestroy {
 
   getRedirectResult() {
     return this.afAuth.getRedirectResult();
+  }
+
+  accountChange(account: AccountExt) {
+    console.log('AuthService Changed Account', account);
+    this._account = account;
+    this.account$.next(account);
   }
 
   signOut() {

@@ -26,15 +26,14 @@
           <h2 class="flex justify-between">
             <div class="p-3">
               <a
+                *ngIf="account$ | async as account"
                 class="flex items-center"
                 [routerLink]="['profile']">
-                <ng-container *ngIf="profileExt$ | async as profile">
-                  <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
-                  <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
-                    <span class="block text-sm ellipsis">{{ profile.displayName }}</span>
-                  </span>
-                  <span class="flex-shrink-0 mx-2 px-1 flex h-5 items-center text-xs bg-green-500 text-white">프로필 설정</span>
-                </ng-container>
+                <img [src]="account.profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
+                <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+                  <span class="block text-sm ellipsis">{{ account.profile.displayName }}</span>
+                </span>
+                <span class="flex-shrink-0 mx-2 px-1 flex h-5 items-center text-xs bg-green-500 text-white">프로필 설정</span>
               </a>
             </div>
           </h2>
@@ -102,35 +101,38 @@
               </a>
             </li>
           </ul>
-          <ng-container *ngIf="useProfile && profileExt$ | async as selectedProfileExt">
-            <div class="px-3">
-              <h2 class="mt-4 py-2 text-green-800">프로필 전환</h2>
-              <ul class="border-t border-b border-gray-300" *ngIf="profileExts$ | async as profileExts">
-                <li
-                  *ngFor="let profileExt of profileExts; first as isFirst"
-                  class="relative border-gray-300"
-                  [ngClass]="{'border-t': !isFirst}">
-                  <button
-                    (click)="onClickProfileSelect(selectedProfileExt, profileExt)"
-                    class="flex justify-between items-center w-full h-12 p-0 border-0 bg-transparent text-gray-800">
-                    <span class="flex-shrink-0 w-8 h-8 mr-2 relative">
-                      <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
-                      <!-- <span class="absolute right-0 top-0 w-1 h-1 -m-px rounded-full bg-red-600"></span> -->
-                    </span>
-                    <span class="flex-grow text-left text-sm ellipsis">{{ profileExt.displayName }}</span>
-                    <span
-                      class="flex-shrink-0 flex-grow-0 mx-2 px-1 flex h-5 items-center text-xs uppercase"
-                      [ngClass]="{
-                          'text-green-700': selectedProfileExt.id === profileExt.id,
-                          'bg-green-500 text-white': selectedProfileExt.id !== profileExt.id
-                        }">
-                        {{ selectedProfileExt.id === profileExt.id ? '사용중' : profileExt.group.name }}
+          <ng-container *ngIf="useProfile && account$ | async as currAccount">
+            <ng-container *ngIf="accounts$ | async as accounts">
+              <div class="px-3">
+                <h2 class="mt-4 py-2 text-green-800">프로필 전환</h2>
+                <ul class="border-t border-b border-gray-300">
+                  <li
+                    *ngFor="let account of accounts; first as isFirst"
+                    class="relative border-gray-300"
+                    [ngClass]="{'border-t': !isFirst}">
+                    <button
+                      [disabled]="account.profileId === currAccount.profileId"
+                      (click)="onClickAccountChange(account)"
+                      class="flex justify-between items-center w-full h-12 p-0 border-0 bg-transparent text-gray-800">
+                      <span class="flex-shrink-0 w-8 h-8 mr-2 relative">
+                        <img [src]="account.profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
+                        <!-- <span class="absolute right-0 top-0 w-1 h-1 -m-px rounded-full bg-red-600"></span> -->
                       </span>
-                  </button>
-                </li>
-              </ul>
-              <a [routerLink]="['groups']" class="flex justify-center items-center w-full h-12 p-2 bg-green-500 text-white text-center mt-3">그룹추가</a>
-            </div>
+                      <span class="flex-grow text-left text-sm ellipsis">{{ account.profile.displayName }}</span>
+                      <span
+                        class="flex-shrink-0 flex-grow-0 mx-2 px-1 flex h-5 items-center text-xs uppercase"
+                        [ngClass]="{
+                            'text-green-700': account.profileId === currAccount.profileId,
+                            'bg-green-500 text-white': account.profileId !== currAccount.profileId
+                          }">
+                          {{ account.profileId === currAccount.profileId ? '사용중' : account.profile.group.name }}
+                        </span>
+                    </button>
+                  </li>
+                </ul>
+                <a [routerLink]="['groups']" class="flex justify-center items-center w-full h-12 p-2 bg-green-500 text-white text-center mt-3">그룹추가</a>
+              </div>
+            </ng-container>
           </ng-container>
         </div>
       </div>

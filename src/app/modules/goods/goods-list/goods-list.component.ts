@@ -4,7 +4,7 @@ import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService, GoodsService } from '@app/core/http';
-import { PersistenceService } from '@app/core/persistence';
+import { Persistence2Service } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
 
 @Component({
@@ -20,9 +20,9 @@ export class GoodsListComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private goodsService: GoodsService,
-    private persistenceService: PersistenceService,
+    private persistence2Service: Persistence2Service,
   ) {
-    this.persistenceService.goods$.pipe(first()).subscribe(g => {
+    this.persistence2Service.goods$.pipe(first()).subscribe(g => {
       this.more = g.length >= 5;
       this.goods$.next(g);
     });

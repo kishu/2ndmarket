@@ -1,14 +1,15 @@
 import { forkJoin } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import { first, map, switchMap, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
-import { PersistenceService } from '@app/core/persistence';
+import { Persistence2Service, PersistenceService } from '@app/core/persistence';
 import { ProfileSelectService } from '@app/core/business';
-import { ProfileExt } from '@app/core/model';
+import { AccountExt, ProfileExt } from '@app/core/model';
 import { CoverService } from '@app/modules/components/services';
 import { environment } from '@environments/environment';
+import { AccountsService } from '@app/core/http/accounts.service';
 
 @Component({
   selector: 'app-preference',
@@ -17,25 +18,21 @@ import { environment } from '@environments/environment';
 })
 export class PreferenceComponent implements OnInit {
   useProfile = environment.useProfile;
-  profileExt$ = this.authService.profileExt$;
-  profileExts$ = this.profilesService.getQueryByUserId(this.authService.user.id).pipe(
-    switchMap(profiles => {
-      return forkJoin(
-        profiles.map(profile => this.groupsService.get(profile.groupId))
-      ).pipe(
-        map(groups => profiles.map((profile, i) => ({...profile, group: groups[i]} as ProfileExt)))
-      );
-    })
+  account$ = this.authService.account$;
+  accounts$ = this.authService.account$.pipe(
+    switchMap(account => this.accountService.getQueryByUserId(account.userId))
   );
-  writeGoodsCount$ = this.persistenceService.writtenGoods$.pipe(map(g => g.length));
-  favoriteGoodsCount$ = this.persistenceService.favoritedGoods$.pipe(map(g => g.length));
-  newMessagesCount$ = this.persistenceService.newMessageCount$;
+  writeGoodsCount$ = this.persistence2Service.writtenGoods$.pipe(map(g => g.length));
+  favoriteGoodsCount$ = this.persistence2Service.favoritedGoods$.pipe(map(g => g.length));
+  newMessagesCount$ = this.persistence2Service.newMessageCount$;
   constructor(
     private location: Location,
     private router: Router,
     private authService: AuthService,
+    private accountService: AccountsService,
     private groupsService: GroupsService,
     private persistenceService: PersistenceService,
+    private persistence2Service: Persistence2Service,
     private profilesService: ProfilesService,
     private profileSelectService: ProfileSelectService,
     private coverService: CoverService
@@ -43,6 +40,12 @@ export class PreferenceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  onClickAccountChange(account: AccountExt) {
+    this.accountService.activate(account.id).then(() => {
+      this.authService.resetAccount$.next();
+    });
   }
 
   onClickProfileSelect(curr: ProfileExt, target: ProfileExt) {

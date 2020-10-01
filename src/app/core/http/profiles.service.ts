@@ -4,17 +4,30 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
 import { NewProfile, Profile, Profile2, NewProfile2 } from '@app/core/model';
-import { switchMap } from 'rxjs/operators';
+import { GroupsService } from '@app/core/http/groups.service';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Profiles2Service extends FirestoreService<Profile2> {
 
-  constructor(protected afs: AngularFirestore) {
+  constructor(
+    protected afs: AngularFirestore,
+    protected groupService: GroupsService
+  ) {
     super(afs, 'profiles2');
   }
 
+  getWithGroup(profileId: string) {
+    return this.get(profileId).pipe(
+      switchMap(profile => {
+        return this.groupService.get(profile.groupId).pipe(
+          map(group => ({ ...profile, group }))
+        );
+      })
+    );
+  }
 }
 
 @Injectable({
