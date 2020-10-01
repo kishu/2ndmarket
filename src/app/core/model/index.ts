@@ -1,3 +1,4 @@
+export * from './account';
 export * from './favorite-goods';
 export * from './fcm-token';
 export * from './goods';

@@ -3,7 +3,18 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
-import { NewProfile, Profile } from '@app/core/model';
+import { NewProfile, Profile, Profile2, NewProfile2 } from '@app/core/model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class Profiles2Service extends FirestoreService<Profile2> {
+
+  constructor(protected afs: AngularFirestore) {
+    super(afs, 'profiles2');
+  }
+
+}
 
 @Injectable({
   providedIn: 'root'
