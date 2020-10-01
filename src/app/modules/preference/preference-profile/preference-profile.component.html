@@ -31,15 +31,13 @@
           <div class="w-full h-full overflow-hidden rounded-full">
             <!-- <img [src]="(uploadedPhotoUrl || photoFile || profile.photoURL || 'https://via.placeholder.com/150') | objectUrl | sanitizer: 'url'" class="w-full h-full object-cover" alt=""> -->
             <img
-              *ngIf="draftImage"
+              *ngIf="draftImage?.isFile || draftImage.src"
               [src]="(draftImage.isFile ? draftImage.file : (draftImage.src || 'https://via.placeholder.com/150')) | objectUrl | sanitizer: 'url'"
               [style.transform]="'rotate(' + draftImage.rotate + 'deg)'"
-              class="w-full h-full object-cover" alt="">
-            <input
-              type="file"
-              accept="image/gif, image/jpeg, image/png"
-              (change)="onChangeFile($event)"
-              class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
+              class="w-full h-full rounded-full object-cover" alt="">
+            <div class="w-full h-full bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-4xl font-bold">
+              {{ profile.displayName.slice(0, 1) }}
+            </div>
             <div
               *ngIf="draftImage?.isFile"
               class="absolute inset-0">
@@ -66,6 +64,11 @@
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
             </div>
+            <input
+              type="file"
+              accept="image/gif, image/jpeg, image/png"
+              (change)="onChangeFile($event)"
+              class="absolute left-0 top-0 w-full h-full border-none p-0 rounded-full opacity-0">
           </div>
         </div>
         <div class="mt-4">

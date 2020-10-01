@@ -14,7 +14,7 @@
         [ngClass]="{'flex-row-reverse': talk.permission}">
         <ng-container *ngIf="talk.profileId | fsDocument:'profiles' | async as profile">
           <div
-            class="w-10 h-10 m-1 border border-white bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-sm font-bold uppercase"
+            class="w-10 h-10 m-1 border border-white bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-sm font-bold"
             [ngClass]="{'opacity-0': !isFirst, '-my-1': !isFirst, 'shadow-outline': talk.seller}"
             *ngIf="!talk.permission">
             <img [src]="profile.photoURL" class="w-full h-full rounded-full object-cover" *ngIf="profile.photoURL">
@@ -57,7 +57,7 @@
           class="flex -mx-1"
           [ngClass]="{'flex-row-reverse': seller.id === profile.id}">
             <div
-              class="w-10 h-10 m-1 border border-white bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-sm font-bold uppercase"
+              class="w-10 h-10 m-1 border border-white bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-sm font-bold"
               [ngClass]="{'shadow-outline': seller.id !== profile.id}"
               *ngIf="seller.id !== profile.id">
               <img [src]="seller.photoURL" class="w-full h-full rounded-full object-cover" *ngIf="seller.photoURL">

@@ -24,18 +24,19 @@
       <div class="flex-grow overflow-y-auto scrolling-touch flex flex-col">
         <div>
           <h2 class="flex justify-between">
-            <div class="p-3">
-              <a
-                class="flex items-center"
-                [routerLink]="['profile']">
-                <ng-container *ngIf="profileExt$ | async as profile">
-                  <img [src]="profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
-                  <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
-                    <span class="block text-sm ellipsis">{{ profile.displayName }}</span>
-                  </span>
-                  <span class="flex-shrink-0 mx-2 px-1 flex h-5 items-center text-xs bg-green-500 text-white">프로필 설정</span>
-                </ng-container>
-              </a>
+            <div class="p-3 flex items-center">
+              <ng-container *ngIf="profileExt$ | async as profile">
+                <div class="w-12 h-12 mr-2 bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-lg font-bold">
+                  <img [src]="profile.photoURL" class="w-full h-full rounded-full object-cover" *ngIf="profile.photoURL">
+                  <span *ngIf="!profile.photoURL">{{ profile.displayName.slice(0, 1) }}</span>
+                </div>
+                <span class="flex items-center whitespace-no-wrap overflow-hidden flex-shrink flex-grow">
+                  <span class="block text-sm ellipsis">{{ profile.displayName }}</span>
+                </span>
+                <a
+                  routerLink="profile"
+                  class="flex-shrink-0 mx-2 px-1 flex h-5 items-center text-xs bg-green-500 text-white">프로필 설정</a>
+              </ng-container>
             </div>
           </h2>
           <ul class="flex justify-between px-2">
@@ -114,7 +115,10 @@
                     (click)="onClickProfileSelect(selectedProfileExt, profileExt)"
                     class="flex justify-between items-center w-full h-12 p-0 border-0 bg-transparent text-gray-800">
                     <span class="flex-shrink-0 w-8 h-8 mr-2 relative">
-                      <img [src]="profileExt.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
+                      <div class="w-8 h-8 mr-2 bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-xs font-bold">
+                        <img [src]="profileExt.photoURL" class="w-full h-full rounded-full object-cover" *ngIf="profileExt.photoURL">
+                        <span *ngIf="!profileExt.photoURL">{{ profileExt.displayName.slice(0, 1) }}</span>
+                      </div>
                       <!-- <span class="absolute right-0 top-0 w-1 h-1 -m-px rounded-full bg-red-600"></span> -->
                     </span>
                     <span class="flex-grow text-left text-sm ellipsis">{{ profileExt.displayName }}</span>
