@@ -1,5 +1,5 @@
 import { firestore } from 'firebase';
-import { Profile } from './profile';
+import { Profile, ProfileExt2 } from './profile';
 
 export interface Account {
   id: string;
@@ -11,7 +11,7 @@ export interface Account {
 }
 
 export interface AccountExt extends Account {
-  profile: Profile;
+  profile: ProfileExt2;
 }
 
 export type NewAccount = Omit<Account, 'id' | 'created'> & {
