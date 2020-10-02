@@ -1,23 +1,28 @@
 import { firestore } from 'firebase';
-import { Profile, ProfileExt2 } from './profile';
+import { Group } from './group';
+import { Profile2 } from './profile';
 
-export interface Account {
+export interface Membership {
   id: string;
   userId: string; // sns login id
   userEmail: string; // sns login email
+  groupId: string;
   profileId: string;
   activated: boolean;
   created: firestore.Timestamp;
 }
 
-export interface AccountExt extends Account {
-  profile: ProfileExt2;
+export interface MembershipExt extends Membership {
+  group: Group;
+  profile: Profile2;
 }
 
-export type NewAccount = Omit<Account, 'id' | 'created'> & {
+export type NewMembership = Omit<Account, 'id' | 'created'> & {
   created: firestore.FieldValue;
 };
 
+
+// "유저(firebase)는 '프로필'을 사용해 '그룹'의 '멤버'가 된다."
 
 // 1. sns 로그인 -> Account.uid == uid && Account.activated == true인 Account 검색
 //   1.1 Account 있다 -> 유저 확인 완료. 식별자로 Account.id 사용

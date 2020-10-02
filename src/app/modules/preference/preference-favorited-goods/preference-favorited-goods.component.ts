@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/http';
-import { GoodsCacheService, PersistenceService } from '@app/core/persistence';
+import { GoodsCacheService, Persistence2Service } from '@app/core/persistence';
 import { Goods } from '@app/core/model';
 
 @Component({
@@ -16,7 +16,7 @@ export class PreferenceFavoritedGoodsComponent implements OnInit {
     private location: Location,
     private authService: AuthService,
     private goodsCacheService: GoodsCacheService,
-    private persistenceService: PersistenceService
+    private persistenceService: Persistence2Service
   ) {
   }
 

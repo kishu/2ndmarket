@@ -40,7 +40,7 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit, OnDestr
 
   ngAfterViewInit() {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
-    const profileId = this.authService.profile.id;
+    const profileId = this.authService.membership.profileId;
 
     this.commentList$ = this.commentsService.valueChangesQueryByGoodsId(goodsId).pipe(
       takeUntil(this.destroy$),

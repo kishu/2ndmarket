@@ -12,7 +12,7 @@
         class="flex -mx-1"
         *ngFor="let talk of comment trackBy:trackById; first as isFirst; last as isLast"
         [ngClass]="{'flex-row-reverse': talk.permission}">
-        <ng-container *ngIf="talk.profileId | fsDocument:'profiles' | async as profile">
+        <ng-container *ngIf="talk.profileId | fsDocument:'profiles2' | async as profile">
           <div
             class="w-10 h-10 m-1 border border-white bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-sm font-bold uppercase"
             [ngClass]="{'opacity-0': !isFirst, '-my-1': !isFirst, 'shadow-outline': talk.seller}"

@@ -8,12 +8,16 @@ export const onWriteFavoriteGoods = functions
   .firestore
   .document('favoriteGoods/{favoriteGoodsId}')
   .onWrite(async (change: any, context: any) => {
-    const created = change.after.exists;
-    const favoriteGoodsDoc = change.after.exists ? change.after : change.before;
+    const created = !change.before.exists() && change.after.exists();
+    const updated = change.before.exists() && change.after.exists();
+    const deleted = change.before.exists() && !change.after.exists();
+    const favoriteGoodsDoc = (created || updated) ? change.after : change.before;
     const favoriteGoodsData = favoriteGoodsDoc.data();
-    const goodsDoc = await db.doc(`goods/${favoriteGoodsData.goodsId}`).get();
-    const partialGoods= {
-      favoritesCnt: admin.firestore.FieldValue.increment(created ? 1 : -1),
-    };
-    return goodsDoc.ref.update(partialGoods);
+    const increment = created ? 1 : deleted ? -1 : 0;
+    const action = increment !== 0 ?
+      db.collection('goods').doc(favoriteGoodsData.goodId).update({
+        favoritesCnt: admin.firestore.FieldValue.increment(increment)
+      }) :
+      null;
+    return action;
   });

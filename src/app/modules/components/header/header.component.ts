@@ -12,7 +12,7 @@ import { Persistence2Service, PersistenceService } from '@app/core/persistence';
 })
 export class HeaderComponent implements OnInit {
   routePath: string;
-  group = this.authService.account.profile.group;
+  group = this.authService.membership.group;
   newMessagesCount$ = this.persistence2Service.newMessageCount$;
 
   constructor(

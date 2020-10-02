@@ -26,7 +26,7 @@
           <h2 class="flex justify-between">
             <div class="p-3">
               <a
-                *ngIf="account$ | async as account"
+                *ngIf="membership$ | async as account"
                 class="flex items-center"
                 [routerLink]="['profile']">
                 <img [src]="account.profile.photoURL || 'https://via.placeholder.com/150'" class="w-12 h-12 rounded-full mr-2 flex items-center object-cover" alt="">
@@ -101,31 +101,31 @@
               </a>
             </li>
           </ul>
-          <ng-container *ngIf="useProfile && account$ | async as currAccount">
-            <ng-container *ngIf="accounts$ | async as accounts">
+          <ng-container *ngIf="useProfile && membership$ | async as currMembership">
+            <ng-container *ngIf="memberships$ | async as memberships">
               <div class="px-3">
                 <h2 class="mt-4 py-2 text-green-800">프로필 전환</h2>
                 <ul class="border-t border-b border-gray-300">
                   <li
-                    *ngFor="let account of accounts; first as isFirst"
+                    *ngFor="let membership of memberships; first as isFirst"
                     class="relative border-gray-300"
                     [ngClass]="{'border-t': !isFirst}">
                     <button
-                      [disabled]="account.profileId === currAccount.profileId"
-                      (click)="onClickAccountChange(account)"
+                      [disabled]="membership.profileId === currMembership.profileId"
+                      (click)="onClickMembershipChange(membership)"
                       class="flex justify-between items-center w-full h-12 p-0 border-0 bg-transparent text-gray-800">
                       <span class="flex-shrink-0 w-8 h-8 mr-2 relative">
-                        <img [src]="account.profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
+                        <img [src]="membership.profile.photoURL || 'https://via.placeholder.com/150'" class="w-8 h-8 rounded-full mr-2 object-cover" alt="">
                         <!-- <span class="absolute right-0 top-0 w-1 h-1 -m-px rounded-full bg-red-600"></span> -->
                       </span>
-                      <span class="flex-grow text-left text-sm ellipsis">{{ account.profile.displayName }}</span>
+                      <span class="flex-grow text-left text-sm ellipsis">{{ membership.profile.displayName }}</span>
                       <span
                         class="flex-shrink-0 flex-grow-0 mx-2 px-1 flex h-5 items-center text-xs uppercase"
                         [ngClass]="{
-                            'text-green-700': account.profileId === currAccount.profileId,
-                            'bg-green-500 text-white': account.profileId !== currAccount.profileId
+                            'text-green-700': membership.profileId === currMembership.profileId,
+                            'bg-green-500 text-white': membership.profileId !== currMembership.profileId
                           }">
-                          {{ account.profileId === currAccount.profileId ? '사용중' : account.profile.group.name }}
+                          {{ membership.profileId === currMembership.profileId ? '사용중' : membership.group.name }}
                         </span>
                     </button>
                   </li>

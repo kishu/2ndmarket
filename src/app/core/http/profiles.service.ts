@@ -19,15 +19,6 @@ export class Profiles2Service extends FirestoreService<Profile2> {
     super(afs, 'profiles2');
   }
 
-  getWithGroup(profileId: string) {
-    return this.get(profileId).pipe(
-      switchMap(profile => {
-        return this.groupService.get(profile.groupId).pipe(
-          map(group => ({ ...profile, group }))
-        );
-      })
-    );
-  }
 }
 
 @Injectable({

@@ -3,13 +3,12 @@ import { first, map, switchMap, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService, GroupsService, ProfilesService } from '@app/core/http';
+import { AuthService, GroupsService, MembershipsService, ProfilesService } from '@app/core/http';
 import { Persistence2Service, PersistenceService } from '@app/core/persistence';
 import { ProfileSelectService } from '@app/core/business';
-import { AccountExt, ProfileExt } from '@app/core/model';
+import { MembershipExt, ProfileExt } from '@app/core/model';
 import { CoverService } from '@app/modules/components/services';
 import { environment } from '@environments/environment';
-import { AccountsService } from '@app/core/http/accounts.service';
 
 @Component({
   selector: 'app-preference',
@@ -18,9 +17,9 @@ import { AccountsService } from '@app/core/http/accounts.service';
 })
 export class PreferenceComponent implements OnInit {
   useProfile = environment.useProfile;
-  account$ = this.authService.account$;
-  accounts$ = this.authService.account$.pipe(
-    switchMap(account => this.accountService.getQueryByUserId(account.userId))
+  membership$ = this.authService.membership$;
+  memberships$ = this.authService.membership$.pipe(
+    switchMap(membership => this.membershipsService.getQueryByUserId(membership.userId))
   );
   writeGoodsCount$ = this.persistence2Service.writtenGoods$.pipe(map(g => g.length));
   favoriteGoodsCount$ = this.persistence2Service.favoritedGoods$.pipe(map(g => g.length));
@@ -29,8 +28,8 @@ export class PreferenceComponent implements OnInit {
     private location: Location,
     private router: Router,
     private authService: AuthService,
-    private accountService: AccountsService,
     private groupsService: GroupsService,
+    private membershipsService: MembershipsService,
     private persistenceService: PersistenceService,
     private persistence2Service: Persistence2Service,
     private profilesService: ProfilesService,
@@ -42,9 +41,9 @@ export class PreferenceComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onClickAccountChange(account: AccountExt) {
-    this.accountService.activate(account.id).then(() => {
-      this.authService.resetAccount$.next();
+  onClickMembershipChange(membership: MembershipExt) {
+    this.membershipsService.activate(membership.id).then(() => {
+      this.authService.changeMembership$.next();
     });
   }
 

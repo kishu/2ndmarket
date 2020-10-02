@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AuthService, MessagesService } from '@app/core/http';
-import { PersistenceService } from '@app/core/persistence';
+import { Persistence2Service } from '@app/core/persistence';
 import { MessageExt } from '@app/core/model';
 
 @Component({
@@ -17,7 +17,7 @@ export class PreferenceMessagesComponent implements OnInit {
     private renderer: Renderer2,
     private authService: AuthService,
     private messagesService: MessagesService,
-    private persistenceService: PersistenceService
+    private persistenceService: Persistence2Service
     ) {
   }
 

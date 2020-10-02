@@ -4,8 +4,9 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AccountsService } from '@app/core/http/accounts.service';
-import { ProfileExt, User, Profile2, ProfileExt2, AccountExt } from '@app/core/model';
+import { ProfileExt, User, Profile2 } from '@app/core/model';
+import { MembershipExt } from '@app/core/model/membership';
+import { MembershipsService } from '@app/core/http/memberships.service';
 
 enum AuthProvider {
   google = 'google',
@@ -24,8 +25,8 @@ export class AuthService implements OnDestroy {
   private _profile: ProfileExt;
   get profile() { return this._profile; }
 
-  private _account: AccountExt;
-  get account() { return this._account; }
+  private _membership: MembershipExt;
+  get membership() { return this._membership; }
 
   profileExt$ = new ReplaySubject<ProfileExt>(1);
   set selectedProfile(profileExt: ProfileExt) {
@@ -50,29 +51,31 @@ export class AuthService implements OnDestroy {
     this.user$.next(user);
   });
 
-  account$ = new ReplaySubject<AccountExt | null>(1);
-  resetAccount$ = new Subject<null>();
-  private accountSubscription = merge(
-    this.user$.pipe(switchMap(user => user ? this.accountService.getActivatedByUserId(user.id) : of(null))),
-    this.resetAccount$.pipe(switchMap(() => this.user ? this.accountService.getActivatedByUserId(this.user.id) : of(null)))
-  ).subscribe(account => {
-    console.log('AuthService Account', account);
-    this._account = account;
-    this.account$.next(account);
+  membership$ = new ReplaySubject<MembershipExt | null>(1);
+  changeMembership$ = new Subject<null>();
+  private membershipSubscription = merge(
+    this.user$.pipe(map(user => user?.id)),
+    this.changeMembership$.pipe(map(() => this.user?.id))
+  ).pipe(
+    switchMap(userId => userId ? this.membershipService.getActivatedByUserId(userId) : of(null))
+  ).subscribe(membership => {
+    console.log('AuthService Membership', membership);
+    this._membership = membership;
+    this.membership$.next(membership);
   });
 
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
-    private accountService: AccountsService
+    private membershipService: MembershipsService
   ) {
   }
 
   ngOnDestroy() {
-    this.account$.complete();
+    this.membership$.complete();
     this.user$.complete();
 
-    this.accountSubscription.unsubscribe();
+    this.membershipSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
   }
 
@@ -97,12 +100,6 @@ export class AuthService implements OnDestroy {
 
   getRedirectResult() {
     return this.afAuth.getRedirectResult();
-  }
-
-  accountChange(account: AccountExt) {
-    console.log('AuthService Changed Account', account);
-    this._account = account;
-    this.account$.next(account);
   }
 
   signOut() {

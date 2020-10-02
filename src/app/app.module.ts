@@ -33,7 +33,7 @@ export function appInitializer(router: Router, authService: AuthService) {
     return new Promise(resolve => {
       forkJoin([
         authService.user$.pipe(first()),
-        authService.account$.pipe(first())
+        authService.membership$.pipe(first())
       ]).subscribe(([u, a]) => {
         if (!u) {
           router.navigate(['/auth/sign-in']);

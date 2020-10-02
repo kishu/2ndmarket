@@ -4,9 +4,6 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-    match /accounts/{account} {
-      allow read, write: if request.auth.uid != null;
-    }
     match /deletedGoods/{deletedGoods} {
       allow read: if false;
       allow create: if request.auth.uid != null;
@@ -29,6 +26,9 @@ service cloud.firestore {
     match /groups/{group} {
       allow read: if true;
       allow write: if false;
+    }
+    match /memberships/{membership} {
+      allow read, write: if request.auth.uid != null;
     }
     match /messages/{message} {
       allow read, write: if request.auth.uid != null;

@@ -8,8 +8,11 @@ export const onWriteGoodsComments = functions
     .document('goodsComments/{goodsCommentId}')
     .onWrite(async (change: any, context: any) => {
       const promises: Promise<any>[] = [] ;
-      const created = change.after.exists;
-      const goodsCommentDoc = change.after.exists ? change.after : change.before;
+      const created = !change.before.exists() && change.after.exists();
+      const updated = change.before.exists() && change.after.exists();
+      const deleted = change.before.exists() && !change.after.exists();
+
+      const goodsCommentDoc = (created || updated) ? change.after : change.before;
       const goodsCommentData = goodsCommentDoc.data();
       const goodsDoc = await db.doc(`goods/${goodsCommentData.goodsId}`).get();
       const goodsData = goodsDoc.data();
@@ -28,7 +31,7 @@ export const onWriteGoodsComments = functions
         promises.push(db.collection('messages').add(newMessage));
       }
 
-      if (!created) {
+      if (deleted) {
         const deleteMessages = db.collection('messages')
           .where('goodsCommentId', '==', goodsCommentDoc.id)
           .get()

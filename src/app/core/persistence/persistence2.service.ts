@@ -15,42 +15,42 @@ export class Persistence2Service implements OnDestroy {
   messageExts$ = new ReplaySubject<MessageExt[]>(1);
   newMessageCount$ = new ReplaySubject<number>(1);
 
-  protected goodsSubscription = this.authService.account$.pipe(
-    filter(a => a !== null),
-    switchMap(a => {
-      return this.goodsService.getQueryByGroupId(a.profile.groupId, { limit: 5 }).pipe(
-        switchMap(() => this.goodsService.valueChangesQueryByGroupId(a.profile.groupId, { limit: 5 }))
+  protected goodsSubscription = this.authService.membership$.pipe(
+    filter(m => m !== null),
+    switchMap(m => {
+      return this.goodsService.getQueryByGroupId(m.groupId, { limit: 5 }).pipe(
+        switchMap(() => this.goodsService.valueChangesQueryByGroupId(m.groupId, { limit: 5 }))
       );
     }),
     tap(g => console.log('goods', g))
   ).subscribe(g => this.goods$.next(g));
 
-  protected writtenGoodsSubscription = this.authService.account$.pipe(
-    filter(a => a !== null),
-    switchMap(a => this.goodsService.valueChangesQueryByProfileId(a.profileId)),
+  protected writtenGoodsSubscription = this.authService.membership$.pipe(
+    filter(m => m !== null),
+    switchMap(m => this.goodsService.valueChangesQueryByProfileId(m.profileId)),
   ).subscribe(g => this.writtenGoods$.next(g));
 
-  protected favoritedGoodsSubscription = this.authService.account$.pipe(
-    switchMap(a => a ?
-      this.favoriteGoodsService.valueChangesByProfileId(a.profileId).pipe(
+  protected favoritedGoodsSubscription = this.authService.membership$.pipe(
+    switchMap(m => m ?
+      this.favoriteGoodsService.valueChangesByProfileId(m.profileId).pipe(
         switchMap(favorites => isEmpty(favorites) ? of([]) : forkJoin(favorites.map(f => this.goodsService.get(f.goodsId)))),
       ) :
       of([])
     ),
   ).subscribe(g => this.favoritedGoods$.next(g));
 
-  protected messageExtsSubscription = this.authService.account$.pipe(
-    filter(a => a !== null),
-    switchMap(a => {
-      return this.messagesService.valueChangesQueryByProfileId(a.profileId).pipe(
+  protected messageExtsSubscription = this.authService.membership$.pipe(
+    filter(m => m !== null),
+    switchMap(m => {
+      return this.messagesService.valueChangesQueryByProfileId(m.profileId).pipe(
         switchMap(messages => {
-          this.newMessageCount$.next(messages.filter(m => !m.read).length);
+          this.newMessageCount$.next(messages.filter(ms => !ms.read).length);
           return messages.length === 0 ? of([]) : forkJoin([
-            forkJoin(messages.map(m => this.goodsService.get(m.goodsId))),
-            forkJoin(messages.map(m => this.goodsCommentsService.get(m.goodsCommentId)))
+            forkJoin(messages.map(ms => this.goodsService.get(ms.goodsId))),
+            forkJoin(messages.map(ms => this.goodsCommentsService.get(ms.goodsCommentId)))
           ]).pipe(
-            map(([goods, goodsComments]) => messages.map((m, i) => {
-              return {...m, goods: goods[i], goodsComment: goodsComments[i]} as MessageExt;
+            map(([goods, goodsComments]) => messages.map((ms, i) => {
+              return {...ms, goods: goods[i], goodsComment: goodsComments[i]} as MessageExt;
             }))
           );
         }),
