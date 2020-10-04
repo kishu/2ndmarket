@@ -8,7 +8,7 @@ export interface Membership {
   userEmail: string; // sns login email
   groupId: string;
   profileId: string;
-  activated: boolean;
+  activated: firestore.Timestamp;
   created: firestore.Timestamp;
 }
 
@@ -17,7 +17,8 @@ export interface MembershipExt extends Membership {
   profile: Profile2;
 }
 
-export type NewMembership = Omit<Account, 'id' | 'created'> & {
+export type NewMembership = Omit<Membership, 'id' | 'created'> & {
+  activated: firestore.FieldValue;
   created: firestore.FieldValue;
 };
 

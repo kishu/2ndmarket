@@ -7,10 +7,11 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { AuthService, GroupsService, ProfilesService, UserInfosService } from '@app/core/http';
+import { AuthService, GroupsService, MembershipsService, Profiles2Service, ProfilesService, UserInfosService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/business';
 import { CoverService } from '@app/modules/components/services';
-import { Group, NewProfile, Profile } from '@app/core/model';
+import { Group, NewMembership, NewProfile, NewProfile2, Profile } from '@app/core/model';
+import { firestore } from 'firebase';
 
 @Component({
   selector: 'app-preference-groups',
@@ -51,7 +52,9 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private coverService: CoverService,
     private groupsService: GroupsService,
+    private membershipsService: MembershipsService,
     private profilesService: ProfilesService,
+    private profiles2Service: Profiles2Service,
     private profileSelectService: ProfileSelectService,
   ) {
   }
@@ -138,13 +141,52 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     const user = this.authService.user;
     const selectedGroup = this.selectedGroup;
 
-    const profiles$ =
-      this.profilesService
-      .getQueryByEmailAndGroupId(email, selectedGroup.id)
+    const memberships$ = this.membershipsService
+      .getQueryByUserIdAndGroupId(selectedGroup.id, user.id)
       .pipe(
         first(),
-        tap(t => console.log(0, t)),
-        share());
+        share()
+      );
+
+    // no memberships contains email given email, add new profile and new membership
+    const create2$ = memberships$.pipe(
+      first(),
+      filter(memberships => !memberships.find(m => m.profile.email === email)),
+      switchMap(() => {
+        const { id: userId } = this.authService.user;
+        return this.profiles2Service.add({
+          userId,
+          email,
+          displayName: email.split('@')[0],
+          photoURL: '',
+          created: Profiles2Service.serverTimestamp()
+        } as NewProfile2);
+      }),
+      switchMap(profile => {
+        const { id: userId, email: userEmail } = this.authService.user;
+        return this.membershipsService.add({
+          userId,
+          userEmail,
+          groupId: selectedGroup.id,
+          profileId: profile.id,
+          activated: MembershipsService.serverTimestamp(),
+          created: MembershipsService.serverTimestamp()
+        } as NewMembership);
+      })
+    );
+
+    // is memberships contains given email, add user id to profile.users
+
+
+
+
+    const profiles$ =
+      this.profiles2Service
+      .getQueryByEmailAndGroupId_D(email, selectedGroup.id)
+      .pipe(
+        first(),
+        share()
+      );
 
     // no profile contains email given email, add new profile
     const create$ = profiles$.pipe(
@@ -152,7 +194,7 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
       filter(profiles => isEmpty(profiles)),
       tap(t => console.log(1, t)),
       switchMap(() => {
-        return this.profilesService.add({
+        return this.profiles2Service.add_D({
           groupId: selectedGroup.id,
           displayName: email.split('@')[0],
           email,
@@ -172,7 +214,7 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
       map(profiles => head(profiles) as Profile),
       switchMap(profile => {
         return fromPromise(
-          this.profilesService.updateUserIdAdd(profile.id, user.id)
+          this.profiles2Service.updateUserIdAdd_D(profile.id, user.id)
         ).pipe(
           map(() => profile)
         );

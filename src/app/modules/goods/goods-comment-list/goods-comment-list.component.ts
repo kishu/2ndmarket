@@ -32,15 +32,10 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-  }
-
-  ngAfterViewInit() {
     const goodsId = this.activatedRoute.snapshot.paramMap.get('goodsId');
     const profileId = this.authService.membership.profileId;
+
+    console.log('p', profileId);
 
     this.commentList$ = this.commentsService.valueChangesQueryByGoodsId(goodsId).pipe(
       takeUntil(this.destroy$),
@@ -71,8 +66,17 @@ export class GoodsCommentListComponent implements OnInit, AfterViewInit, OnDestr
           }
           return a;
         }, []);
-      })
+      }),
+      tap(t => console.log('tttt', t))
     );
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
+  ngAfterViewInit() {
+
   }
 
   onDelete(comment: GoodsComment) {

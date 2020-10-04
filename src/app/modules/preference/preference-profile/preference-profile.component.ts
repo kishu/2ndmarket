@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
-import { AuthService, CloudinaryUploadService, ProfilesService } from '@app/core/http';
+import { AuthService, CloudinaryUploadService, Profiles2Service, ProfilesService } from '@app/core/http';
 import { ProfileSelectService } from '@app/core/business';
 import { CoverService } from '@app/modules/components/services';
 import { DraftImage } from '@app/core/model';
@@ -44,6 +44,7 @@ export class PreferenceProfileComponent implements OnInit {
     private authService: AuthService,
     private coverService: CoverService,
     private profilesService: ProfilesService,
+    private profiles2Service: Profiles2Service,
     private profileSelectService: ProfileSelectService,
     private cloudinaryUploadService: CloudinaryUploadService
   ) {
@@ -88,7 +89,7 @@ export class PreferenceProfileComponent implements OnInit {
     const [uploadProgress$, uploadComplete$] = this.cloudinaryUploadService.upload([this.draftImage]);
     uploadComplete$.pipe(
       switchMap(urls => {
-        return this.profilesService.update(profile.id, {
+        return this.profiles2Service.update_D(profile.id, {
           photoURL: urls[0],
           displayName: this.displayNameCtl.value
         });
@@ -113,8 +114,8 @@ export class PreferenceProfileComponent implements OnInit {
     this.coverService.show('프로필을 재설정하고 있습니다.');
 
     const { user, profile } = this.authService;
-    const profiles$ = fromPromise(this.profilesService.updateUserIdRemove(profile.id, user.id)).pipe(
-      switchMap(() => this.profilesService.getQueryByUserId(user.id)),
+    const profiles$ = fromPromise(this.profiles2Service.updateUserIdRemove_D(profile.id, user.id)).pipe(
+      switchMap(() => this.profiles2Service.getQueryByUserId_D(user.id)),
       share()
     );
 

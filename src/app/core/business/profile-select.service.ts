@@ -46,32 +46,34 @@ export class ProfileSelectService {
   }
 
   update(id: string) {
-    return this.profileService.get(id).pipe(
-      switchMap(profile => {
-        return this.groupsService.get(profile.groupId).pipe(
-          map(group => ({ ...profile, group })),
-        );
-      }),
-      tap(profileExt => this.authService.selectedProfile = profileExt)
-    );
+    return of(null);
+    // return this.profileService.get(id).pipe(
+    //   switchMap(profile => {
+    //     return this.groupsService.get(profile.groupId).pipe(
+    //       map(group => ({ ...profile, group })),
+    //     );
+    //   }),
+    //   tap(profileExt => this.authService.selectedProfile = profileExt)
+    // );
   }
 
   select(id: string) {
-    const userInfo$ = this.userInfosService.set(
-      this.authService.user.id,
-      { profileId: id }
-    );
-
-    return fromPromise(userInfo$).pipe(
-      switchMap(() => this.profileService.get(id)),
-      switchMap(profile => {
-        return this.groupsService.get(profile.groupId).pipe(
-          map(group => ({ ...profile, group })),
-        );
-      }),
-      switchMap(profileExt => this.persistenceService.reset(profileExt)),
-      tap(profileExt => this.authService.selectedProfile = profileExt)
-    );
+    return of(null);
+    // const userInfo$ = this.userInfosService.set(
+    //   this.authService.user.id,
+    //   { profileId: id }
+    // );
+    //
+    // return fromPromise(userInfo$).pipe(
+    //   switchMap(() => this.profileService.get(id)),
+    //   switchMap(profile => {
+    //     return this.groupsService.get(profile.groupId).pipe(
+    //       map(group => ({ ...profile, group })),
+    //     );
+    //   }),
+    //   switchMap(profileExt => this.persistenceService.reset(profileExt)),
+    //   tap(profileExt => this.authService.selectedProfile = profileExt)
+    // );
   }
 
   remove() {

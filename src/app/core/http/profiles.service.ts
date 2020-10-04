@@ -1,5 +1,5 @@
 import { firestore } from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
@@ -17,6 +17,48 @@ export class Profiles2Service extends FirestoreService<Profile2> {
     protected groupService: GroupsService
   ) {
     super(afs, 'profiles2');
+  }
+
+  add(newProfile: NewProfile2) {
+    return super.add(newProfile);
+  }
+
+  add_D(newProfile: NewProfile) {
+    return super.add(newProfile);
+  }
+
+  getQueryByUserId_D(userId: string) {
+    return super.getQuery({
+      where: [
+        ['userIds', 'array-contains', userId]
+      ]
+    });
+  }
+
+  getQueryByEmailAndGroupId_D(email: string, groupId: string): Observable<Profile[]> {
+    return of([]);
+    // return super.getQuery({
+    //   where: [
+    //     ['groupId', '==', groupId],
+    //     ['email', '==', email]
+    //   ]
+    // });
+  }
+
+  update_D(profileId: string, profile: Partial<Profile>) {
+    return super.update(profileId, profile);
+  }
+
+  updateUserIdAdd_D(profileId: string, userId: string) {
+    return super.update(profileId, {
+      userIds: firestore.FieldValue.arrayUnion(userId)
+    });
+  }
+
+  updateUserIdRemove_D(profileId: string, userId: string) {
+    return super.update(profileId, {
+      userIds: firestore.FieldValue.arrayRemove(userId)
+    });
   }
 
 }

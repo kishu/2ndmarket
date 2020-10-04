@@ -3,7 +3,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { head } from 'lodash-es';
 import { firestore } from 'firebase/app';
 import { Injectable } from '@angular/core';
-import { Membership } from '@app/core/model/membership';
+import { Membership, NewMembership } from '@app/core/model/membership';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreService } from '@app/core/http/firestore.service';
 import { GroupsService } from '@app/core/http/groups.service';
@@ -22,25 +22,12 @@ export class MembershipsService extends FirestoreService<Membership> {
     super(afs, 'memberships');
   }
 
-  getQueryByUserId(userId: string) {
-    return super.getQuery({
-      where: [
-        ['userId', '==', userId]
-      ]
-    }).pipe(
-      switchMap(memberships => {
-        return forkJoin([
-          forkJoin(memberships.map(membership => this.groupsService.get(membership.groupId))),
-          forkJoin(memberships.map(membership => this.profiles2Service.get(membership.profileId)))
-        ]).pipe(
-          map(([groups, profiles]) => {
-            return memberships.map((membership, i) => {
-              return { ...membership, group: groups[i], profile: profiles[i] };
-            });
-          })
-        );
-      })
-    );
+  activate(id: string) {
+    return this.update(id, { activated: firestore.FieldValue.serverTimestamp() });
+  }
+
+  add(membership: NewMembership) {
+    return super.add(membership);
   }
 
   getActivatedByUserId(userId: string) {
@@ -69,7 +56,45 @@ export class MembershipsService extends FirestoreService<Membership> {
     );
   }
 
-  activate(id: string) {
-    return this.update(id, { activated: firestore.FieldValue.serverTimestamp() });
+  getQueryByUserIdAndGroupId(groupId: string, userId: string) {
+    return super.getQuery({
+      where: [
+        ['groupId', '==', groupId],
+        ['userId', '==', userId]
+      ]
+    }).pipe(
+      switchMap(memberships => {
+        return forkJoin(
+          memberships.map(membership => this.profiles2Service.get(membership.profileId))
+        ).pipe(
+          map((profiles) => {
+            return memberships.map((membership, i) => {
+              return { ...membership, profile: profiles[i] };
+            });
+          })
+        );
+      })
+    );
+  }
+
+  getQueryByUserId(userId: string) {
+    return super.getQuery({
+      where: [
+        ['userId', '==', userId]
+      ]
+    }).pipe(
+      switchMap(memberships => {
+        return forkJoin([
+          forkJoin(memberships.map(membership => this.groupsService.get(membership.groupId))),
+          forkJoin(memberships.map(membership => this.profiles2Service.get(membership.profileId)))
+        ]).pipe(
+          map(([groups, profiles]) => {
+            return memberships.map((membership, i) => {
+              return { ...membership, group: groups[i], profile: profiles[i] };
+            });
+          })
+        );
+      })
+    );
   }
 }

@@ -10,7 +10,7 @@ export interface Profile2 {
   created: firestore.Timestamp;
 }
 
-export type NewProfile2 = Omit<Account, 'id' | 'created'> & {
+export type NewProfile2 = Omit<Profile2, 'id' | 'created'> & {
   created: firestore.FieldValue;
 };
 
