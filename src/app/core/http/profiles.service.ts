@@ -23,6 +23,15 @@ export class Profiles2Service extends FirestoreService<Profile2> {
     return super.add(newProfile);
   }
 
+  getQueryByEmail(email: string) {
+    return super.getQuery({
+      where: [
+        ['email', '==', email]
+      ],
+      limit: 1
+    });
+  }
+
   add_D(newProfile: NewProfile) {
     return super.add(newProfile);
   }

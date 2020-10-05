@@ -1,5 +1,5 @@
 import { head, isEmpty, random } from 'lodash-es';
-import { BehaviorSubject, merge } from 'rxjs';
+import { BehaviorSubject, merge, of } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { filter, first, map, share, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
@@ -141,97 +141,159 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     const user = this.authService.user;
     const selectedGroup = this.selectedGroup;
 
-    const memberships$ = this.membershipsService
-      .getQueryByUserIdAndGroupId(selectedGroup.id, user.id)
-      .pipe(
-        first(),
-        share()
-      );
+    const membership$ = this.membershipsService
+      .getQueryByUserIdAndGroupId(selectedGroup.id, user.id).pipe(first(), share());
 
-    // no memberships contains email given email, add new profile and new membership
-    const create2$ = memberships$.pipe(
+    const existence$ = membership$.pipe(
       first(),
-      filter(memberships => !memberships.find(m => m.profile.email === email)),
-      switchMap(() => {
-        const { id: userId } = this.authService.user;
-        return this.profiles2Service.add({
-          userId,
-          email,
-          displayName: email.split('@')[0],
-          photoURL: '',
-          created: Profiles2Service.serverTimestamp()
-        } as NewProfile2);
+      filter(m => !!m),
+      switchMap(() => of(null))
+    );
+
+    const nonexistence$ = membership$.pipe(
+      first(),
+      filter(m => !m),
+      switchMap(() => this.profiles2Service.getQueryByEmail(email).pipe(first(), map(p => head(p)))),
+      switchMap(p => {
+        if (p) {
+          return of(p.id);
+        } else {
+          const { id: userId } = this.authService.user;
+          return this.profiles2Service.add({
+            userId,
+            email,
+            displayName: email.split('@')[0],
+            photoURL: '',
+            created: Profiles2Service.serverTimestamp()
+          } as NewProfile2).then(doc => doc.id);
+        }
       }),
-      switchMap(profile => {
+      switchMap(profileId => {
         const { id: userId, email: userEmail } = this.authService.user;
         return this.membershipsService.add({
           userId,
           userEmail,
           groupId: selectedGroup.id,
-          profileId: profile.id,
+          profileId,
           activated: MembershipsService.serverTimestamp(),
           created: MembershipsService.serverTimestamp()
         } as NewMembership);
       })
     );
 
-    // is memberships contains given email, add user id to profile.users
-
-
-
-
-    const profiles$ =
-      this.profiles2Service
-      .getQueryByEmailAndGroupId_D(email, selectedGroup.id)
-      .pipe(
-        first(),
-        share()
-      );
-
-    // no profile contains email given email, add new profile
-    const create$ = profiles$.pipe(
+    merge(existence$, nonexistence$).pipe(
       first(),
-      filter(profiles => isEmpty(profiles)),
-      tap(t => console.log(1, t)),
-      switchMap(() => {
-        return this.profiles2Service.add_D({
-          groupId: selectedGroup.id,
-          displayName: email.split('@')[0],
-          email,
-          photoURL: '',
-          userIds: [ user.id ],
-          created: ProfilesService.serverTimestamp()
-        } as NewProfile);
-      }),
-      map(docRef => docRef.id)
-    );
-
-    // profile contains given email, add user id to profile.users
-    const update$ = profiles$.pipe(
-      first(),
-      filter(profiles => !isEmpty(profiles)),
-      tap(t => console.log(2, t)),
-      map(profiles => head(profiles) as Profile),
-      switchMap(profile => {
-        return fromPromise(
-          this.profiles2Service.updateUserIdAdd_D(profile.id, user.id)
-        ).pipe(
-          map(() => profile)
-        );
-      }),
-      map(profile => profile.id)
-    );
-
-    merge(create$, update$).pipe(
-      first(),
-      switchMap(profileId => this.profileSelectService.select(profileId)),
-    ).subscribe(() => {
+    ).subscribe(result => {
       this.coverService.hide();
+      if (!result) {
+        alert('you have membership already.');
+      }
       this.router.navigate(['/goods']);
     }, err => {
       alert(err);
       this.coverService.hide();
     });
+
+
+    //
+    //
+    // // if profile existed
+    // const membership$ = profile2$.pipe(
+    //   first(),
+    //
+    //
+    //   switchMap(({id: profileId}) => {
+    //     const { id: userId, email: userEmail } = this.authService.user;
+    //     return this.membershipsService.add({
+    //       userId,
+    //       userEmail,
+    //       groupId: selectedGroup.id,
+    //       profileId,
+    //       activated: MembershipsService.serverTimestamp(),
+    //       created: MembershipsService.serverTimestamp()
+    //     } as NewMembership);
+    //   })
+    // );
+
+    // if not profile existed
+    // const create2$ = profile2$.pipe(
+    //   first(),
+    //   filter(mp => !p),
+    //   switchMap(() => {
+    //     const { id: userId } = this.authService.user;
+    //     return this.profiles2Service.add({
+    //       userId,
+    //       email,
+    //       displayName: email.split('@')[0],
+    //       photoURL: '',
+    //       created: Profiles2Service.serverTimestamp()
+    //     } as NewProfile2);
+    //   }),
+    //   switchMap(profile => {
+    //     const { id: userId, email: userEmail } = this.authService.user;
+    //     return this.membershipsService.add({
+    //       userId,
+    //       userEmail,
+    //       groupId: selectedGroup.id,
+    //       profileId: profile.id,
+    //       activated: MembershipsService.serverTimestamp(),
+    //       created: MembershipsService.serverTimestamp()
+    //     } as NewMembership);
+    //   })
+    // );
+
+    // const profiles$ =
+    //   this.profiles2Service
+    //   .getQueryByEmailAndGroupId_D(email, selectedGroup.id)
+    //   .pipe(
+    //     first(),
+    //     share()
+    //   );
+
+    // no profile contains email given email, add new profile
+    // const create$ = profiles$.pipe(
+    //   first(),
+    //   filter(profiles => isEmpty(profiles)),
+    //   tap(t => console.log(1, t)),
+    //   switchMap(() => {
+    //     return this.profiles2Service.add_D({
+    //       groupId: selectedGroup.id,
+    //       displayName: email.split('@')[0],
+    //       email,
+    //       photoURL: '',
+    //       userIds: [ user.id ],
+    //       created: ProfilesService.serverTimestamp()
+    //     } as NewProfile);
+    //   }),
+    //   map(docRef => docRef.id)
+    // );
+
+    // profile contains given email, add user id to profile.users
+    // const update$ = profiles$.pipe(
+    //   first(),
+    //   filter(profiles => !isEmpty(profiles)),
+    //   tap(t => console.log(2, t)),
+    //   map(profiles => head(profiles) as Profile),
+    //   switchMap(profile => {
+    //     return fromPromise(
+    //       this.profiles2Service.updateUserIdAdd_D(profile.id, user.id)
+    //     ).pipe(
+    //       map(() => profile)
+    //     );
+    //   }),
+    //   map(profile => profile.id)
+    // );
+
+    // merge(create$, update$).pipe(
+    //   first(),
+    //   switchMap(profileId => this.profileSelectService.select(profileId)),
+    // ).subscribe(() => {
+    //   this.coverService.hide();
+    //   this.router.navigate(['/goods']);
+    // }, err => {
+    //   alert(err);
+    //   this.coverService.hide();
+    // });
   }
 
 }
