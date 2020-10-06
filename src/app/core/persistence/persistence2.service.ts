@@ -65,7 +65,6 @@ export class Persistence2Service implements OnDestroy {
     private goodsCommentsService: GoodsCommentsService,
     private messagesService: MessagesService,
   ) {
-    console.log('persistence');
   }
 
   reset(profileExt: ProfileExt) {

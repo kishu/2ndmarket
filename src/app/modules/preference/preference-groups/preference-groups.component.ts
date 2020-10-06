@@ -11,7 +11,7 @@ import { AuthService, GroupsService, MembershipsService, Profiles2Service, Profi
 import { ProfileSelectService } from '@app/core/business';
 import { CoverService } from '@app/modules/components/services';
 import { Group, NewMembership, NewProfile, NewProfile2, Profile } from '@app/core/model';
-import { firestore } from 'firebase';
+import { firestore } from 'firebase/app';
 
 @Component({
   selector: 'app-preference-groups',
