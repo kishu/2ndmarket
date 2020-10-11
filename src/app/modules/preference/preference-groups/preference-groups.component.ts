@@ -94,16 +94,16 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
   sendMail() {
     const to = this.email;
     const code = random(1000, 9999);
-    // console.log(code);
+    console.log(code);
 
-    const callable = this.fns.httpsCallable('sendVerificationEmail');
-    callable({to, code}).pipe(first()).subscribe(() => {
+    // const callable = this.fns.httpsCallable('sendVerificationEmail');
+    // callable({to, code}).pipe(first()).subscribe(() => {
       // i don't know why this subscribe function run outside of ngzone.
       // this is just tricky code.
-      this.ngZone.run(() => {
+      // this.ngZone.run(() => {
         this.code = code;
-      });
-    });
+      // });
+    // });
   }
 
   onTimeoverLimitTimer() {
@@ -142,12 +142,18 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
     const selectedGroup = this.selectedGroup;
 
     const membership$ = this.membershipsService
-      .getQueryByUserIdAndGroupId(selectedGroup.id, user.id).pipe(first(), share());
+      .getQueryByUserIdAndGroupId(selectedGroup.id, user.id)
+      .pipe(
+        first(),
+        share(),
+        map(memberships => head(memberships))
+      );
 
     const existence$ = membership$.pipe(
       first(),
       filter(m => !!m),
-      switchMap(() => of(null))
+      switchMap(m => this.membershipsService.activate(m.id)),
+      switchMap(() => of(null)),
     );
 
     const nonexistence$ = membership$.pipe(
@@ -158,9 +164,8 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
         if (p) {
           return of(p.id);
         } else {
-          const { id: userId } = this.authService.user;
           return this.profiles2Service.add({
-            userId,
+            userId: user.id,
             email,
             displayName: email.split('@')[0],
             photoURL: '',
@@ -169,26 +174,27 @@ export class PreferenceGroupsComponent implements OnInit, OnDestroy {
         }
       }),
       switchMap(profileId => {
-        const { id: userId, email: userEmail } = this.authService.user;
         return this.membershipsService.add({
-          userId,
-          userEmail,
+          userId: user.id,
+          userEmail: user.email,
           groupId: selectedGroup.id,
           profileId,
           activated: MembershipsService.serverTimestamp(),
           created: MembershipsService.serverTimestamp()
         } as NewMembership);
-      })
+      }),
+      map(m => m.id)
     );
 
     merge(existence$, nonexistence$).pipe(
       first(),
     ).subscribe(result => {
-      this.coverService.hide();
-      if (!result) {
+      if (!result){
         alert('you have membership already.');
       }
+      this.authService.changeMembership$.next();
       this.router.navigate(['/goods']);
+      this.coverService.hide();
     }, err => {
       alert(err);
       this.coverService.hide();

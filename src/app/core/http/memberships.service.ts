@@ -1,6 +1,6 @@
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { head } from 'lodash-es';
+import { head, isEmpty } from 'lodash-es';
 import { firestore } from 'firebase/app';
 import { Injectable } from '@angular/core';
 import { Membership, NewMembership } from '@app/core/model/membership';
@@ -41,17 +41,21 @@ export class MembershipsService extends FirestoreService<Membership> {
       limit: 1
     }).pipe(
       switchMap(memberships => {
-        return forkJoin([
-          forkJoin(memberships.map(membership => this.groupsService.get(membership.groupId))),
-          forkJoin(memberships.map(membership => this.profiles2Service.get(membership.profileId)))
-        ]).pipe(
-          map(([groups, profiles]) => {
-            return memberships.map((membership, i) => {
-              return { ...membership, group: groups[i], profile: profiles[i] };
-            });
-          }),
-          map(m => head(m))
-        );
+        if (isEmpty(memberships)) {
+          return of(null);
+        } else {
+          return forkJoin([
+            forkJoin(memberships.map(membership => this.groupsService.get(membership.groupId))),
+            forkJoin(memberships.map(membership => this.profiles2Service.get(membership.profileId)))
+          ]).pipe(
+            map(([groups, profiles]) => {
+              return memberships.map((membership, i) => {
+                return { ...membership, group: groups[i], profile: profiles[i] };
+              });
+            }),
+            map(m => head(m))
+          );
+        }
       })
     );
   }

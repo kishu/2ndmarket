@@ -29,8 +29,6 @@ export class SignInComponent implements OnInit {
           return;
         }
 
-        console.log('c', c);
-
         if (c.user && c.additionalUserInfo?.isNewUser) {
           this.router.navigate(['preference/groups']);
           return;

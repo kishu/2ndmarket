@@ -57,6 +57,7 @@ export class AuthService implements OnDestroy {
     this.user$.pipe(map(user => user?.id)),
     this.changeMembership$.pipe(map(() => this.user?.id))
   ).pipe(
+    tap(t => console.log('asdfadf', t)),
     switchMap(userId => userId ? this.membershipService.getActivatedByUserId(userId) : of(null))
   ).subscribe(membership => {
     console.log('AuthService Membership', membership);

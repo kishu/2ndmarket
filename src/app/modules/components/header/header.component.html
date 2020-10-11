@@ -15,9 +15,11 @@
           <span class="absolute right-0 top-0 w-1 h-1 m-2 rounded-full bg-red-600" *ngIf="(newMessagesCount$ | async) > 0"></span>
         </a>
       </div>
-      <h1 class="h-12 p-3 text-center font-bold text-lg text-green-500 ellipsis">
+      <h1
+        *ngIf="membership$ | async as membership"
+        class="h-12 p-3 text-center font-bold text-lg text-green-500 ellipsis">
         <a routerLink="./">
-          <span  class="uppercase">세컨드마켓@{{ group.name }}</span>
+          <span  class="uppercase">세컨드마켓@{{ membership.group.name }}</span>
         </a>
       </h1>
       <div class="absolute inset-y-0 right-0 flex">
