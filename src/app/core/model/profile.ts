@@ -1,4 +1,4 @@
-import { firestore } from 'firebase/app';
+import firestore from 'firebase/firebase-firestore';
 import { Group } from '@app/core/model/group';
 
 export interface Profile2 {

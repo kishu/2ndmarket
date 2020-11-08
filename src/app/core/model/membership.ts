@@ -1,11 +1,11 @@
-import { firestore } from 'firebase';
+import firestore from 'firebase/firebase-firestore';
 import { Group } from './group';
 import { Profile2 } from './profile';
 
 export interface Membership {
   id: string;
-  userId: string; // sns login id
-  userEmail: string; // sns login email
+  userId: string; // firebase user id
+  userEmail: string; // firebase user email
   groupId: string;
   profileId: string;
   activated: firestore.Timestamp;

@@ -1,5 +1,6 @@
 {
   "projects": {
+    "test": "ff538d52",
     "dev": "c1d13c97",
     "prod": "f5e1f38a"
   }

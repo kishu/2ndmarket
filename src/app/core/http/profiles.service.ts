@@ -1,4 +1,4 @@
-import { firestore } from 'firebase/app';
+import firestore from 'firebase/firebase-firestore';
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';

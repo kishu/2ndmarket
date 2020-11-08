@@ -25,7 +25,7 @@ import { ProfileSelectService } from '@app/core/business';
 import { environment } from '@environments/environment';
 import { AppComponent } from './app.component';
 
-// import { firestore } from 'firebase/app';
+// import firestore from 'firebase/firebase-firestore';
 // firestore.setLogLevel('debug');
 
 export function appInitializer(router: Router, authService: AuthService) {
@@ -44,22 +44,6 @@ export function appInitializer(router: Router, authService: AuthService) {
         resolve();
       });
     });
-
-    // return new Promise(resolve => {
-    //   forkJoin([
-    //     authService.user$.pipe(first()),
-    //     authService.profileExt$.pipe(first())
-    //   ]).subscribe(([u, p]) => {
-    //     console.log('u', u, 'p', p);
-    //     if (!u) {
-    //       router.navigate(['/auth/sign-in']);
-    //     } else if (!p) {
-    //       alert('프로필을 설정해 주세요!');
-    //       router.navigate(['/preference', 'groups']);
-    //     }
-    //     resolve();
-    //   });
-    // });
   };
 }
 

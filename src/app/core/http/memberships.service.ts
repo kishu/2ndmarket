@@ -1,7 +1,7 @@
 import { forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { head, isEmpty } from 'lodash-es';
-import { firestore } from 'firebase/app';
+import firestore from 'firebase/firebase-firestore';
 import { Injectable } from '@angular/core';
 import { Membership, NewMembership } from '@app/core/model/membership';
 import { AngularFirestore } from '@angular/fire/firestore';

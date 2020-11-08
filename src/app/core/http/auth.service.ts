@@ -1,4 +1,4 @@
-import { auth } from 'firebase/app';
+import auth from 'firebase/firebase-auth';
 import { merge, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
@@ -57,10 +57,8 @@ export class AuthService implements OnDestroy {
     this.user$.pipe(map(user => user?.id)),
     this.changeMembership$.pipe(map(() => this.user?.id))
   ).pipe(
-    tap(t => console.log('asdfadf', t)),
     switchMap(userId => userId ? this.membershipService.getActivatedByUserId(userId) : of(null))
   ).subscribe(membership => {
-    console.log('AuthService Membership', membership);
     this._membership = membership;
     this.membership$.next(membership);
   });

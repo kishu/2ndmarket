@@ -1,4 +1,4 @@
-import { firestore } from 'firebase';
+import firestore from 'firebase/firebase-firestore';
 
 export interface GoodsComment {
   id: string;

@@ -1,4 +1,4 @@
-import { firestore } from 'firebase';
+import firestore from 'firebase/firebase-firestore';
 import { Goods } from '@app/core/model/goods';
 import { GoodsComment } from '@app/core/model/goods-comment';
 

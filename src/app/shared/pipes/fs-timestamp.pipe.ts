@@ -1,5 +1,5 @@
+import firestore from 'firebase/firebase-firestore';
 import { Pipe, PipeTransform } from '@angular/core';
-import { firestore } from 'firebase/app';
 
 @Pipe({
   name: 'fsTimestamp'

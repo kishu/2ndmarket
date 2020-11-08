@@ -1,4 +1,4 @@
-import { firestore } from 'firebase/app';
+import firestore from 'firebase/firebase-firestore';
 
 export interface FcmToken {
   id: string;

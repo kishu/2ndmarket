@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { firestore } from 'firebase/app';
+import firestore from 'firebase/firebase-firestore';
 import { Inject, Injectable } from '@angular/core';
 import {
   Action,
