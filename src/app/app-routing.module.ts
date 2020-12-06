@@ -9,9 +9,10 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(
     routes,
     {
-      anchorScrolling: 'disabled',
-      scrollPositionRestoration: 'enabled',
-    }
+    anchorScrolling: 'disabled',
+    scrollPositionRestoration: 'enabled',
+    relativeLinkResolution: 'legacy'
+}
   )],
   exports: [RouterModule]
 })
